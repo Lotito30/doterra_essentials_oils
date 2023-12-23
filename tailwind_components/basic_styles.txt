@@ -1,0 +1,7 @@
+a con fondo blanco: text-orange-500 hover:bg-gray-200 hover:text-orange-600
+
+a: class="rounded-md bg-orange-400 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-orange-500"
+
+parrafo: text-gray-500
+
+boton como el de newsletter: class="block w-full px-5 py-3 text-base font-medium text-white bg-orange-400 border border-transparent rounded-lg shadow hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 sm:px-10

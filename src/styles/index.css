@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.active{
+    @apply border-orange-standard;
+}
+p{
+  @apply text-gray-500 font-sans text-sm; 
+}
+/* Estilo general de la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 10px;
+    z-index: -1;
+  }
+  
+  /* Estilo del track (la barra de desplazamiento en sí) */
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  
+  /* Estilo del thumb (el control deslizante de la barra de desplazamiento) */
+  ::-webkit-scrollbar-thumb {
+    background: #d8d8d8;
+    opacity: 10px;
+    border-radius: 10px;
+  }
+  
+  /* Cambia el color del thumb al pasar el mouse */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c9c9c9;
+    opacity: 10px;
+    border-radius: 10px;
+  }
