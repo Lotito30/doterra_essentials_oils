@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .active{
-    @apply border-orange-standard;
+  @apply border-orange-standard;
 }
 p{
   @apply text-gray-500 font-sans text-sm; 
 }
+
+ body{
+  /* background-color: rgb(252,254,233); */
+  background-color: rgb(254,254,254);
+} 
 /* Estilo general de la barra de desplazamiento */
 ::-webkit-scrollbar {
     width: 10px;

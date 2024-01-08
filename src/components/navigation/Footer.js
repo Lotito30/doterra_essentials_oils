@@ -8,7 +8,7 @@ function Footer(){
         <div class="px-5 py-12 w-full lg:py-16 md:px-12 lg:px-20">
           <div class="xl:grid xl:grid-cols-3 xl:gap-8">
             <div class="space-y-8 xl:col-span-1">
-              <Link to="/" class="text-lg font-bold tracking-tighter text-black border-b-4 border-black" > doTERRA </Link>
+              <Link to="/" class="text-lg font-bold tracking-tighter text-black border-b-3 border-black" > doTERRA </Link>
             </div>
             <div class="grid md:grid-cols-2 gap-8 mt-12 xl:mt-0 xl:col-span-2">
               <div class="md:grid md:grid-cols-2 md:gap-8">

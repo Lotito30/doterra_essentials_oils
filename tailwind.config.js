@@ -9,6 +9,8 @@ module.exports = {
         "orange-standard":'#ED8936',
         "button-standard-hover":'#000',
         "text-color":"#6B727F",
+        "color-champagne":"#F7E7CE",
+        
       }
     },
     boxShadow:{

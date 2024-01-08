@@ -1,4 +1,3 @@
-import Footer from "components/navigation/Footer";
 import Navbar from "components/navigation/Navbar";
 import Contact from "components/users/ContactUs";
 import Layout from "hocs/layouts/Layout";

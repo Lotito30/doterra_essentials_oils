@@ -7,7 +7,7 @@ import { Typewriter } from "react-simple-typewriter";
 function Header() {
   return (
     <main>
-      <div class="px-4 lg:py-10 mx-auto max-w-7xl sm:px-6 md:pb-20 md:px-12 lg:px-16 lg:pb-16 relative">
+      <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-16 lg:pb-8 relative">
         <Link to="/products">
           <img
             class="fixed bottom-5 right-2 w-30 h-20 z-10"
@@ -15,18 +15,16 @@ function Header() {
             src={iconoWhatsapp}
           />
         </Link>
-        <div class="flex flex-wrap items-center mx-auto max-w-7xl">
-          <div class="w-full lg:max-w-lg lg:w-1/2 rounded-xl flex md:justify-center">
+        <div class="flex flex-wrap items-center mx-auto max-w-7xl flex-col-reverse lg:flex-row">
+          <div class="w-full lg:max-w-lg lg:w-1/2 rounded-xl flex md:justify-center" >
             <div>
-              <div class="relative w-full max-w-lg ">
-                <div class="relative ">
-                  <div class="absolute -top-24 rounded-full bg-orange-700 -left-36 lg:w-72 lg:h-72 w-52 h-52 mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
+              <div class="relative w-full max-w-lg">
+                <div class="relative">
                   <img
-                    class="object-cover object-center mx-auto rounded-lg shadow-2xl md:w-auto"
+                    class="hidden object-cover object-center mx-auto rounded-lg shadow-2xl md:w-auto md:mt-10 md:block"
                     alt="Oils"
                     src={headerImg}
                   />
-                  <div class="absolute rounded-full bg-orange-700 right-0 -bottom-24 lg:-right-36 lg:h-72 lg:w-72 w-52 h-52 mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
                 </div>
               </div>
             </div>
