@@ -1,0 +1,23 @@
+<svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="48" height="48" rx="8" fill="#ED8936" />
+      <path
+        d=""
+        stroke="#FB923C"
+        strokeWidth="2"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d=""
+        stroke="#FDBA74"
+        strokeWidth="2"
+      />
+</svg>
+
+

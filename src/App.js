@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import headerImg from "assets/img/error404.webp";
 import AnimatedRoutes from "AnimatedRoutes";
+// import Activate from "containers/auth/Activate";
+
 
 function App() {
   

@@ -1,0 +1,39 @@
+import Navbar from "components/navigation/Navbar";
+import ResetPassword from "components/users/ResetPassword";
+import Layout from "hocs/layouts/Layout";
+import { Helmet } from "react-helmet-async";
+
+
+function Reset_Password() {
+  return (
+    <Layout>
+      <Helmet>
+        <title>Reset Password | doTERRA</title>
+        <meta
+          name="description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        <meta
+          name="keywords"
+          content="doTERRA Oils, Natural Wellness, Health Products, Essential Oils, Aromatherapy, Pure Extracts, Sustainably Sourced"
+        />
+        <meta name="robots" content="all" />
+        <meta name="author" content="Lotito" />
+        <meta name="publisher" content="Lotito" />
+        {/* <link rel="canonical" href="https://oilslotito.com.ae"/> */}
+
+        <meta name="twitter:title" content="Home | doTERRA" />
+        <meta
+          name="twitter:description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        {/* <meta name="twitter:image" content={headerImg} /> */}
+      </Helmet>
+      <Navbar />
+      <div className="pt-20">
+        <ResetPassword />
+      </div>
+    </Layout>
+  );
+}
+export default Reset_Password;

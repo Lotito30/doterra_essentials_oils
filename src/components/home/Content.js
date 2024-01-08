@@ -4,7 +4,7 @@ import fondoHome from "assets/img/fondoHome.jpg";
 
 function Content() {
   return (
-    <div className="px-4 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+    <div className="px-4 pb-10 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="flex flex-col justify-center md:pr-8 xl:pr-0 lg:max-w-lg">
           <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-teal-accent-400 md:text-center "></div>

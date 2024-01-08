@@ -1,6 +1,40 @@
+import Navbar from "components/navigation/Navbar";
+import Layout from "../../hocs/layouts/Layout";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { signup } from "../../redux/actions/auth";
+import { Oval } from "react-loader-spinner";
 
-function SignUp() {
+function SignUp({ signup, loading }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [accountCreated, setAccountCreated] = useState(false);
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    password: "",
+    re_password: "",
+  });
+
+  const { first_name, last_name, phone, email, password, re_password } =
+    formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    signup(first_name, last_name, phone, email, password, re_password);
+    setAccountCreated(true);
+  };
+
   return (
     <section>
       <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24">
@@ -21,44 +55,139 @@ function SignUp() {
                   </div>
                 </div>
               </div>
-              <div class="mt-6 space-y-2">
-                <div>
-                  <label for="email" class="block text-sm font-medium text-neutral-600"> Email address </label>
-                  <input
-                    type="text"
-                    name="email"
-                    id="email"
-                    class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div>
-                  <label for="password" class="block text-sm font-medium text-neutral-600"> Password </label>
-                  <input
-                    type="text"
-                    name="password"
-                    id="password"
-                    class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <div>
-                  <label for="phone" class="block text-sm font-medium text-neutral-600"> Phone </label>
-                  <input
-                    type="number"
-                    name="phone"
-                    id="phone"
-                    class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                    placeholder="Enter your phone"
-                  />
-                </div>
+              <div class="mt-6">
+                <form onSubmit={(e) => onSubmit(e)}>
+                  <div>
+                    <label
+                      for="email"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      Email address{" "}
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={(e) => onChange(e)}
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="first_name"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      First Name{" "}
+                    </label>
+                    <input
+                      type="text"
+                      name="first_name"
+                      value={first_name}
+                      onChange={(e) => onChange(e)}
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Enter your first name"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="last_name"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      Last Name{" "}
+                    </label>
+                    <input
+                      type="text"
+                      name="last_name"
+                      value={last_name}
+                      onChange={(e) => onChange(e)}
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Enter your last name"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="phone"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      Phone{" "}
+                    </label>
+                    <input
+                      type="number"
+                      name="phone"
+                      value={phone}
+                      onChange={(e) => onChange(e)}
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Enter your phone"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="password"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      Password{" "}
+                    </label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => onChange(e)}
+                      autoComplete="new-password"
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Enter your password"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="re_password"
+                      class="block text-sm font-medium text-neutral-600"
+                    >
+                      {" "}
+                      Repeat Password{" "}
+                    </label>
+                    <input
+                      type="password"
+                      name="re_password"
+                      value={re_password}
+                      onChange={(e) => onChange(e)}
+                      required
+                      class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="Repeat your password"
+                    />
+                  </div>
+                  {loading ? (
+                    <button className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <Oval
+                        visible={true}
+                        height="20"
+                        width="20"
+                        color="#ED8936"
+                        ariaLabel="oval-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                      />{" "}
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Sign Up
+                    </button>
+                  )}
+                </form>
                 <div class="flex flex-col mt-4 lg:space-y-2">
-                  <button
-                    type="button"
-                    class="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Sign up
-                  </button>
                   <Link
                     to="/signin"
                     type="button"
@@ -140,4 +269,10 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+const mapStateToProps = (state) => ({
+  loading: state.Auth.loading,
+});
+
+export default connect(mapStateToProps, {
+  signup,
+})(SignUp);
