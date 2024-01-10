@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
+import Layout from "hocs/layouts/Layout";
+import { Fragment, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import {
@@ -8,10 +9,10 @@ import {
   PlusSmIcon,
   ViewGridIcon,
 } from "@heroicons/react/solid";
+import Card from "components/cart/cart";
 
-import { connect } from "react-redux";
-import { get_categories } from "../../redux/actions/categories";
-import Layout from "hocs/layouts/Layout";
+
+
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -69,12 +70,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Get_Products({ get_categories, categories }) {
+function Get_Products({categories, products}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    get_categories();
-  }, []);
+  
   return (
     <div className="bg-white">
       <div>
@@ -509,8 +507,15 @@ function Get_Products({ get_categories, categories }) {
               {/* Product grid */}
               <div className="lg:col-span-3">
                 {/* Replace with your content */}
-                <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" />
+                {/* <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" /> */}
                 {/* /End replace */}
+                {
+                products &&
+                products !== null &&
+                products !== undefined &&
+                products.map((prod) => (
+                  <Card prod={prod}/>
+                ))}
               </div>
             </div>
           </section>
@@ -520,10 +525,4 @@ function Get_Products({ get_categories, categories }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  categories: state.Categories.categories,
-});
-
-export default connect(mapStateToProps, {
-  get_categories,
-})(Get_Products);
+export default Get_Products

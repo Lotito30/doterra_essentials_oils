@@ -120,7 +120,7 @@ export const get_product = (productId) => async (dispatch) => {
     );
 
     if (res.status === 200 && !res.data.error) {
-      console.log('DENTRO DEL IF DE GET_PRODUCT');
+ 
         dispatch({ 
             type: GET_PRODUCT_SUCCESS, 
             payload: res.data 

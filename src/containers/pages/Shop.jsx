@@ -3,8 +3,19 @@ import Navbar from "components/navigation/Navbar";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 import Get_Products from "components/pages/Shop";
+import { get_products } from "../../redux/actions/products";
+import { get_categories } from "../../redux/actions/categories";
+import { connect } from "react-redux";
+import { useEffect } from "react";
 
-function Products() {
+function Products({ get_categories, categories, get_products, products }) {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    get_categories();
+    get_products()
+  }, []);
+
   return (
     <Layout>
       <Helmet>
@@ -31,10 +42,19 @@ function Products() {
       </Helmet>
       <Navbar />
       <div className="pt-20">
-        <Get_Products />
+        <Get_Products categories={categories} products={products}/>
       </div>
       <Footer />
     </Layout>
   );
 }
-export default Products;
+const mapStateToProps = (state) => ({
+  categories: state.Categories.categories,
+  products:state.Products.products
+});
+
+export default connect(mapStateToProps, {
+  get_categories,
+  get_products,
+})(Products);
+
