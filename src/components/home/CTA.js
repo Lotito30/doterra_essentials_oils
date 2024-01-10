@@ -17,7 +17,7 @@ function CTA() {
 
           <div class="mt-4 sm:mt-8">
             <Link
-              to="/products"
+              to="/shop"
               class="inline-block rounded-md bg-orange-standard px-5 py-2.5 text-sm font-medium text-white transition duration-300 ease-in-out hover:bg-black focus:outline-none focus:ring-yellow-400"
             >
               Get Yours Today

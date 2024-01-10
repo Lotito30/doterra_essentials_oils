@@ -45,17 +45,21 @@ function classNames(...classes) {
 }
 
 
-function ProductDetail({ data, related_products }) {
+function ProductDetail({ data, dataR }) {
   return (
-     <div className="bg-white">
-       <div className="max-w-2xl mx-auto py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+    <>
+     {data &&
+      data !== undefined &&
+      data !== null &&
+      <div className="bg-white">
+       <div className="max-w-2xl mx-auto py-8 px-4 sm:py-10 sm:px-6 lg:max-w-7xl lg:px-8">
          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
            {/* Image gallery */}
            <Tab.Group as="div" className="flex">
              <Tab.Panels className="w-full aspect-w-1 aspect-h-1">
                  <Tab.Panel key={data.id}>
                    <img
-                     src={data.get_thumbnail}
+                     src={data.photo}
                      className="w-full h-full object-center object-cover sm:rounded-lg"
                    />
                  </Tab.Panel>
@@ -167,8 +171,9 @@ function ProductDetail({ data, related_products }) {
          </div>
        </div>
      </div>
-    
-  );
+     }
+    </>
+  )
 }
 
 export default ProductDetail;

@@ -185,8 +185,8 @@ export const get_filtered_products = (category_id,price_range,sort_by,order) => 
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/product/by/search`,
-      config,
-      body
+      body,
+      config
     );
 
     if (res.status === 200 && !res.data.error) {

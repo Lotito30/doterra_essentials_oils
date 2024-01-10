@@ -18,9 +18,9 @@ function ProductDetails({product,related_products,get_product,get_related_produc
     const productId = params.productId
 
     useEffect(() => {
-        window.scrollTo(0,0)
         get_product(productId)
         get_related_products(productId)
+        window.scrollTo(0,0)
     },[])
     return(
         <Layout>
