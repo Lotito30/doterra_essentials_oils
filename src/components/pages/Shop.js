@@ -9,7 +9,8 @@ import {
   PlusSmIcon,
   ViewGridIcon,
 } from "@heroicons/react/solid";
-import Card from "components/cart/cart";
+import Cart from "components/cart/cart";
+import CartProducts from "components/cart/cartProductsMap";
 
 
 
@@ -70,7 +71,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Get_Products({categories, products}) {
+function Get_Products({categories, products, showProducts}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   
   return (
@@ -509,13 +510,8 @@ function Get_Products({categories, products}) {
                 {/* Replace with your content */}
                 {/* <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" /> */}
                 {/* /End replace */}
-                {
-                products &&
-                products !== null &&
-                products !== undefined &&
-                products.map((prod) => (
-                  <Card prod={prod}/>
-                ))}
+                {/* <CartProducts data={products}/>  */}
+                {products && showProducts()}
               </div>
             </div>
           </section>
