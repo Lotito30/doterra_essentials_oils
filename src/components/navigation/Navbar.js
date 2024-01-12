@@ -9,53 +9,52 @@ import { logout } from "../../redux/actions/auth";
 // import { ChevronDownIcon } from "@heroicons/react/solid";
 
 function Navbar({ isAuthenticated, user, logout }) {
-const solutions = [
-  {
-    name: "Shop",
-    description: "Discover Our Range of Oils",
-    href: "/shop",
-    icon: iconProduct,
-  },
-  {
-    name: "Experience",
-    description: "Feel the Power of Nature",
-    href: "/experience",
-    icon: IconExperience,
-  },
-  {
-    name: "About Us",
-    description: "Learn About Our Ethical Sourcing",
-    href: "/about",
-    icon: IconAbout,
-  },
-  {
-    name: "Contact Us",
-    description: "We're Here to Help You",
-    href: "/contact",
-    icon: IconContact,
-  },
-  // {
-  //   name: "Sign in",
-  //   description: "Access your existing account here",
-  //   href: "/signin",
-  //   icon: IconSignIn,
-  // },
-  {
-    name: "Sign up",
-    description: "Create your new account now",
-    href: "/signup",
-    icon: IconSignUp,
-  },
-  {
-    name: "Log out",
-    description: "End your current session now",
-    onclick: () => logout(),
-    icon: IconLogOut,
-  },
-];
+  const solutions = [
+    {
+      name: "Shop",
+      description: "Discover Our Range of Oils",
+      href: "/shop",
+      icon: iconProduct,
+    },
+    {
+      name: "Experience",
+      description: "Feel the Power of Nature",
+      href: "/experience",
+      icon: IconExperience,
+    },
+    {
+      name: "About Us",
+      description: "Learn About Our Ethical Sourcing",
+      href: "/about",
+      icon: IconAbout,
+    },
+    {
+      name: "Contact Us",
+      description: "We're Here to Help You",
+      href: "/contact",
+      icon: IconContact,
+    },
+    // {
+    //   name: "Sign in",
+    //   description: "Access your existing account here",
+    //   href: "/signin",
+    //   icon: IconSignIn,
+    // },
+    {
+      name: "Sign up",
+      description: "Create your new account now",
+      href: "/signup",
+      icon: IconSignUp,
+    },
+    {
+      name: "Log out",
+      description: "End your current session now",
+      onclick: () => logout(),
+      icon: IconLogOut,
+    },
+  ];
 
-
-  const loading = true
+  const loading = true;
 
   window.onscroll = function () {
     scrollFunction();
@@ -79,8 +78,7 @@ const solutions = [
   // function classNames(...classes) {
   //   return classes.filter(Boolean).join(" ");
   // }
-
- 
+const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75'
   const authLinks = (
     <div className="block">
       <Popover className="relative">
@@ -89,7 +87,7 @@ const solutions = [
             <Popover.Button
               className={`
                 
-                group inline-flex items-center text-gray-100 rounded-md bg-orange-standard px-3.5 py-2.5 text-base font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 transition-all duration-200 ease-in-out`}
+                group inline-flex items-center text-black text-base font-mediumtransition-all duration-300 ease-in-out p-3 bg-gray-200 rounded-lg hover:bg-gray-300`}
             >
               {open ? (
                 <svg
@@ -105,9 +103,19 @@ const solutions = [
                     fill="#0F0F0F"
                   ></path>
                 </svg>
-              ) : 
-              (
-                <svg
+              ) : (isAuthenticated ? 
+                (<svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  style={{ fill: "", transform: "", msFilter: "" }}
+                >
+                  <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z">
+
+                  </path>
+                </svg>): 
+                (<svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
                   fill="none"
@@ -120,7 +128,7 @@ const solutions = [
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   ></path>
-                </svg>
+                </svg>)
               )}
             </Popover.Button>
             <Transition
@@ -173,7 +181,7 @@ const solutions = [
       >
         Sign in
         <DotLoader
-          className="ml-1"
+          className="ml-3"
           loading={loading}
           size={20}
           color="#f2f2f2"
@@ -188,6 +196,7 @@ const solutions = [
       </Link>
     </Fragment>
   );
+
   return (
     <navbar
       id="navbar"
@@ -197,8 +206,10 @@ const solutions = [
         <div class="flex h-16 items-center justify-between">
           <div class="md:flex md:items-center md:gap-12 ">
             <Link to="/" class="text-orange-standard flex items-center">
-              <img src={icono} className="w-16 h-16" alt="doTERRA"/>
-              <h2 className="hidden lg:block text-black text-2xl font-bold">dōTERRA</h2>
+              <img src={icono} className="w-16 h-16" alt="doTERRA" />
+              <h2 className="hidden lg:block text-black text-2xl font-bold">
+                dōTERRA
+              </h2>
             </Link>
           </div>
 
@@ -253,12 +264,8 @@ const solutions = [
               <div class="sm:flex ">{authLinks}</div>
             ) : (
               <div className="inline-flex gap-4">
-                <div className="inline-flex sm:gap-4">
-                  {guestLinks}
-                </div>
-                <div className="block md:hidden">
-                  {authLinks}
-                </div>
+                <div className="inline-flex sm:gap-4">{guestLinks}</div>
+                <div className="block md:hidden">{authLinks}</div>
               </div>
             )}
           </div>
@@ -275,7 +282,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  logout
+  logout,
 })(Navbar);
 
 function iconProduct() {

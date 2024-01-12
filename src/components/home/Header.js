@@ -67,7 +67,7 @@ function Header() {
             <div class="mt-0 lg:mt-6 max-w-7xl flex gap-1 items-center">
               <div class="mt-3 rounded-md sm:mt-0">
                 <Link
-                  to="/products"
+                  to="/shop"
                   class="items-center block px-10 py-4 text-base font-medium text-center text-white transform hover:bg-black transition duration-300 ease-in-out bg-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Get products

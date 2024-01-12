@@ -28,6 +28,7 @@ function Home({
     get_products_by_arrival();
     get_products_by_sold();
   }, []);
+
   return (
     <Layout>
       <Navbar />

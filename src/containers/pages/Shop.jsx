@@ -46,6 +46,17 @@ function Products({
     setFiltered(true)
   };
 
+  const onDelete = (e) => {
+    setFormData(
+    {
+      category_id: "0",
+      price_range: "Any",
+      sortBy: "created",
+      order: "desc"
+    }
+    )
+    get_filtered_products("0", "Any", "created", "desc");
+  }
 
   const showProducts = () => {
     let results =[]
@@ -119,7 +130,7 @@ function Products({
       <Navbar />
       <div className="pt-20">
         {/* Shop.js */}
-        <Get_Products categories={categories} products={products} showProducts={showProducts} onSubmit={onSubmit} onChange={onChange} sortBy={sortBy} order={order}  /> 
+        <Get_Products categories={categories} products={products} showProducts={showProducts} onSubmit={onSubmit} onChange={onChange} sortBy={sortBy} order={order} onDelete={onDelete} /> 
       </div>
       <Footer />
     </Layout>

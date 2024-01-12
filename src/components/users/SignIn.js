@@ -27,7 +27,6 @@ function SignIn({ signin, loading }) {
     e.preventDefault();
     console.log(formData);
     signin(email, password)
-    setFormData({email: "", password: "",})
   };
   return (
     <Layout>

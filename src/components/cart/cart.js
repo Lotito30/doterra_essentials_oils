@@ -47,7 +47,7 @@ function Cart({ data }) {
               <div className="mt-1 flex justify-between">
                 <div>
                   <h3 className="text-sm text-gray-700 text-title capitalize">
-                    <Link to={`/product/${data.id}`}>
+                    <Link to={`product/${data.id}`}>
                       <span aria-hidden="true" className="absolute inset-0 " />
                       {data.name}
                     </Link>

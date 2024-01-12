@@ -18,7 +18,7 @@ function ProductsSold({ data }) {
         </div>
         <div className="mt-6">
           <Link
-            to="#"
+            to="/shop"
             className="block text-sm font-semibold text-orange-standard hover:text-orange-standard"
           >
             See more products<span aria-hidden="true"> &rarr;</span>

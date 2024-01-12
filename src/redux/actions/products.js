@@ -40,7 +40,7 @@ export const get_products = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_FAIL
     })
@@ -70,7 +70,7 @@ export const get_products_by_arrival = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_BY_ARRIVAL_FAIL
     })
@@ -100,7 +100,7 @@ export const get_products_by_sold = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_BY_SOLD_FAIL
     })
@@ -131,7 +131,7 @@ export const get_product = (productId) => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCT_FAIL
     })
@@ -162,7 +162,7 @@ export const get_related_products = (productId) => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:RELATED_PRODUCTS_FAIL
     })
@@ -200,7 +200,7 @@ export const get_filtered_products = (category_id,price_range,sort_by,order) => 
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:FILTER_PRODUCTS_FAIL
     })
@@ -237,7 +237,7 @@ export const get_search_products = (search, category_id) => async (dispatch) => 
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:SEARCH_PRODUCTS_FAIL
     })
