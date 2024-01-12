@@ -25,6 +25,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
+
         <Route path="*" element={<Error404 />} />
         <Route exact path="/" element={<Home />} />
         <Route exact path="/shop" element={<Shop />} />
@@ -33,16 +34,13 @@ function AnimatedRoutes() {
         <Route exact path="/contact" element={<ContactUs />} />
         <Route exact path="/product/:productId" element={<ProductDetails />} />
 
-
-
         {/* AUTHENTICATION */}
         <Route exact path="/signin" element={<UserSingIn />} />
         <Route exact path="/signup" element={<UserSingUp />} />
         <Route exact path="/activate/:uid/:token" element={<Activate />} />
         <Route exact path="/reset_password" element={<Reset_Password />} />
         <Route exact path="/password/reset/confirm/:uid/:token" element={< Reset_Password_Confirm />} />
-
-
+        
       </Routes>
     </AnimatePresence>
   );
