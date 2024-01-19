@@ -27,10 +27,7 @@ function UserSingIn() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">
-        <SignIn />
-      </div>
+      <SignIn />
     </Layout>
   );
 }

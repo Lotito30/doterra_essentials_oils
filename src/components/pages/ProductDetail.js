@@ -51,8 +51,7 @@ function ProductDetail({ data, dataR }) {
      {data &&
       data !== undefined &&
       data !== null &&
-      <div className="bg-white">
-       <div className="max-w-2xl mx-auto py-8 px-4 sm:py-10 sm:px-6 lg:max-w-7xl lg:px-8">
+       <div className="max-w-2xl mx-auto px-4 py-14 sm:px-6 lg:max-w-7xl lg:px-8">
          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
            {/* Image gallery */}
            <Tab.Group as="div" className="flex">
@@ -170,7 +169,6 @@ function ProductDetail({ data, dataR }) {
            </div>
          </div>
        </div>
-     </div>
      }
     </>
   )

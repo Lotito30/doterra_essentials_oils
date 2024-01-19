@@ -222,8 +222,8 @@ export const get_search_products = (search, category_id) => async (dispatch) => 
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/product/search`,
-      config,
-      body
+      body,
+      config
     );
 
     if (res.status === 200 && !res.data.error) {

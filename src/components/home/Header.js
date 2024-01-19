@@ -4,10 +4,31 @@ import iconoWhatsapp from "assets/img/iconoWhatsapp.png";
 import { Link } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 
-function Header() {
+function Header({isAuthenticated, user}) {
   return (
     <main>
-      <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-16 lg:pb-8 relative">
+      {/* {isAuthenticated 
+      ? 
+      <>
+      <p>ID User: {
+        user &&
+        user !== null &&
+        user !== undefined && 
+        user.id
+        }</p> 
+      <p>Name User: {
+        user &&
+        user !== null &&
+        user !== undefined && 
+        user.get_full_name
+        }</p> 
+        </>
+      
+      :
+      <p className="hidden"></p>
+    }
+       */}
+      <div class="px-4 mx-auto max-w-7xl pt-10 lg:pt-5 sm:px-6 md:px-12 lg:px-16 lg:pb-8 relative">
         <Link to="/products">
           <img
             class="fixed bottom-5 right-2 w-30 h-20 z-10"
@@ -30,8 +51,8 @@ function Header() {
             </div>
           </div>
 
-          <div class="flex flex-col items-start mt-12 mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">
-            <span class="mb-8 text-xs font-bold tracking-widest text-blue-600 uppercase">
+          <div class="flex flex-col items-start mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">
+            <span class="mb-8 text-xs font-bold tracking-widest text-black uppercase">
               {" "}
               Pure Essence{" "}
             </span>
@@ -68,7 +89,7 @@ function Header() {
               <div class="mt-3 rounded-md sm:mt-0">
                 <Link
                   to="/shop"
-                  class="items-center block px-10 py-4 text-base font-medium text-center text-white transform hover:bg-black transition duration-300 ease-in-out bg-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  class="items-center block px-10 py-4 text-base font-medium text-center text-white transform hover:bg-black transition duration-300 ease-in-out bg-orange-standard rounded-md focus:outline-none focus:ring-offset-2 focus:ring-0"
                 >
                   Get products
                 </Link>
@@ -76,7 +97,7 @@ function Header() {
               <div class="mt-3 rounded-md sm:mt-0 sm:ml-3">
                 <Link
                   to="/contact"
-                  class="items-center block px-10 py-4 text-base font-medium text-center text-blue-600 transition duration-300 ease-in-out transform border-2 border-gray-100 hover:bg-gray-200 shadow-md rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  class="items-center block px-10 py-4 text-base font-medium text-center text-black transition duration-300 ease-in-out transform border-2 border-gray-100 hover:bg-gray-200 shadow-md rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 >
                   Contact us
                 </Link>

@@ -28,9 +28,7 @@ function AboutUs() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">AboutUs</div>
-      <Footer />
+      AboutUs
     </Layout>
   );
 }

@@ -1,14 +1,50 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Navigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 import icono from "assets/img/iconodoTERRA3.png";
 import Alert from "../../components/alert";
 import { logout } from "../../redux/actions/auth";
+import { get_categories } from "../../redux/actions/categories";
+import { get_search_products } from "../../redux/actions/products";
+import SearchBox from "../../components/navigation/Search";
 // import { ChevronDownIcon } from "@heroicons/react/solid";
 
-function Navbar({ isAuthenticated, user, logout }) {
+function Navbar({
+  isAuthenticated,
+  user,
+  logout,
+  get_categories,
+  categories,
+  get_search_products,
+}) {
+  const [render, setRender] = useState(false);
+  const [formData, setFormData] = useState({
+    category_id: 0,
+    search: "",
+  });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    get_categories();
+  }, [render]);
+
+  const { category_id, search } = formData;
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await get_search_products(search, category_id);
+    setRender(!render);
+  };
+
+  if (render) {
+    return <Navigate to="/shop" />;
+  }
+
   const solutions = [
     {
       name: "Shop",
@@ -34,12 +70,6 @@ function Navbar({ isAuthenticated, user, logout }) {
       href: "/contact",
       icon: IconContact,
     },
-    // {
-    //   name: "Sign in",
-    //   description: "Access your existing account here",
-    //   href: "/signin",
-    //   icon: IconSignIn,
-    // },
     {
       name: "Sign up",
       description: "Create your new account now",
@@ -51,6 +81,24 @@ function Navbar({ isAuthenticated, user, logout }) {
       description: "End your current session now",
       onclick: () => logout(),
       icon: IconLogOut,
+    },
+  ];
+  const navBar = [
+    {
+      name: "Shop",
+      href: "/shop",
+    },
+    {
+      name: "Experience",
+      href: "/experience",
+    },
+    {
+      name: "About Us",
+      href: "/about",
+    },
+    {
+      name: "Contact Us",
+      href: "/contact",
     },
   ];
 
@@ -78,7 +126,8 @@ function Navbar({ isAuthenticated, user, logout }) {
   // function classNames(...classes) {
   //   return classes.filter(Boolean).join(" ");
   // }
-const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75'
+  const ClassPopoverButton =
+    "rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75";
   const authLinks = (
     <div className="block">
       <Popover className="relative">
@@ -86,13 +135,13 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
           <>
             <Popover.Button
               className={`
-                
+
                 group inline-flex items-center text-black text-base font-mediumtransition-all duration-300 ease-in-out p-3 bg-gray-200 rounded-lg hover:bg-gray-300`}
             >
               {open ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -103,21 +152,20 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
                     fill="#0F0F0F"
                   ></path>
                 </svg>
-              ) : (isAuthenticated ? 
-                (<svg
+              ) : isAuthenticated ? (
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
                   style={{ fill: "", transform: "", msFilter: "" }}
                 >
-                  <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z">
-
-                  </path>
-                </svg>): 
-                (<svg
+                  <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z"></path>
+                </svg>
+              ) : (
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -128,7 +176,7 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   ></path>
-                </svg>)
+                </svg>
               )}
             </Popover.Button>
             <Transition
@@ -176,7 +224,7 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
   const guestLinks = (
     <Fragment>
       <Link
-        class="inline-flex rounded-md bg-orange-standard px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
+        className="inline-flex rounded-md bg-orange-standard px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
         to="/signin"
       >
         Sign in
@@ -189,7 +237,7 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
       </Link>
 
       <Link
-        class="hidden md:block rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-orange-standard hover:bg-gray-200 transition duration-300 ease-in-out"
+        className="hidden md:block rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-orange-standard hover:bg-gray-200 transition duration-300 ease-in-out"
         to="/signup"
       >
         Sign up
@@ -198,91 +246,78 @@ const ClassPopoverButton = 'rounded-md bg-orange-standard px-3.5 py-2.5 focus-vi
   );
 
   return (
-    <navbar
-      id="navbar"
-      class="transition duration-400 ease-in-out fixed top-0 w-full z-40"
-    >
-      <div class="px-5 w-full md:px-12 lg:px-20">
-        <div class="flex h-16 items-center justify-between">
-          <div class="md:flex md:items-center md:gap-12 ">
-            <Link to="/" class="text-orange-standard flex items-center">
-              <img src={icono} className="w-16 h-16" alt="doTERRA" />
-              <h2 className="hidden lg:block text-black text-2xl font-bold">
-                dōTERRA
-              </h2>
-            </Link>
-          </div>
+    <>
+      <navbar
+        id="navbar"
+        className="transition duration-400 ease-in-out fixed top-0 w-full z-40"
+      >
+        <div className="px-6 w-full lg:px-12">
+          <div className="flex h-16 items-center justify-between">
+            <div className="md:flex md:items-center md:gap-12 ">
+              <Link to="/" className="text-orange-standard flex items-center">
+                <img src={icono} className="w-16 h-16" alt="doTERRA" />
+                <h2 className="hidden lg:block text-black text-2xl font-bold">
+                  dōTERRA
+                </h2>
+              </Link>
+            </div>
 
-          <div class="hidden md:block">
-            <nav aria-label="Global">
-              <ul class="flex items-center gap-6 text-sm">
-                <li>
-                  <Link
-                    to="/shop"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Shop{" "}
-                  </Link>
-                </li>
+            <div className="hidden md:block">
+              <nav aria-label="Global">
+                <ul className="flex items-center gap-6 text-sm">
+                  {navBar.map((item) => (
+                    <NavLink
+                      key={item.name}
+                      to={item.href}
+                      className={({ isActive }) =>
+                        `border-b-2 font-bold ${
+                          isActive
+                            ? "text-black border-orange-standard"
+                            : "text-gray-400 border-b-transparent hover:border-orange-standard"
+                        }`
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
+                  ))}
+                </ul>
+              </nav>
+            </div>
 
-                <li>
-                  <Link
-                    to="/experience"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Experience{" "}
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/about"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    About{" "}
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/contact"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Contact{" "}
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          <div class="flex items-center gap-4">
-            {isAuthenticated ? (
-              <div class="sm:flex ">{authLinks}</div>
-            ) : (
-              <div className="inline-flex gap-4">
-                <div className="inline-flex sm:gap-4">{guestLinks}</div>
-                <div className="block md:hidden">{authLinks}</div>
-              </div>
-            )}
+            <div className="flex items-center gap-4">
+              <SearchBox
+                categories={categories}
+                search={search}
+                onSubmit={onSubmit}
+                onChange={onChange}
+              />
+              {isAuthenticated ? (
+                <div className="sm:flex ">{authLinks}</div>
+              ) : (
+                <div className="inline-flex gap-4">
+                  <div className="inline-flex sm:gap-4">{guestLinks}</div>
+                  <div className="block md:hidden">{authLinks}</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </navbar>
       <Alert />
-    </navbar>
+    </>
   );
 }
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
+  categories: state.Categories.categories,
 });
 
 export default connect(mapStateToProps, {
   logout,
+  get_categories,
+  get_search_products,
 })(Navbar);
 
 function iconProduct() {

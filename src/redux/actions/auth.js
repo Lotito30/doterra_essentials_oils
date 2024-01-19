@@ -122,30 +122,34 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
     }
 };
 
-export const load_user = () => async dispatch => {
+export const load_user = () => async (dispatch) => {
+  const token = localStorage.getItem('access')
+  
   if(localStorage.getItem('access')){
       const config = {
           headers: {
-              'Authorization': `JWT ${localStorage.getItem('access')}`,
+              'Content-Type':'application/json',
+              'Authorization': `JWT ${token}`,
               'Accept': 'application/json'
-          }
+          },
+          withCredentials: true,
       };
 
       try {
           const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-      
+
           if (res.status === 200) {
               dispatch({
                   type: USER_LOADED_SUCCESS,
-                  payload: res.data
+                  payload: res.data,
               });
           } else {
               dispatch({
                   type: USER_LOADED_FAIL
               });
           }
-      }
-      catch(err){
+      }catch(error){
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
           dispatch({
               type: USER_LOADED_FAIL
           });
@@ -196,7 +200,7 @@ export const signin = (email, password) => async (dispatch) => {
       dispatch(setAlert("Error Logging In", "red"));
     }
   } catch (error) {
-    console.error("Error response data:", error.response.data); // Imprime los detalles del error proporcionados por el servidor
+    console.error("Error response data:", error.response.data); 
     dispatch({
       type: LOGIN_FAIL,
     });

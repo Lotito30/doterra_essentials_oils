@@ -3,7 +3,6 @@ import ResetPasswordConfirm from "components/users/ResetPasswordConfirm";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 
-
 function Reset_Password_Confirm() {
   return (
     <Layout>
@@ -29,11 +28,8 @@ function Reset_Password_Confirm() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">
-        <ResetPasswordConfirm />
-      </div>
+      <ResetPasswordConfirm />
     </Layout>
   );
 }
-export default  Reset_Password_Confirm;
+export default Reset_Password_Confirm;

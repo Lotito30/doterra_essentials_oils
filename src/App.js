@@ -9,11 +9,12 @@ import { Provider } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import headerImg from "assets/img/error404.webp";
 import AnimatedRoutes from "AnimatedRoutes";
+import Navbar from "components/navigation/Navbar";
+import Footer from "components/navigation/Footer";
+import Layout from "hocs/layouts/Layout";
 // import Activate from "containers/auth/Activate";
 
-
 function App() {
-  
   return (
     <HelmetProvider>
       <Helmet>
@@ -39,9 +40,11 @@ function App() {
         <meta name="twitter:image" content={headerImg} />
       </Helmet>
       <Provider store={store}>
-        <Router>
-          <AnimatedRoutes />
-        </Router>
+          <Router>
+            <Navbar />
+            <AnimatedRoutes />
+            <Footer />
+          </Router>
       </Provider>
     </HelmetProvider>
   );

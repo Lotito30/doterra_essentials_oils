@@ -1,5 +1,4 @@
 import Footer from "components/navigation/Footer";
-import Navbar from "components/navigation/Navbar";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 import Get_Products from "components/pages/Shop";
@@ -13,9 +12,10 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import ProductsArrival from "components/home/ProductsArrival";
 import Cart from "components/cart/cart";
-import { Oval } from "react-loader-spinner";
+import { Navigate } from "react-router-dom";
+import Navbar from "components/navigation/Navbar";
 
-function Products({
+function Search({
   get_categories,
   categories,
   get_products,
@@ -23,7 +23,6 @@ function Products({
   get_filtered_products,
   filtered_products,
   search_products,
-  loading,
 }) {
   const [filtered, setFiltered] = useState(false);
   const [formData, setFormData] = useState({
@@ -44,9 +43,9 @@ function Products({
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    get_filtered_products(category_id, price_range, sortBy, order);
+    await get_filtered_products(category_id, price_range, sortBy, order);
     setFiltered(true);
   };
 
@@ -63,7 +62,6 @@ function Products({
   const showProducts = () => {
     let results = [];
     let display = [];
-
     if (
       filtered_products &&
       filtered_products !== null &&
@@ -89,19 +87,6 @@ function Products({
           </div>
         );
       });
-    } else if (
-      !filtered &&
-      products &&
-      products !== null &&
-      products !== undefined
-    ) {
-      products.map((product, index) => {
-        return display.push(
-          <div key={index}>
-            <Cart data={product} />
-          </div>
-        );
-      });
     }
 
     for (let i = 0; i < display.length; i += 3) {
@@ -121,9 +106,9 @@ function Products({
   };
 
   return (
-    <Layout>
+    <div>
       <Helmet>
-        <title>Shop | doTERRA</title>
+        <title>Search | doTERRA</title>
         <meta
           name="description"
           content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
@@ -144,35 +129,19 @@ function Products({
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
+
       {/* Shop.js */}
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-        <div className="flex items-center justify-center w-20 px-10 py-4 text-base font-medium text-center bg-orange-standard transform rounded-xl ">
-          <Oval
-            visible={true}
-            height="30"
-            width="30"
-            color="white"
-            ariaLabel="oval-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />{" "}
-        </div>
-      </div>
-      ) : (
-        <Get_Products
-          categories={categories}
-          products={products}
-          showProducts={showProducts}
-          onSubmit={onSubmit}
-          onChange={onChange}
-          sortBy={sortBy}
-          order={order}
-          onDelete={onDelete}
-        />
-      )}
-    </Layout>
-    
+      <Get_Products
+        categories={categories}
+        products={products}
+        showProducts={showProducts}
+        onSubmit={onSubmit}
+        onChange={onChange}
+        sortBy={sortBy}
+        order={order}
+        onDelete={onDelete}
+      />
+    </div>
   );
 }
 const mapStateToProps = (state) => ({
@@ -180,11 +149,10 @@ const mapStateToProps = (state) => ({
   products: state.Products.products,
   filtered_products: state.Products.filtered_products,
   search_products: state.Products.search_products,
-  loading: state.Auth.loading,
 });
 
 export default connect(mapStateToProps, {
   get_categories,
   get_products,
   get_filtered_products,
-})(Products);
+})(Search);
