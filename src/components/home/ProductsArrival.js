@@ -2,21 +2,8 @@ import fondoHome3 from "assets/img/fondoHome3.webp";
 import fondoHome4 from "assets/img/fondoHome4.webp";
 import fondoHome from "assets/img/fondoHome.jpg";
 import { Link } from "react-router-dom";
-import CartProducts from "components/cart/cartProductsMap";
+import Cart from "components/cart/cart";
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  // More products...
-];
 function ProductsArrival({ data }) {
   return (
     <div>
@@ -41,10 +28,12 @@ function ProductsArrival({ data }) {
             high-quality products await. Discover your new favorite today.
           </p>
         </header>
-        <CartProducts data={data}/>
+        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          <Cart data={data}/>
+        </div>
         <div className="mt-6">
           <Link
-            to="#"
+            to="/shop"
             className="block text-sm font-semibold text-orange-standard hover:text-orange-standard"
           >
             See more products<span aria-hidden="true"> &rarr;</span>

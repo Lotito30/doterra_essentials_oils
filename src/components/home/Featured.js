@@ -19,7 +19,7 @@ function Featured() {
 
         <ul className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <li>
-            <Link to="/products" className="group relative block">
+            <Link to="/shop" className="group relative block">
               <img
                 src={fondoHome}
                 alt=""
@@ -39,7 +39,7 @@ function Featured() {
           </li>
 
           <li>
-            <Link to="/products" className="group relative block">
+            <Link to="/shop" className="group relative block">
               <img
                 src={fondoHome3}
                 alt=""
@@ -59,7 +59,7 @@ function Featured() {
           </li>
 
           <li className="lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-            <Link to="/products" className="group relative block">
+            <Link to="/shop" className="group relative block">
               <img
                 src={fondoHome4}
                 alt=""

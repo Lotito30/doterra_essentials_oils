@@ -27,9 +27,7 @@ function Experience() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">Experience</div>
-      <Footer />
+      Experience
     </Layout>
   );
 }

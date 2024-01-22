@@ -3,7 +3,6 @@ import ResetPassword from "components/users/ResetPassword";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 
-
 function Reset_Password() {
   return (
     <Layout>
@@ -29,10 +28,7 @@ function Reset_Password() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">
-        <ResetPassword />
-      </div>
+      <ResetPassword />
     </Layout>
   );
 }

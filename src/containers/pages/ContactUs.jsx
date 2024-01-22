@@ -3,7 +3,6 @@ import Contact from "components/users/ContactUs";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 
-
 function ContactUs() {
   return (
     <Layout>
@@ -29,10 +28,8 @@ function ContactUs() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">
-        <Contact />
-      </div>
+
+      <Contact />
     </Layout>
   );
 }

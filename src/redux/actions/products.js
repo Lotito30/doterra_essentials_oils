@@ -40,7 +40,7 @@ export const get_products = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_FAIL
     })
@@ -70,7 +70,7 @@ export const get_products_by_arrival = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_BY_ARRIVAL_FAIL
     })
@@ -100,7 +100,7 @@ export const get_products_by_sold = () => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCTS_BY_SOLD_FAIL
     })
@@ -131,7 +131,7 @@ export const get_product = (productId) => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:GET_PRODUCT_FAIL
     })
@@ -162,7 +162,7 @@ export const get_related_products = (productId) => async (dispatch) => {
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:RELATED_PRODUCTS_FAIL
     })
@@ -185,8 +185,8 @@ export const get_filtered_products = (category_id,price_range,sort_by,order) => 
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/product/by/search`,
-      config,
-      body
+      body,
+      config
     );
 
     if (res.status === 200 && !res.data.error) {
@@ -200,7 +200,7 @@ export const get_filtered_products = (category_id,price_range,sort_by,order) => 
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:FILTER_PRODUCTS_FAIL
     })
@@ -222,8 +222,8 @@ export const get_search_products = (search, category_id) => async (dispatch) => 
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/product/search`,
-      config,
-      body
+      body,
+      config
     );
 
     if (res.status === 200 && !res.data.error) {
@@ -237,7 +237,7 @@ export const get_search_products = (search, category_id) => async (dispatch) => 
         })
     }
   } catch (error) {
-    console.log(`Error response data: ${error.response.data}`);
+        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
         type:SEARCH_PRODUCTS_FAIL
     })

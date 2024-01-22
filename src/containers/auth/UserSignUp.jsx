@@ -1,12 +1,10 @@
 import Navbar from "components/navigation/Navbar";
 import SignUp from "components/users/SignUp";
 import Layout from "hocs/layouts/Layout";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
-
 function UserSignUp() {
-
   return (
     <Layout>
       <Helmet>
@@ -31,10 +29,7 @@ function UserSignUp() {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <Navbar />
-      <div className="pt-20">
-        <SignUp />
-      </div>
+      <SignUp />
     </Layout>
   );
 }

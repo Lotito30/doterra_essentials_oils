@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = True
 
 DOMAIN = os.environ.get('DOMAIN')
 
@@ -33,22 +33,22 @@ DJANGO_APPS =[
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
 ]
 
-PROJECT_APPS =['apps.user']
+PROJECT_APPS =['apps.user',]
 
-ECOMMERCE_APPS =['apps.category','apps.product']
+ECOMMERCE_APPS =['apps.category','apps.product','apps.cart','apps.shipping',]
 
 THIRD_PARTY_APPS =[
     'corsheaders',
     'rest_framework',
-    'ckeditor',
-    'ckeditor_uploader',
     'djoser',
     'social_django',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ECOMMERCE_APPS + THIRD_PARTY_APPS
@@ -56,22 +56,22 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ECOMMERCE_APPS + THIRD_PARTY_APPS
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
-        'autoParagraph':False
-    }
+        'autoParagraph':False,
+    },
 }
 CKEDITOR_UPLOAD_PATH = "/media/"
 
 MIDDLEWARE = [
-    'social_django.middleware.SocialAuthExceptionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -94,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -105,17 +104,37 @@ DATABASES = {
     }
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
-# PASSWORD_HASHERS = [
-#     "django.contrib.auth.hashers.Argon2PasswordHasher",
-#     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
-#     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
-#     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
-#     "django.contrib.auth.hashers.ScryptPasswordHasher",
-# ]
+PASSWORD_HASHERS = [
+     "django.contrib.auth.hashers.Argon2PasswordHasher",
+     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+     "django.contrib.auth.hashers.ScryptPasswordHasher",
+ ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -164,37 +183,23 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 12,
 }
-
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000',
-]
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000',
-]
-
-
-
-REST_FRAMEKWORD = {
-        'DEFAULT_PERMISSION_CLASSES':[
-        'rest_framework.permissions.IsAuthenticatedReadOnly'
-        ],
-        'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework_simplejwt.authentication.JWTAuthentication',
-        ),
-        'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
-        'PAGE_SIZE':12
-    }
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
@@ -203,14 +208,15 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT', ),
+    # 'ROTATE_REFRESH_TOKENS':True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10080),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
-    'ROTATE_REFRESFH_TOKENS':True,
-    'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_TOKEN_CLASSES': (
         'rest_framework_simplejwt.tokens.AccessToken',
-    )
+    ),
 }
 
 DJOSER = {
@@ -220,12 +226,14 @@ DJOSER = {
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
     'SEND_CONFIRMATION_EMAIL': True,
     'SET_USERNAME_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'SET_PASSWORD_RETYPE': True,
+    
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
+
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
     'SERIALIZERS': {
@@ -236,24 +244,24 @@ DJOSER = {
     },
 }
 
-AUTH_USER_MODEL= 'user.UserAccount'
+AUTH_USER_MODEL='user.UserAccount'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-if not DEBUG:
-    ALLOWED_HOSTS=env.list('ALLOWED_HOSTS_DEPLOY')
-    CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
-    CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEPLOY')
+# if not DEBUG:
+#     ALLOWED_HOSTS=env.list('ALLOWED_HOSTS_DEPLOY')
+#     CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
+#     CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEPLOY')
 
-    DATABASES = {
-        "default": env.db("DATABASE_URL")
-    }
-    DATABASES["default"]["ATOMIC_REQUESTS"] = True
+#     DATABASES = {
+#         "default": env.db("DATABASE_URL")
+#     }
+#     DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
-    DEFAULT_FROM_EMAIL='Lotitoils - <lotitoils@gmail.com>'
-    EMAIL_BACKEND='django.core.email.backends.smtp.EmailBackend'
-    EMAIL_HOST=env('EMAIL_HOST')
-    EMAIL_HOST_USER=env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
-    EMAIL_PORT=env('EMAIL_PORT')
-    EMAIL_USER_TLS=env('EMAIL_USE_TLS')
+#     DEFAULT_FROM_EMAIL='Lotitoils - <lotitoils@gmail.com>'
+#     EMAIL_BACKEND='django.core.email.backends.smtp.EmailBackend'
+#     EMAIL_HOST=env('EMAIL_HOST')
+#     EMAIL_HOST_USER=env('EMAIL_HOST_USER')
+#     EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
+#     EMAIL_PORT=env('EMAIL_PORT')
+#     EMAIL_USER_TLS=env('EMAIL_USE_TLS')

@@ -1,4 +1,4 @@
-import CartProducts from "components/cart/cartProductsMap";
+import Cart from "components/cart/cart";
 import { Link } from "react-router-dom";
 
 function ProductsSold({ data }) {
@@ -13,10 +13,12 @@ function ProductsSold({ data }) {
             our customers. Experience their charm and make them yours.
           </p>
         </header>
-        <CartProducts data={data}/>
+        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          <Cart data={data}/>
+        </div>
         <div className="mt-6">
           <Link
-            to="#"
+            to="/shop"
             className="block text-sm font-semibold text-orange-standard hover:text-orange-standard"
           >
             See more products<span aria-hidden="true"> &rarr;</span>

@@ -19,6 +19,9 @@ import { AnimatePresence } from "framer-motion";
 import Reset_Password from "containers/auth/ResetPassword";
 import Reset_Password_Confirm from "containers/auth/ResetPasswordConfirm";
 import ProductDetails from "containers/pages/ProductDetails";
+// import Search from "containers/pages/Search";
+import Cart from "containers/pages/Cart";
+import Checkout from "containers/pages/Checkout";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -33,6 +36,9 @@ function AnimatedRoutes() {
         <Route exact path="/about" element={<AboutUs />} />
         <Route exact path="/contact" element={<ContactUs />} />
         <Route exact path="/product/:productId" element={<ProductDetails />} />
+        <Route exact path="/cart" element={<Cart />} />
+        <Route exact path="/checkout" element={<Checkout />} />
+        {/* <Route exact path="/search" element={<Search />} /> */}
 
         {/* AUTHENTICATION */}
         <Route exact path="/signin" element={<UserSingIn />} />

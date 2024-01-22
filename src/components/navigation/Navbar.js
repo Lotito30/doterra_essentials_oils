@@ -1,61 +1,109 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Navigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 import icono from "assets/img/iconodoTERRA3.png";
 import Alert from "../../components/alert";
 import { logout } from "../../redux/actions/auth";
+import { get_categories } from "../../redux/actions/categories";
+import { get_search_products } from "../../redux/actions/products";
+import SearchBox from "../../components/navigation/Search";
+import { ShoppingCartIcon } from "@heroicons/react/solid";
 // import { ChevronDownIcon } from "@heroicons/react/solid";
 
-function Navbar({ isAuthenticated, user, logout }) {
-const solutions = [
-  {
-    name: "Shop",
-    description: "Discover Our Range of Oils",
-    href: "/shop",
-    icon: iconProduct,
-  },
-  {
-    name: "Experience",
-    description: "Feel the Power of Nature",
-    href: "/experience",
-    icon: IconExperience,
-  },
-  {
-    name: "About Us",
-    description: "Learn About Our Ethical Sourcing",
-    href: "/about",
-    icon: IconAbout,
-  },
-  {
-    name: "Contact Us",
-    description: "We're Here to Help You",
-    href: "/contact",
-    icon: IconContact,
-  },
-  // {
-  //   name: "Sign in",
-  //   description: "Access your existing account here",
-  //   href: "/signin",
-  //   icon: IconSignIn,
-  // },
-  {
-    name: "Sign up",
-    description: "Create your new account now",
-    href: "/signup",
-    icon: IconSignUp,
-  },
-  {
-    name: "Log out",
-    description: "End your current session now",
-    onclick: () => logout(),
-    icon: IconLogOut,
-  },
-];
+function Navbar({
+  isAuthenticated,
+  user,
+  logout,
+  get_categories,
+  categories,
+  get_search_products,
+  total_items
+}) {
+  const [render, setRender] = useState(false);
+  const [formData, setFormData] = useState({
+    category_id: 0,
+    search: "",
+  });
+  useEffect(() => {
+    get_categories();
+  }, [render]);
 
+  const { category_id, search } = formData;
 
-  const loading = true
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await get_search_products(search, category_id);
+    setRender(!render);
+  };
+
+  if (render) {
+    return <Navigate to="/shop" />;
+  }
+
+  const solutions = [
+    {
+      name: "Shop",
+      description: "Discover Our Range of Oils",
+      href: "/shop",
+      icon: iconProduct,
+    },
+    {
+      name: "Experience",
+      description: "Feel the Power of Nature",
+      href: "/experience",
+      icon: IconExperience,
+    },
+    {
+      name: "About Us",
+      description: "Learn About Our Ethical Sourcing",
+      href: "/about",
+      icon: IconAbout,
+    },
+    {
+      name: "Contact Us",
+      description: "We're Here to Help You",
+      href: "/contact",
+      icon: IconContact,
+    },
+    {
+      name: "Sign up",
+      description: "Create your new account now",
+      href: "/signup",
+      icon: IconSignUp,
+    },
+    {
+      name: "Log out",
+      description: "End your current session now",
+      onclick: () => logout(),
+      icon: IconLogOut,
+    },
+  ];
+  const navBar = [
+    {
+      name: "Shop",
+      href: "/shop",
+    },
+    {
+      name: "Experience",
+      href: "/experience",
+    },
+    {
+      name: "About Us",
+      href: "/about",
+    },
+    {
+      name: "Contact Us",
+      href: "/contact",
+    },
+  ];
+
+  const loading = true;
 
   window.onscroll = function () {
     scrollFunction();
@@ -79,8 +127,8 @@ const solutions = [
   // function classNames(...classes) {
   //   return classes.filter(Boolean).join(" ");
   // }
-
- 
+  const ClassPopoverButton =
+    "rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75";
   const authLinks = (
     <div className="block">
       <Popover className="relative">
@@ -88,13 +136,13 @@ const solutions = [
           <>
             <Popover.Button
               className={`
-                
-                group inline-flex items-center text-gray-100 rounded-md bg-orange-standard px-3.5 py-2.5 text-base font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 transition-all duration-200 ease-in-out`}
+
+                group inline-flex items-center text-black text-base font-mediumtransition-all duration-300 ease-in-out p-3 bg-gray-200 rounded-lg hover:bg-gray-300`}
             >
               {open ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -105,11 +153,20 @@ const solutions = [
                     fill="#0F0F0F"
                   ></path>
                 </svg>
-              ) : 
-              (
+              ) : isAuthenticated ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  style={{ fill: "", transform: "", msFilter: "" }}
+                >
+                  <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -133,14 +190,19 @@ const solutions = [
               leaveTo="opacity-0 -translate-y-3"
             >
               <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-3/4 transform px-4 sm:px-0">
-                <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
-                  <div className="relative grid gap-8 bg-white p-7">
+                <div className="overflow-hidden rounded-lg shadow-lg ring-0">
+                  <div className="relative grid gap-6 bg-white p-7">
                     {solutions.map((item) => (
                       <Link
                         key={item.name}
                         onClick={item.onclick}
                         to={item.href}
-                        className="-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out hover:bg-orange-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105"
+                        className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 ${
+                          item.name === "Log out" ? 'hover:bg-red-300' : 'hover:bg-gray-100'} ${
+                          item.name === "Log out" && isAuthenticated === false || item.name === "Sign up" && isAuthenticated === true
+                            ? "hidden"
+                            : ""
+                        }`}
                       >
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
                           <item.icon aria-hidden="true" />
@@ -168,12 +230,12 @@ const solutions = [
   const guestLinks = (
     <Fragment>
       <Link
-        class="inline-flex rounded-md bg-orange-standard px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
+        className="inline-flex rounded-md bg-orange-standard px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
         to="/signin"
       >
         Sign in
         <DotLoader
-          className="ml-1"
+          className="ml-3"
           loading={loading}
           size={20}
           color="#f2f2f2"
@@ -181,101 +243,97 @@ const solutions = [
       </Link>
 
       <Link
-        class="hidden md:block rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-orange-standard hover:bg-gray-200 transition duration-300 ease-in-out"
+        className="hidden md:block rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-orange-standard hover:bg-gray-200 transition duration-300 ease-in-out"
         to="/signup"
       >
         Sign up
       </Link>
     </Fragment>
   );
+
   return (
-    <navbar
-      id="navbar"
-      class="transition duration-400 ease-in-out fixed top-0 w-full z-40"
-    >
-      <div class="px-5 w-full md:px-12 lg:px-20">
-        <div class="flex h-16 items-center justify-between">
-          <div class="md:flex md:items-center md:gap-12 ">
-            <Link to="/" class="text-orange-standard flex items-center">
-              <img src={icono} className="w-16 h-16" alt="doTERRA"/>
-              <h2 className="hidden lg:block text-black text-2xl font-bold">dōTERRA</h2>
-            </Link>
-          </div>
+    <>
+      <navbar
+        id="navbar"
+        className="transition duration-400 ease-in-out fixed top-0 w-full z-40 min-w-[420px]"
+      >
+        <div className="px-6 w-full lg:px-12">
+          <div className="flex h-16 items-center justify-between">
+            <div className="md:flex md:items-center md:gap-12 ">
+              <Link to="/" className="text-orange-standard flex items-center">
+                <img src={icono} className="w-16 h-16" alt="doTERRA" />
+                <h2 className="hidden lg:block text-black text-2xl font-bold">
+                  dōTERRA
+                </h2>
+              </Link>
+            </div>
 
-          <div class="hidden md:block">
-            <nav aria-label="Global">
-              <ul class="flex items-center gap-6 text-sm">
-                <li>
-                  <Link
-                    to="/shop"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Shop{" "}
-                  </Link>
-                </li>
+            <div className="hidden md:block">
+              <nav aria-label="Global">
+                <ul className="flex items-center gap-6 text-sm">
+                  {navBar.map((item) => (
+                    <NavLink
+                      key={item.name}
+                      to={item.href}
+                      className={({ isActive }) =>
+                        `border-b-2 font-bold ${
+                          isActive
+                            ? "text-black border-orange-standard"
+                            : "text-gray-400 border-b-transparent hover:border-orange-standard"
+                        }`
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
+                  ))}
+                </ul>
+              </nav>
+            </div>
 
-                <li>
-                  <Link
-                    to="/experience"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Experience{" "}
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/about"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    About{" "}
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/contact"
-                    class="text-gray-500 border-b-2 border-b-transparent hover:border-orange-standard font-bold"
-                  >
-                    {" "}
-                    Contact{" "}
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          <div class="flex items-center gap-4">
-            {isAuthenticated ? (
-              <div class="sm:flex ">{authLinks}</div>
-            ) : (
-              <div className="inline-flex gap-4">
-                <div className="inline-flex sm:gap-4">
-                  {guestLinks}
+            <div className="flex items-center gap-2">
+              <Link
+                to="/cart"
+                className="rounded-full p-2 hover:bg-gray-200 "
+              >
+                <ShoppingCartIcon className="w-6 h-6 text-black hover:scale-110" />
+                <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
+                  {isAuthenticated ? total_items : 0}
+                  </span>
+              </Link>
+              <SearchBox
+                categories={categories}
+                search={search}
+                onSubmit={onSubmit}
+                onChange={onChange}
+              />
+              {isAuthenticated ? (
+                <div className="sm:flex ">{authLinks}</div>
+              ) : (
+                <div className="inline-flex gap-2">
+                  <div className="inline-flex sm:gap-1">{guestLinks}</div>
+                  <div className="block md:hidden">{authLinks}</div>
                 </div>
-                <div className="block md:hidden">
-                  {authLinks}
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </navbar>
       <Alert />
-    </navbar>
+    </>
   );
 }
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
+  categories: state.Categories.categories,
+  total_items: state.Cart.total_items
 });
 
 export default connect(mapStateToProps, {
-  logout
+  logout,
+  get_categories,
+  get_search_products,
 })(Navbar);
 
 function iconProduct() {
