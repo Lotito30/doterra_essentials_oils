@@ -36,7 +36,6 @@ function Products({
   const { category_id, price_range, sortBy, order } = formData;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     get_categories();
     get_products();
   }, []);
@@ -50,14 +49,15 @@ function Products({
     setFiltered(true);
   };
 
-  const onDelete = (e) => {
+  const onDelete = async (e)  => {
     setFormData({
       category_id: "0",
       price_range: "Any",
       sortBy: "created",
       order: "desc",
     });
-    get_filtered_products("0", "Any", "created", "desc");
+    await get_filtered_products("0", "Any", "created", "desc");
+    
   };
 
   const showProducts = () => {

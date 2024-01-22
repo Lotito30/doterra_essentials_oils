@@ -1,33 +1,60 @@
 import {
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
+} from "../../redux/actions/cart";
+import {
   get_product,
   get_related_products,
 } from "../../redux/actions/products";
-import Footer from "components/navigation/Footer";
-import Navbar from "components/navigation/Navbar";
+
 import Layout from "hocs/layouts/Layout";
 import ProductDetail from "components/pages/ProductDetail";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
 
 function ProductDetails({
   product,
   related_products,
   get_product,
   get_related_products,
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
 }) {
+
+  const [loading, setLoading] = useState(false)
+  const addToCart = async () => {
+    if (
+      product &&
+      product !== null &&
+      product !== undefined &&
+      product.quantity > 0
+    ) {
+      setLoading(true)
+      await add_item(product);
+      await get_items();
+      await get_total();
+      await get_item_total();
+      setLoading(false)
+    }
+  };
   const params = useParams();
 
   const productId = params.productId;
 
-  useEffect( () => {
+  useEffect(() => {
     get_product(productId);
     get_related_products(productId);
-    window.scrollTo(0, 0);
   }, []);
+
   return (
     <Layout>
-      <ProductDetail data={product} dataR={related_products} />
+      <ProductDetail product={product} addToCart={addToCart} loading={loading}/>
     </Layout>
   );
 }
@@ -39,4 +66,8 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   get_product,
   get_related_products,
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
 })(ProductDetails);

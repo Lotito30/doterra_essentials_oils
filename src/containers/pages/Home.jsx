@@ -16,6 +16,8 @@ import {
 } from "../../redux/actions/products";
 import ProductsArrival from "components/home/ProductsArrival";
 import ProductsSold from "components/home/ProductsSold";
+import headerImg from "assets/img/error404.webp";
+import { Helmet } from "react-helmet-async";
 
 function Home({
   get_products_by_arrival,
@@ -26,13 +28,34 @@ function Home({
   user,
 }) {
   useEffect(() => {
-    // window.scrollTo(0, 0)
     get_products_by_arrival();
     get_products_by_sold();
   }, []);
 
   return (
     <Layout>
+      <Helmet>
+        <title>Home | doTERRA</title>
+        <meta
+          name="description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        <meta
+          name="keywords"
+          content="doTERRA Oils, Natural Wellness, Health Products, Essential Oils, Aromatherapy, Pure Extracts, Sustainably Sourced"
+        />
+        <meta name="robots" content="all" />
+        <meta name="author" content="Lotito" />
+        <meta name="publisher" content="Lotito" />
+        {/* <link rel="canonical" href="https://oilslotito.com.ae"/> */}
+
+        <meta name="twitter:title" content="Home | doTERRA" />
+        <meta
+          name="twitter:description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        <meta name="twitter:image" content={headerImg} />
+      </Helmet>
       <Header user={user} isAuthenticated={isAuthenticated} />
       <Statistic />
       <Featured />

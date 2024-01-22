@@ -35,7 +35,6 @@ function Search({
   const { category_id, price_range, sortBy, order } = formData;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     get_categories();
     get_products();
   }, []);

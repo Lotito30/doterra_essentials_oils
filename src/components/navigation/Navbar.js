@@ -9,6 +9,7 @@ import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
 import SearchBox from "../../components/navigation/Search";
+import { ShoppingCartIcon } from "@heroicons/react/solid";
 // import { ChevronDownIcon } from "@heroicons/react/solid";
 
 function Navbar({
@@ -18,6 +19,7 @@ function Navbar({
   get_categories,
   categories,
   get_search_products,
+  total_items
 }) {
   const [render, setRender] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,7 +27,6 @@ function Navbar({
     search: "",
   });
   useEffect(() => {
-    window.scrollTo(0, 0);
     get_categories();
   }, [render]);
 
@@ -189,14 +190,19 @@ function Navbar({
               leaveTo="opacity-0 -translate-y-3"
             >
               <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-3/4 transform px-4 sm:px-0">
-                <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
-                  <div className="relative grid gap-8 bg-white p-7">
+                <div className="overflow-hidden rounded-lg shadow-lg ring-0">
+                  <div className="relative grid gap-6 bg-white p-7">
                     {solutions.map((item) => (
                       <Link
                         key={item.name}
                         onClick={item.onclick}
                         to={item.href}
-                        className="-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out hover:bg-orange-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105"
+                        className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 ${
+                          item.name === "Log out" ? 'hover:bg-red-300' : 'hover:bg-gray-100'} ${
+                          item.name === "Log out" && isAuthenticated === false || item.name === "Sign up" && isAuthenticated === true
+                            ? "hidden"
+                            : ""
+                        }`}
                       >
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
                           <item.icon aria-hidden="true" />
@@ -249,7 +255,7 @@ function Navbar({
     <>
       <navbar
         id="navbar"
-        className="transition duration-400 ease-in-out fixed top-0 w-full z-40"
+        className="transition duration-400 ease-in-out fixed top-0 w-full z-40 min-w-[420px]"
       >
         <div className="px-6 w-full lg:px-12">
           <div className="flex h-16 items-center justify-between">
@@ -284,7 +290,16 @@ function Navbar({
               </nav>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link
+                to="/cart"
+                className="rounded-full p-2 hover:bg-gray-200 "
+              >
+                <ShoppingCartIcon className="w-6 h-6 text-black hover:scale-110" />
+                <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
+                  {isAuthenticated ? total_items : 0}
+                  </span>
+              </Link>
               <SearchBox
                 categories={categories}
                 search={search}
@@ -294,8 +309,8 @@ function Navbar({
               {isAuthenticated ? (
                 <div className="sm:flex ">{authLinks}</div>
               ) : (
-                <div className="inline-flex gap-4">
-                  <div className="inline-flex sm:gap-4">{guestLinks}</div>
+                <div className="inline-flex gap-2">
+                  <div className="inline-flex sm:gap-1">{guestLinks}</div>
                   <div className="block md:hidden">{authLinks}</div>
                 </div>
               )}
@@ -312,6 +327,7 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
   categories: state.Categories.categories,
+  total_items: state.Cart.total_items
 });
 
 export default connect(mapStateToProps, {
