@@ -1,6 +1,3 @@
-import fondoHome3 from "assets/img/fondoHome3.webp";
-import fondoHome4 from "assets/img/fondoHome4.webp";
-import fondoHome from "assets/img/fondoHome.jpg";
 import { Link } from "react-router-dom";
 import Cart from "components/cart/cart";
 
@@ -29,6 +26,7 @@ function ProductsArrival({ data }) {
           </p>
         </header>
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          {/* CART */}
           <Cart data={data}/>
         </div>
         <div className="mt-6">

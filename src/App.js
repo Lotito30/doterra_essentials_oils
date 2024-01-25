@@ -18,15 +18,12 @@ import ScrollToTop from "components/navigation/ScrollToTop";
 function App() {
   return (
     <HelmetProvider>
-      <Provider store={store} >
-          <Router >
-            <ScrollToTop />
-            <div className="min-w-[420px]">
-              <Navbar/>
-              <AnimatedRoutes />
-              <Footer />
-            </div>
-          </Router>
+      <Provider store={store}>
+        <Router>
+          <Routes>
+            <Route path="/*" element={<AnimatedRoutes />} />
+          </Routes>
+        </Router>
       </Provider>
     </HelmetProvider>
   );

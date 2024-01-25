@@ -1,34 +1,38 @@
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Link, NavLink, Navigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 import icono from "assets/img/iconodoTERRA3.png";
-import Alert from "../../components/alert";
 import { logout } from "../../redux/actions/auth";
-import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
 import SearchBox from "../../components/navigation/Search";
 import { ShoppingCartIcon } from "@heroicons/react/solid";
-// import { ChevronDownIcon } from "@heroicons/react/solid";
+import { get_categories } from "../../redux/actions/categories";
+
+
 
 function Navbar({
   isAuthenticated,
-  user,
   logout,
-  get_categories,
   categories,
   get_search_products,
-  total_items
+  total_items,
+  get_categories
 }) {
-  const [render, setRender] = useState(false);
+  const navigate = useNavigate();
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [formData, setFormData] = useState({
     category_id: 0,
     search: "",
   });
+
   useEffect(() => {
-    get_categories();
-  }, [render]);
+    const fecthCategories = async () => {
+      await get_categories()
+    }
+    fecthCategories()
+  },[])
 
   const { category_id, search } = formData;
 
@@ -39,13 +43,16 @@ function Navbar({
   const onSubmit = async (e) => {
     e.preventDefault();
     await get_search_products(search, category_id);
-    setRender(!render);
+    navigate("/shop");
   };
 
-  if (render) {
-    return <Navigate to="/shop" />;
-  }
-
+  const handleCartCLick = () => {
+    if (!isAuthenticated) {
+      setShowLoginMessage(true);
+      return null
+    }
+    navigate('/cart')
+  };
   const solutions = [
     {
       name: "Shop",
@@ -124,11 +131,6 @@ function Navbar({
     }
   }
 
-  // function classNames(...classes) {
-  //   return classes.filter(Boolean).join(" ");
-  // }
-  const ClassPopoverButton =
-    "rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75";
   const authLinks = (
     <div className="block">
       <Popover className="relative">
@@ -198,8 +200,12 @@ function Navbar({
                         onClick={item.onclick}
                         to={item.href}
                         className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 ${
-                          item.name === "Log out" ? 'hover:bg-red-300' : 'hover:bg-gray-100'} ${
-                          item.name === "Log out" && isAuthenticated === false || item.name === "Sign up" && isAuthenticated === true
+                          item.name === "Log out"
+                            ? "hover:bg-red-300"
+                            : "hover:bg-gray-100"
+                        } ${
+                          (item.name === "Log out" && !isAuthenticated) ||
+                          (item.name === "Sign up" && isAuthenticated)
                             ? "hidden"
                             : ""
                         }`}
@@ -290,16 +296,27 @@ function Navbar({
               </nav>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Link
-                to="/cart"
-                className="rounded-full p-2 hover:bg-gray-200 "
+            <div className="flex items-center gap-2 relative">
+              <button
+                onClick={handleCartCLick}
+                className="rounded-full p-2 hover:bg-gray-200 relative "
               >
                 <ShoppingCartIcon className="w-6 h-6 text-black hover:scale-110" />
-                <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
+                <span className="text-xs absolute top-3 left-1.5 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
                   {isAuthenticated ? total_items : 0}
-                  </span>
-              </Link>
+                </span>
+              </button>
+              {showLoginMessage && (
+                <span className="z-50 w-max text-sm absolute top-5 -translate-x-48 mt-3 ml-4 bg-gray-500 text-white font-semibold rounded-md p-2 text-center"> No items found. You must log in to view your cart. {" "}
+                  
+                    <Link
+                    to={'/signin'}
+                    className="underline text-orange-standard"
+                    >
+                     Sign In
+                    </Link>
+                </span>
+                )}
               <SearchBox
                 categories={categories}
                 search={search}
@@ -318,7 +335,6 @@ function Navbar({
           </div>
         </div>
       </navbar>
-      <Alert />
     </>
   );
 }
@@ -326,14 +342,14 @@ function Navbar({
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
-  categories: state.Categories.categories,
-  total_items: state.Cart.total_items
+  total_items: state.Cart.total_items,
+  categories: state.Categories.categories
 });
 
 export default connect(mapStateToProps, {
   logout,
-  get_categories,
   get_search_products,
+  get_categories
 })(Navbar);
 
 function iconProduct() {

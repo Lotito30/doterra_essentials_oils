@@ -1,17 +1,14 @@
-import Footer from "components/navigation/Footer";
-import Navbar from "components/navigation/Navbar";
 import Layout from "hocs/layouts/Layout";
 import { Helmet } from "react-helmet-async";
 import Get_Products from "components/pages/Shop";
 import {
   get_products,
   get_filtered_products,
-  get_search_products,
 } from "../../redux/actions/products";
 import { get_categories } from "../../redux/actions/categories";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
-import ProductsArrival from "components/home/ProductsArrival";
+
 import Cart from "components/cart/cart";
 import { Oval } from "react-loader-spinner";
 
@@ -26,6 +23,7 @@ function Products({
   loading,
 }) {
   const [filtered, setFiltered] = useState(false);
+
   const [formData, setFormData] = useState({
     category_id: "0",
     price_range: "Any",
@@ -36,20 +34,24 @@ function Products({
   const { category_id, price_range, sortBy, order } = formData;
 
   useEffect(() => {
-    get_categories();
-    get_products();
+    const fetchCategories = async () => {
+      await get_categories();
+      await get_products();
+    };
+    fetchCategories();
+    
   }, []);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    get_filtered_products(category_id, price_range, sortBy, order);
+    await get_filtered_products(category_id, price_range, sortBy, order);
     setFiltered(true);
   };
 
-  const onDelete = async (e)  => {
+  const onDelete = async ()  => {
     setFormData({
       category_id: "0",
       price_range: "Any",
@@ -57,7 +59,6 @@ function Products({
       order: "desc",
     });
     await get_filtered_products("0", "Any", "created", "desc");
-    
   };
 
   const showProducts = () => {
@@ -79,6 +80,7 @@ function Products({
       });
     } else if (
       search_products &&
+      search_products.length > 0 &&
       search_products !== null &&
       search_products !== undefined
     ) {
@@ -169,6 +171,7 @@ function Products({
           sortBy={sortBy}
           order={order}
           onDelete={onDelete}
+          search_products={search_products}
         />
       )}
     </Layout>

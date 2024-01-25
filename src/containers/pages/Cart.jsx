@@ -10,9 +10,7 @@ import {
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import CartItem from "components/cart/CartItem";
-import { Link, Navigate } from "react-router-dom";
-
-import { QuestionMarkCircleIcon } from '@heroicons/react/solid'
+import { Link, useNavigate } from "react-router-dom";
 import { setAlert } from "../../redux/actions/alert";
 import { get_shipping_options } from "../../redux/actions/shipping";
 
@@ -29,27 +27,31 @@ function Cart({
   update_item,
   setAlert,
   get_shipping_options,
-}) { 
-  
+
+}) {
+  const navigate = useNavigate()
   const [render, setRender] = useState(false);
   
   useEffect(() => {
-    if(!isAuthenticated){
-      return <Navigate to='/' />
+    const fetchItems = async () => {
+      if (!isAuthenticated) {
+        navigate('/')
+        return
+      }
+      await get_items();
+      await get_total();
+      await get_item_total();
+      await get_shipping_options();
     }
-
-    get_items();
-    get_total();
-    get_item_total();
-    get_shipping_options()
-  }, [render,isAuthenticated]);
- 
+    fetchItems()
+  }, [render,isAuthenticated, navigate]);
 
   const showItems = () => {
     return (
       <div>
-        {
-          isAuthenticated &&
+        {isAuthenticated &&
+        isAuthenticated !== null &&
+        isAuthenticated !== undefined &&
           items &&
           items !== null &&
           items !== undefined &&
@@ -77,34 +79,31 @@ function Cart({
   const checkoutButton = () => {
     if (total_items < 1) {
       return (
-      <Link
-        to="/shop"
-        className="inline-block text-center w-full bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
-
-      >
-        Shop
-      </Link>
-      )
-    }else if(!isAuthenticated){
-      return(
         <Link
-        to="/signin"
-        className="inline-block text-center w-full bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
-
-      >
-        Sign in
-      </Link>
-      )
-    }else{
-      return(
-        <Link
-        to="/checkout"
-        className="inline-block w-full text-center bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
-        
+          to="/shop"
+          className="inline-block text-center w-full bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
         >
-        Checkout
-      </Link>
-      )
+          Shop
+        </Link>
+      );
+    } else if (!isAuthenticated) {
+      return (
+        <Link
+          to="/signin"
+          className="inline-block text-center w-full bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
+        >
+          Sign in
+        </Link>
+      );
+    } else {
+      return (
+        <Link
+          to="/checkout"
+          className="inline-block w-full text-center bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
+        >
+          Checkout
+        </Link>
+      );
     }
   };
 
@@ -133,34 +132,67 @@ function Cart({
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
       <div className="bg-white">
-      <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart Items ({total_items})</h1>
-        <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
-          <section aria-labelledby="cart-heading" className="lg:col-span-7">
-            <h2 id="cart-heading" className="sr-only">
-              Items in your shopping cart
-            </h2>
+        <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            Shopping Cart Items ({total_items})
+          </h1>
+          <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+            <section aria-labelledby="cart-heading" className="lg:col-span-7">
+              <h2 id="cart-heading" className="sr-only">
+                Items in your shopping cart
+              </h2>
 
-            <ul role="list" className="border-t border-b border-gray-200 divide-y divide-gray-200">
-              {showItems()}
-            </ul>
-          </section>
+              <ul
+                role="list"
+                className="border-t border-b border-gray-200 divide-y divide-gray-200"
+              >
+                {isAuthenticated && showItems()}
+              </ul>
+            </section>
 
-          {/* Order summary */}
-          <section
-            aria-labelledby="summary-heading"
-            className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
-          >
-            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
-              Order summary
-            </h2>
+            {/* Order summary */}
+            <section
+              aria-labelledby="summary-heading"
+              className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
+            >
+              <h2
+                id="summary-heading"
+                className="text-lg font-medium text-gray-900"
+              >
+                Order summary
+              </h2>
+              <div className="mt-2">
+                {items &&
+                  items !== null &&
+                  items !== undefined &&
+                  items.length !== 0 &&
+                  items.map((item, index) => (
+                    <div className="flex items-center justify-between mt-0.5">
+                      <span className="sr-only">
+                        map de items con su nombre, valor unitario y precio
+                        multiplicado por la cantidad de productos comprados
+                      </span>
+                      <dt className="text-sm text-gray-600">
+                        {item.product.name} x {item.count}
+                      </dt>
 
-            <dl className="mt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">{amount.toFixed(2)} AED</dd>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {(parseFloat(item.product.price) * item.count).toFixed(
+                          2
+                        )}{" "}
+                        AED
+                      </dd>
+                    </div>
+                  ))}
               </div>
-              {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+              <dl className="mt-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm text-gray-600">Subtotal</dt>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {amount.toFixed(2)} AED
+                  </dd>
+                </div>
+                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
                 <dt className="flex items-center text-sm text-gray-600">
                   <span>Shipping estimate</span>
                   <Link href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
@@ -170,7 +202,7 @@ function Cart({
                 </dt>
                 <dd className="text-sm font-medium text-gray-900">5.00 AED</dd>
               </div> */}
-              {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
                 <dt className="flex text-sm text-gray-600">
                   <span>Tax estimate</span>
                   <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
@@ -180,19 +212,17 @@ function Cart({
                 </dt>
                 <dd className="text-sm font-medium text-gray-900">$8.32</dd>
               </div> */}
-              {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
                 <dt className="text-base font-medium text-gray-900">Order total</dt>
                 <dd className="text-base font-medium text-gray-900">{amount.toFixed(2)} AED</dd>
               </div> */}
-            </dl>
+              </dl>
 
-            <div className="mt-6 w-full">
-                {checkoutButton()}
-            </div>
-          </section>
+              <div className="mt-6 w-full">{checkoutButton()}</div>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
     </Layout>
   );
 }
@@ -204,7 +234,7 @@ const mapStateToProps = (state) => ({
   amount: state.Cart.amount,
   compare_amount: state.Cart.compare_amount,
   total_items: state.Cart.total_items,
-  shipping: state.Shipping.shipping,
+  // shipping: state.Shipping.shipping,
 });
 
 export default connect(mapStateToProps, {
@@ -216,4 +246,5 @@ export default connect(mapStateToProps, {
   setAlert,
   // remove_wishlist_item
   get_shipping_options,
+
 })(Cart);

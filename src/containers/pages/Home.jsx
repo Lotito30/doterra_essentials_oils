@@ -56,7 +56,7 @@ function Home({
         />
         <meta name="twitter:image" content={headerImg} />
       </Helmet>
-      <Header user={user} isAuthenticated={isAuthenticated} />
+      <Header />
       <Statistic />
       <Featured />
       <ProductsArrival data={products_arrival} />

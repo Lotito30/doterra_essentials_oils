@@ -11,28 +11,41 @@ import {
 import { useEffect } from "react";
 
 import { get_items, get_total, get_item_total } from "../../redux/actions/cart";
+import ScrollToTop from "components/navigation/ScrollToTop";
+import Navbar from "components/navigation/Navbar";
+import Footer from "components/navigation/Footer";
+// import Alert from "components/alert";
 
 function Layout(props) {
   useEffect(() => {
-    props.check_authenticated();
-    props.refresh();
-    props.load_user();
-    if (props.isAuthenticated) {
-      props.get_items();
-      props.get_total();
-      props.get_item_total();
+    const fetchUser= async () => {
+      await props.check_authenticated();
+      if (props.isAuthenticated) {
+        await props.refresh();
+        await props.load_user();
+        await props.get_items();
+        await props.get_total();
+        await props.get_item_total();
+      }
     }
+    fetchUser()
   }, [props.isAuthenticated]);
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <motion.div
         key={props.location?.pathname || ""}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.3 } }}
+        exit={{ opacity: 0, transition: { duration:0.3 } }}
       >
-        <ToastContainer autoClose={4000} />
-        <div className="pt-20">{props.children}</div>
+        <ToastContainer autoClose={1000} />
+        <ScrollToTop />
+        <div className="pt-20 min-w-[420px]">
+          <Navbar/>
+          {/* <Alert /> */}
+          {props.children}
+          <Footer />
+        </div>
       </motion.div>
     </AnimatePresence>
   );

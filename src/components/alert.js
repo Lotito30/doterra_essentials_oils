@@ -2,15 +2,15 @@ import { Fragment } from "react";
 import { connect } from "react-redux";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 const alertTypeToClass = {
-  green: "green-500",
-  red: "red-500",
+  green: "green",
+  red: "red",
 };
 function Alert({ alert }) {
   const displayAlert = () => {
     if (alert !== null) {
       return (
         <div
-          className={`rounded-md bg-${alertTypeToClass[alert.alertType]} p-3 absolute top-24 left-0 w-full z-50`}
+          className={`rounded-md bg-${alertTypeToClass[alert.alertType]}-500" p-3 absolute top-24 left-0 w-full z-50`}
         >
           <div className="flex">
             <div className="flex-shrink-0">
@@ -20,7 +20,7 @@ function Alert({ alert }) {
               />
             </div>
             <div className="ml-3">
-              <p className={`text-sm font-medium text-white `}>{alert.msg}</p>
+              <p className='text-sm font-medium text-black'>{alert.msg}</p>
             </div>
           </div>
         </div>

@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 const SearchBox = ({ categories, search, onSubmit, onChange}) => {
 
   return (
-    <form onSubmit={e => onSubmit(e)} className="gap-1 flex absolute top-16 right-5">
+    <form onSubmit={e => onSubmit(e)} className="gap-1 flex absolute top-14 right-0">
       <select
         onChange={(e) => onChange(e)}
         name="category_id"
-        className="rounded-md focus:outline-none focus:ring-0 focus:border-gray-300 focus:border-2 w-20"
+        className="rounded-md focus:outline-none focus:ring-0 w-20"
         
       >
         <option value={0}>All</option>
