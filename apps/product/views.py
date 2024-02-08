@@ -95,9 +95,6 @@ class ListSearchView(APIView):
             search_results = Product.objects.filter(
                 Q(description__icontains=search) | Q(name__icontains=search)
             )
-        print(f'Search: {search}')
-        print(f'Category ID: {category_id}')
-        print(f'Search Results Count: {search_results.count()}')
 
         if category_id == 0:
             search_results = ProductSerializer(search_results, many=True)

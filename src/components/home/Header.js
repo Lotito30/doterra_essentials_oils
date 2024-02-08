@@ -1,4 +1,3 @@
-import fondoHome1 from "assets/img/fondoHome1.jpg";
 import headerImg from "assets/img/error404.webp";
 import iconoWhatsapp from "assets/img/iconoWhatsapp.png";
 import { Link } from "react-router-dom";
@@ -42,7 +41,7 @@ function Header({isAuthenticated, user}) {
               <div class="relative w-full max-w-lg">
                 <div class="relative">
                   <img
-                    class="hidden object-cover object-center mx-auto rounded-lg shadow-2xl md:w-auto md:mt-10 md:block"
+                    class="hidden object-cover object-center mx-auto rounded-lg shadow-2xl lg:block"
                     alt="Oils"
                     src={headerImg}
                   />

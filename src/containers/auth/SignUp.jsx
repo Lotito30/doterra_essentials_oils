@@ -1,17 +1,12 @@
-import Navbar from "components/navigation/Navbar";
-import Layout from "../../hocs/layouts/Layout";
-import { Link, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { signup } from "../../redux/actions/auth";
+import Layout from "hocs/layouts/Layout";
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
-import fondoHome1 from "assets/img/fondoHome1.jpg";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { signup } from "../../redux/actions/auth";
 
 function SignUp({ signup, loading }) {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const [accountCreated, setAccountCreated] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -37,24 +32,45 @@ function SignUp({ signup, loading }) {
   };
 
   return (
-    <section className="py-12">
-      <div class="flex min- overflow-hidden">
-        <div class="flex flex-col justify-center flex-1 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <Layout>
+      <Helmet>
+        <title>Sign up | doTERRA</title>
+        <meta
+          name="description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        <meta
+          name="keywords"
+          content="doTERRA Oils, Natural Wellness, Health Products, Essential Oils, Aromatherapy, Pure Extracts, Sustainably Sourced"
+        />
+        <meta name="robots" content="all" />
+        <meta name="author" content="Lotito" />
+        <meta name="publisher" content="Lotito" />
+        {/* <link rel="canonical" href="https://oilslotito.com.ae"/> */}
+
+        <meta name="twitter:title" content="Home | doTERRA" />
+        <meta
+          name="twitter:description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        {/* <meta name="twitter:image" content={headerImg} /> */}
+      </Helmet>
+      <div class="overflow-hidden p-6">
+        <div class="px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div class="w-full max-w-xl mx-auto lg:w-96">
             <div className="w-full px-6">
-              <div class="text-left">
-                <div class="inline-flex items-center w-full">
-                  <h2 class="text-3xl font-extrabold text-neutral-600">
+              <div className="">
+                <div className="w-full">
+                  <h2 className="text-3xl text-center font-extrabold text-neutral-600">
                     Sign Up
                   </h2>
                 </div>
-                <div class="mt-2 text-base text-gray-500">
+                <div className="mt-2 text-center text-base text-gray-500">
                   <p>Sign up and get our newest news</p>
                 </div>
               </div>
-
               <div>
-                <div class="mt-5">
+                <div class="mt-7">
                   <form onSubmit={(e) => onSubmit(e)}>
                     <div>
                       <label
@@ -71,7 +87,7 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your email"
+                        placeholder="Enter your email*"
                       />
                     </div>
                     <div>
@@ -89,7 +105,7 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your first name"
+                        placeholder="Enter your first name*"
                       />
                     </div>
                     <div>
@@ -107,7 +123,7 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your last name"
+                        placeholder="Enter your last name*"
                       />
                     </div>
                     <div>
@@ -125,7 +141,7 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your phone"
+                        placeholder="Enter your phone*"
                       />
                     </div>
                     <div>
@@ -144,7 +160,7 @@ function SignUp({ signup, loading }) {
                         autoComplete="new-password"
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your password"
+                        placeholder="Enter your password*"
                       />
                     </div>
                     <div>
@@ -162,7 +178,7 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Repeat your password"
+                        placeholder="Repeat your password*"
                       />
                     </div>
                     <div className="pt-3">
@@ -255,6 +271,7 @@ function SignUp({ signup, loading }) {
                             <span>Log in with Google</span>
                           </div>
                         </button>
+                        <span>(*) Required</span>
                       </form>
                     </div>
                   </div>
@@ -263,18 +280,10 @@ function SignUp({ signup, loading }) {
             </div>
           </div>
         </div>
-        <div class="relative flex-1 hidden w-0 overflow-hidden lg:block">
-          <img
-            class="absolute px-3 inset-0 object-cover w-full h-full"
-            src={fondoHome1}
-            alt=""
-          />
-        </div>
       </div>
-    </section>
+    </Layout>
   );
 }
-
 const mapStateToProps = (state) => ({
   loading: state.Auth.loading,
 });

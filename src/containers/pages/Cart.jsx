@@ -21,37 +21,35 @@ function Cart({
   isAuthenticated,
   items,
   amount,
-  compare_amount,
   total_items,
   remove_item,
   update_item,
   setAlert,
   get_shipping_options,
-
 }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [render, setRender] = useState(false);
-  
+
   useEffect(() => {
     const fetchItems = async () => {
       if (!isAuthenticated) {
-        navigate('/')
-        return
+        navigate("/");
+        return;
       }
       await get_items();
       await get_total();
       await get_item_total();
       await get_shipping_options();
-    }
-    fetchItems()
-  }, [render,isAuthenticated, navigate]);
+    };
+    fetchItems();
+  }, [render, isAuthenticated, navigate]);
 
   const showItems = () => {
     return (
       <div>
         {isAuthenticated &&
-        isAuthenticated !== null &&
-        isAuthenticated !== undefined &&
+          isAuthenticated !== null &&
+          isAuthenticated !== undefined &&
           items &&
           items !== null &&
           items !== undefined &&
@@ -134,7 +132,7 @@ function Cart({
       <div className="bg-white">
         <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Shopping Cart Items ({total_items})
+            Shopping Cart Items <span className="text-green-500">({total_items})</span>
           </h1>
           <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
             <section aria-labelledby="cart-heading" className="lg:col-span-7">
@@ -167,7 +165,10 @@ function Cart({
                   items !== undefined &&
                   items.length !== 0 &&
                   items.map((item, index) => (
-                    <div className="flex items-center justify-between mt-0.5">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between mt-0.5"
+                    >
                       <span className="sr-only">
                         map de items con su nombre, valor unitario y precio
                         multiplicado por la cantidad de productos comprados
@@ -192,32 +193,7 @@ function Cart({
                     {amount.toFixed(2)} AED
                   </dd>
                 </div>
-                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                <dt className="flex items-center text-sm text-gray-600">
-                  <span>Shipping estimate</span>
-                  <Link href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Learn more about how shipping is calculated</span>
-                    <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                  </Link>
-                </dt>
-                <dd className="text-sm font-medium text-gray-900">5.00 AED</dd>
-              </div> */}
-                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                <dt className="flex text-sm text-gray-600">
-                  <span>Tax estimate</span>
-                  <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Learn more about how tax is calculated</span>
-                    <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                  </a>
-                </dt>
-                <dd className="text-sm font-medium text-gray-900">$8.32</dd>
-              </div> */}
-                {/* <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                <dt className="text-base font-medium text-gray-900">Order total</dt>
-                <dd className="text-base font-medium text-gray-900">{amount.toFixed(2)} AED</dd>
-              </div> */}
               </dl>
-
               <div className="mt-6 w-full">{checkoutButton()}</div>
             </section>
           </div>
@@ -246,5 +222,4 @@ export default connect(mapStateToProps, {
   setAlert,
   // remove_wishlist_item
   get_shipping_options,
-
 })(Cart);

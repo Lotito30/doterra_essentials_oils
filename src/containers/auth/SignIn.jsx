@@ -1,18 +1,16 @@
-import fondoHome1 from "assets/img/fondoHome1.jpg";
 import Layout from "hocs/layouts/Layout";
-import Navbar from "components/navigation/Navbar";
-import { Link, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { signin } from "../../redux/actions/auth";
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
+import { connect } from "react-redux";
+import { Link, Navigate } from "react-router-dom";
+import { signin } from "../../redux/actions/auth";
 
-function SignIn({ signin, loading, auth }) {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  // const [render, setRender] = useState(false);
-
+function SignIn({
+  loading,
+  auth,
+  signin,
+}) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,24 +24,45 @@ function SignIn({ signin, loading, auth }) {
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    await signin(email, password);
+    signin(email, password);
   };
 
   if (auth) {
     return <Navigate to="/" />;
   }
   return (
-    <section className="py-14">
-      <div class="flex min- overflow-hidden">
-        <div class="flex flex-col justify-center flex-1 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <Layout>
+      <Helmet>
+        <title>Sign in | doTERRA</title>
+        <meta
+          name="description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        <meta
+          name="keywords"
+          content="doTERRA Oils, Natural Wellness, Health Products, Essential Oils, Aromatherapy, Pure Extracts, Sustainably Sourced"
+        />
+        <meta name="robots" content="all" />
+        <meta name="author" content="Lotito" />
+        <meta name="publisher" content="Lotito" />
+        {/* <link rel="canonical" href="https://oilslotito.com.ae"/> */}
+
+        <meta name="twitter:title" content="Home | doTERRA" />
+        <meta
+          name="twitter:description"
+          content="Explore doTERRA's pure, potent essential oils. Experience nature's transformative power for wellness. Join us on your journey to health and vitality."
+        />
+        {/* <meta name="twitter:image" content={headerImg} /> */}
+      </Helmet>
+      <div class="overflow-hidden p-12">
+        <div class="px-4 sm:px-6 lg:px-20 xl:px-24">
           <div class="w-full max-w-xl mx-auto lg:w-96">
             <div className="w-full px-6">
               <div>
-                <h2 class="text-3xl font-extrabold text-neutral-600">
+                <h2 class="text-3xl text-center font-extrabold text-neutral-600">
                   Sign in
                 </h2>
               </div>
-
               <div class="mt-8">
                 <div class="mt-6">
                   <form onSubmit={(e) => onSubmit(e)}>
@@ -64,7 +83,7 @@ function SignIn({ signin, loading, auth }) {
                           onChange={(e) => onChange(e)}
                           autocomplete="email"
                           required
-                          placeholder="Enter your Email"
+                          placeholder="Enter your Email*"
                           class="block w-full px-5 py-3 text-base placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
                         />
                       </div>
@@ -87,7 +106,7 @@ function SignIn({ signin, loading, auth }) {
                           onChange={(e) => onChange(e)}
                           autocomplete="current-password"
                           required=""
-                          placeholder="Enter your Password"
+                          placeholder="Enter your Password*"
                           class="block w-full px-5 py-3 text-base placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
                         />
                       </div>
@@ -144,6 +163,7 @@ function SignIn({ signin, loading, auth }) {
                         </button>
                       )}
                     </div>
+                    <span>(*) Required</span>
                   </form>
                   <Link
                     to="/signup"
@@ -157,19 +177,12 @@ function SignIn({ signin, loading, auth }) {
               </div>
             </div>
           </div>
-        </div>
-        <div class="relative flex-1 hidden w-0 overflow-hidden lg:block">
-          <img
-            class="absolute px-3 inset-0 object-cover w-full h-full"
-            src={fondoHome1}
-            alt=""
-          />
-        </div>
+        </div>  
       </div>
-    </section>
+
+    </Layout>
   );
 }
-
 const mapStateToProps = (state) => ({
   loading: state.Auth.loading,
   auth: state.Auth.isAuthenticated,

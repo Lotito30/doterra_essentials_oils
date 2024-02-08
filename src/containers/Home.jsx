@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import {
   get_products_by_arrival,
   get_products_by_sold,
-} from "../../redux/actions/products";
+} from "../redux/actions/products";
 import ProductsArrival from "components/home/ProductsArrival";
 import ProductsSold from "components/home/ProductsSold";
 import headerImg from "assets/img/error404.webp";
@@ -24,8 +24,6 @@ function Home({
   get_products_by_sold,
   products_arrival,
   products_sold,
-  isAuthenticated,
-  user,
 }) {
   useEffect(() => {
     get_products_by_arrival();
@@ -72,8 +70,6 @@ function Home({
 const mapStateToProps = (state) => ({
   products_arrival: state.Products.products_arrival,
   products_sold: state.Products.products_sold,
-  isAuthenticated: state.Auth.isAuthenticated,
-  user: state.Auth.user,
 });
 
 export default connect(mapStateToProps, {

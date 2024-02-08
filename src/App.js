@@ -1,28 +1,24 @@
+import AnimatedRoutes from "AnimatedRoutes";
+import { DashboardProvider } from "components/dashboard/DashboardContext";
+import { HelmetProvider } from "react-helmet-async";
+import { Provider } from "react-redux";
 import {
-  BrowserRouter as Router,
   Route,
-  Routes,
-  useLocation,
+  BrowserRouter as Router,
+  Routes
 } from "react-router-dom";
 import store from "./store";
-import { Provider } from "react-redux";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import headerImg from "assets/img/error404.webp";
-import AnimatedRoutes from "AnimatedRoutes";
-import Navbar from "components/navigation/Navbar";
-import Footer from "components/navigation/Footer";
-import ScrollToTop from "components/navigation/ScrollToTop";
-// import Layout from "hocs/layouts/Layout";
-// import Activate from "containers/auth/Activate";
 
 function App() {
   return (
     <HelmetProvider>
       <Provider store={store}>
         <Router>
-          <Routes>
-            <Route path="/*" element={<AnimatedRoutes />} />
-          </Routes>
+          <DashboardProvider>
+              <Routes>
+                <Route path="/*" element={<AnimatedRoutes />} />
+              </Routes>
+          </DashboardProvider>
         </Router>
       </Provider>
     </HelmetProvider>

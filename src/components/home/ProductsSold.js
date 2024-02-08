@@ -1,4 +1,4 @@
-import Cart from "components/cart/cart";
+import Cart from "components/cart/CardShop";
 import { Link } from "react-router-dom";
 
 function ProductsSold({ data }) {

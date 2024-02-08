@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Cart from "components/cart/cart";
+import Cart from "components/cart/CardShop";
 
 function ProductsArrival({ data }) {
   return (

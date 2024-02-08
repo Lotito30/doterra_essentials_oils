@@ -85,7 +85,7 @@ const CartItem = ({
               name="item_count"
               onChange={(e) => onChange(e)}
               value={item_count}
-              className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-orange-standard focus:border-orange-standard sm:text-sm"
+              className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-none sm:text-sm"
             >
               <option>1</option>
               <option>2</option>
