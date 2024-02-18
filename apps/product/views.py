@@ -55,7 +55,7 @@ class ListProductsView(APIView):
             limit = 9
 
         if order == 'desc':
-            sortby = '-' + sortBy
+            sortBy = '-' + sortBy
             products = Product.objects.order_by(sortBy).all()[:int(limit)]
         elif order == 'asc':
             products = Product.objects.order_by(sortBy).all()[:int(limit)]

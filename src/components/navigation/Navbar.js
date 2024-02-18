@@ -5,11 +5,12 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
-import SearchBox from "./SearchBox";
 import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
+import SearchBox from "./SearchBox";
 import { SearchContext } from "./SearchContext";
+import SearchContent from "./SearchContent";
 
 function Navbar({
   isAuthenticated,
@@ -18,10 +19,12 @@ function Navbar({
   get_search_products,
   total_items,
   get_categories,
+  search_products,
 }) {
   const navigate = useNavigate();
   const { searchClick, setSearchClick } = useContext(SearchContext);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
+
   const [formData, setFormData] = useState({
     category_id: 0,
     search: "",
@@ -36,14 +39,13 @@ function Navbar({
 
   const { category_id, search } = formData;
 
-  const onChange = (e) => {
+  const onChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    onSubmit(search, category_id);
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (search, category_id) => {
     await get_search_products(search, category_id);
-    navigate("/shop");
   };
 
   const handleCartCLick = () => {
@@ -100,7 +102,7 @@ function Navbar({
       icon: IconSignUp,
     },
     {
-      name: "Log out",
+      name: "Sign out",
       description: "End your current session now",
       onclick: () => logout(),
       icon: IconLogOut,
@@ -214,12 +216,12 @@ function Navbar({
                         to={item.href}
                         className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 
                         ${
-                          item.name === "Log out"
+                          item.name === "Sign out"
                             ? "hover:bg-red-300"
                             : "hover:bg-gray-100"
                         } 
                         ${
-                          (item.name === "Log out" && !isAuthenticated) ||
+                          (item.name === "Sign out" && !isAuthenticated) ||
                           (item.name === "Sign up" && isAuthenticated) ||
                           (item.name === "Dashboard" && !isAuthenticated)
                             ? "hidden"
@@ -313,17 +315,36 @@ function Navbar({
             </div>
 
             <div className="flex items-center gap-2 relative">
-              <SearchBox
-                categories={categories}
-                search={search}
-                onSubmit={onSubmit}
-                onChange={onChange}
-                handleSearchCLick={handleSearchCLick}
-              />
-              <button
-                className="rounded-full p-2 hover:bg-gray-200 relative"
-              >
-                <ShoppingCartIcon className="w-7 h-7 text-black" onClick={handleCartCLick}/>
+              <div className="relative">
+                <SearchBox
+                  categories={categories}
+                  search={search}
+                  onSubmit={onSubmit}
+                  onChange={onChange}
+                  handleSearchCLick={handleSearchCLick}
+                />
+                {searchClick &&
+                  search_products &&
+                  search_products !== null &&
+                  search_products !== undefined &&
+                  search_products.length > 0 && (
+                    <div className="h-52 absolute top-12 w-full right-0 border-2 rounded-sm p-2 bg-gray-100 flex flex-col gap-2 overflow-y-auto">
+                      <div>
+                        <h3>Recent Search</h3>
+                      </div>
+                      <SearchContent
+                        search_products={search_products}
+                        onSubmit={onSubmit}
+                      />
+                    </div>
+                  )}
+              </div>
+
+              <button className="rounded-full p-2 hover:bg-gray-200 relative">
+                <ShoppingCartIcon
+                  className="w-7 h-7 text-black"
+                  onClick={handleCartCLick}
+                />
                 <span className="text-xs absolute top-5 left-2.5 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
                   {isAuthenticated ? total_items : 0}
                 </span>
@@ -364,6 +385,7 @@ const mapStateToProps = (state) => ({
   user: state.Auth.user,
   total_items: state.Cart.total_items,
   categories: state.Categories.categories,
+  search_products: state.Products.search_products,
 });
 
 export default connect(mapStateToProps, {

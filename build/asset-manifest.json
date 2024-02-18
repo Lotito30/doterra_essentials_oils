@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.06ac58a8.css",
-    "main.js": "/static/js/main.8ace9eaa.js",
+    "main.css": "/static/css/main.1fe7224f.css",
+    "main.js": "/static/js/main.68d78331.js",
     "static/media/error404.webp": "/static/media/error404.ab749cacea13a0cb5fca.webp",
     "static/media/iconodoTERRA3.png": "/static/media/iconodoTERRA3.2370d11d202513625445.png",
     "static/media/fondoHome1.jpg": "/static/media/fondoHome1.2f9f1d3c8095e1154420.jpg",
@@ -11,11 +11,11 @@
     "static/media/fondoHome4.webp": "/static/media/fondoHome4.b861aa5697d5b6aee604.webp",
     "static/media/redux.cjs": "/static/media/redux.7edfc461ab353f1712ab.cjs",
     "index.html": "/index.html",
-    "main.06ac58a8.css.map": "/static/css/main.06ac58a8.css.map",
-    "main.8ace9eaa.js.map": "/static/js/main.8ace9eaa.js.map"
+    "main.1fe7224f.css.map": "/static/css/main.1fe7224f.css.map",
+    "main.68d78331.js.map": "/static/js/main.68d78331.js.map"
   },
   "entrypoints": [
-    "static/css/main.06ac58a8.css",
-    "static/js/main.8ace9eaa.js"
+    "static/css/main.1fe7224f.css",
+    "static/js/main.68d78331.js"
   ]
 }

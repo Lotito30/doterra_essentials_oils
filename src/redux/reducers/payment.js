@@ -14,6 +14,7 @@ import {
   const initialState = {
     clientToken: null,
     made_payment: false,
+    total_after_coupon: 0.0,
     original_price: 0.0,
     total_amount: 0.0,
     total_compare_amount: 0.0,

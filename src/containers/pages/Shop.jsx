@@ -1,19 +1,17 @@
 import Layout from "hocs/layouts/Layout";
+import { Fragment, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import {
-  get_products,
-  get_filtered_products,
-} from "../../redux/actions/products";
-import { get_categories } from "../../redux/actions/categories";
 import { connect } from "react-redux";
-import { useEffect, useState, Fragment } from "react";
-
-import Cart from "components/cart/CardShop";
+import { get_categories } from "../../redux/actions/categories";
+import {
+  get_filtered_products,
+  get_products,
+} from "../../redux/actions/products";
 import { Oval } from "react-loader-spinner";
-
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { FilterIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/solid";
+import Card from "components/card/CardShop";
 import { prices } from "helpers/fixedPrices";
 
 function classNames(...classes) {
@@ -36,8 +34,8 @@ function Products({
   const [formData, setFormData] = useState({
     category_id: "0",
     price_range: "Any",
-    sortBy: "created",
-    order: "desc",
+    sortBy: "name",
+    order: "asc",
   });
 
   const { category_id, price_range, sortBy, order } = formData;
@@ -64,9 +62,9 @@ function Products({
       category_id: "0",
       price_range: "Any",
       sortBy: "created",
-      order: "desc",
+      order: "asc",
     });
-    await get_filtered_products("0", "Any", "created", "desc");
+    await get_filtered_products("0", "Any", "created", "asc");
   };
 
   const showProducts = () => {
@@ -82,7 +80,7 @@ function Products({
       filtered_products.map((product, index) => {
         return display.push(
           <div key={index}>
-            <Cart data={product} />
+            <Card data={product} />
           </div>
         );
       });
@@ -95,7 +93,7 @@ function Products({
       search_products.map((product, index) => {
         return display.push(
           <div key={index}>
-            <Cart data={product} />
+            <Card data={product} />
           </div>
         );
       });
@@ -108,7 +106,7 @@ function Products({
       products.map((product, index) => {
         return display.push(
           <div key={index}>
-            <Cart data={product} />
+            <Card data={product} />
           </div>
         );
       });
@@ -118,7 +116,7 @@ function Products({
       results.push(
         <div
           key={i}
-          className="mb-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-3 xl:gap-x-8"
+          className="mb-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 md:grid-cols-3 xl:gap-x-8"
         >
           {display[i] ? display[i] : <div className=""></div>}
           {display[i + 1] ? display[i + 1] : <div className=""></div>}
@@ -774,6 +772,12 @@ function Products({
             </span> */}
                 <div className="lg:col-span-3">
                   {products && showProducts()}
+                </div>
+                <div>
+                  <h1 className="text-2xl">Related Products</h1>
+                </div>
+                <div>
+                  <h1 className="text-2xl">Products you may be interested in</h1>
                 </div>
               </div>
             </section>

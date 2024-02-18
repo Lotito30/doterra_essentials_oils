@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import Cart from "components/cart/CardShop";
+import Card from "components/card/CardShop";
 
 function ProductsArrival({ data }) {
   return (
-    <div>
+    <>
       <section>
         <div className="max-w-xl md:mx-auto sm:text-center px-6 lg:max-w-2xl text-center py-8">
           <div>
@@ -16,7 +16,7 @@ function ProductsArrival({ data }) {
           </h2>
         </div>
       </section>
-      <div className="max-w-2xl mx-auto py-10 px-4 lg:max-w-7xl lg:px-8">
+      <div className="max-w-2xl mx-auto py-8 px-4 lg:max-w-7xl lg:px-8">
         <header className="pt-4">
           <h2 className="font-bold text-gray-900 text-4xl">New Arrivals</h2>
 
@@ -26,19 +26,19 @@ function ProductsArrival({ data }) {
           </p>
         </header>
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          {/* CART */}
-          <Cart data={data}/>
+          {/* CARD */}
+          {data && data.map((product) => (<Card key={product.id} data={product}/>))}
         </div>
         <div className="mt-6">
           <Link
             to="/shop"
-            className="block text-sm font-semibold text-orange-standard hover:text-orange-standard"
+            className="inline-block text-sm font-semibold text-orange-standard hover:text-orange-standard"
           >
             See more products<span aria-hidden="true"> &rarr;</span>
           </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

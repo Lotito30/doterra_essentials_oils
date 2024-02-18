@@ -25,8 +25,6 @@ class ListOrdersView(APIView):
                 item['state_province_region'] = order.state_province_region
                 item['postal_zip_code'] = order.postal_zip_code
 
-
-
                 result.append(item)
             
             return Response(

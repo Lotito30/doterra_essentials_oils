@@ -144,6 +144,7 @@ function SignUp({ signup, loading }) {
                         placeholder="Enter your phone*"
                       />
                     </div>
+                    <p className="text-xs text-end">Don't enter +971 </p>
                     <div>
                       <label
                         for="password"

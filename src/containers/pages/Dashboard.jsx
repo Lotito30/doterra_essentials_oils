@@ -1,6 +1,6 @@
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuAlt2Icon, XIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
+import { SearchIcon, UserIcon } from "@heroicons/react/solid";
 import icono from "assets/img/iconodoTERRA3.png";
 import { DashboardContext } from "components/dashboard/DashboardContext";
 import DashboardLink from "components/dashboard/DashboardLink";
@@ -8,15 +8,11 @@ import ShowDashboard from "components/dashboard/ShowDashboard";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { connect } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { get_item_total, get_items, get_total } from "../../redux/actions/cart";
 import { get_order_detail, list_orders } from "../../redux/actions/orders";
-
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+import { logout } from "../../redux/actions/auth";
+import { update_user_profile,get_user_profile } from "../../redux/actions/profile";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -32,21 +28,45 @@ const Dashboard = ({
   isAuthenticated,
   user,
   get_order_detail,
+  logout,
+  loading,
+  update_user_profile,
+  profile,
+  get_user_profile,
+  coupon
 }) => {
   const { content, setContent } = useContext(DashboardContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const params = useParams();
+  const transaction_id = params.transaction_id;
+  const userNavigation = [
+    {
+      name: "Dashboard",
+      to: "/dashboard",
+      onClick: () => setContent("Dashboard"),
+    },
+    { name: "Settings", to: "#" },
+    { name: "Sign out", onClick: () => logout() },
+  ];
+
+  
   useEffect(() => {
     const fetchDashboard = async () => {
       await get_items();
       await get_total();
       await get_item_total();
       await list_orders();
+      if (content === "Payment Detail") {
+        await get_order_detail(transaction_id);
+      }
       // if(orders && orders !== null && orders !== undefined && orders.length > 0){
       //   await get_order_detail(orders[1].transaction_id);
       // }
+      get_user_profile()
     };
     fetchDashboard();
-  }, []);
+  }, [content,get_user_profile]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -75,7 +95,7 @@ const Dashboard = ({
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <div>
+      <div className="min-w-[420px]">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -133,7 +153,7 @@ const Dashboard = ({
                 >
                   <div className="flex-shrink-0 flex items-center gap-2 pl-2">
                     <img className="w-16 h-16" src={icono} alt="" />
-                    <h1 className="text-2xl font-sans font-bold">Lotitoils</h1>
+                    <h1 className="text-2xl font-sans font-bold">doTERRA</h1>
                   </div>
                 </Link>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
@@ -161,7 +181,7 @@ const Dashboard = ({
             >
               <div className="flex-shrink-0 flex items-center gap-2 pl-2">
                 <img className="w-16 h-16" src={icono} alt="" />
-                <h1 className="text-2xl font-sans font-bold">Lotitoils</h1>
+                <h1 className="text-2xl font-sans font-bold">doTERRA</h1>
               </div>
             </Link>
             <div className="mt-5 flex-grow flex flex-col">
@@ -184,7 +204,7 @@ const Dashboard = ({
             </button>
             <div className="flex-1 px-4 flex justify-between">
               <div className="flex-1 flex">
-                <form className="w-full flex md:ml-0" action="#" method="GET">
+                {/* <form className="w-full flex md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
@@ -200,7 +220,7 @@ const Dashboard = ({
                       name="search"
                     />
                   </div>
-                </form>
+                </form> */}
               </div>
               <div className="ml-4 flex items-center md:ml-6">
                 <button
@@ -208,19 +228,15 @@ const Dashboard = ({
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
                 </button>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative">
                   <div>
-                    <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-offset-0 focus:ring-0">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <UserIcon className="h-6 w-6 rounded-full" />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -232,19 +248,20 @@ const Dashboard = ({
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.href}
+                            <Link
+                              onClick={item.onClick}
+                              to={item.to}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
@@ -257,11 +274,16 @@ const Dashboard = ({
 
           <main className="flex-1">
             <div className="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <h1 className="text-2xl mb-4 font-bold">{content}</h1>
               <ShowDashboard
                 user={user}
                 orders={orders}
                 order={order}
                 get_order_detail={get_order_detail}
+                loading={loading}
+                update_user_profile={update_user_profile}
+                profile={profile}
+                coupon={coupon}
               />
             </div>
           </main>
@@ -276,6 +298,9 @@ const mapStateToProps = (state) => ({
   order: state.Orders.order,
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
+  loading: state.Auth.loading,
+  profile: state.Profile.profile,
+  coupon:state.Coupons.coupon
 });
 export default connect(mapStateToProps, {
   list_orders,
@@ -283,4 +308,7 @@ export default connect(mapStateToProps, {
   get_total,
   get_item_total,
   get_order_detail,
+  logout,
+  update_user_profile,
+  get_user_profile,
 })(Dashboard);

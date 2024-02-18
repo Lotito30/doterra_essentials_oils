@@ -15,6 +15,7 @@ import Navbar from "components/navigation/Navbar";
 import ScrollToTop from "components/navigation/ScrollToTop";
 import { get_item_total, get_items, get_total } from "../../redux/actions/cart";
 import { SearchProvider } from "components/navigation/SearchContext";
+import { get_user_profile } from "../../redux/actions/profile";
 
 function Layout(props) {
   useEffect(() => {
@@ -26,6 +27,7 @@ function Layout(props) {
         await props.get_items();
         await props.get_total();
         await props.get_item_total();
+        await props.get_user_profile();
       }
     };
     fetchUser();
@@ -55,6 +57,7 @@ function Layout(props) {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
+  profile: state.Profile.profile
 });
 
 export default connect(mapStateToProps, {
@@ -64,4 +67,5 @@ export default connect(mapStateToProps, {
   get_items,
   get_total,
   get_item_total,
+  get_user_profile,
 })(Layout);

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 import os
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from apps.cart.models import Cart
+from apps.user_profile.models import UserProfile
 
 class UserAccountmanager(BaseUserManager):
     def create_user(self,email,password=None,**extra_fields):
@@ -18,6 +19,9 @@ class UserAccountmanager(BaseUserManager):
 
         shopping_cart = Cart.objects.create(user=user)
         shopping_cart.save() 
+        
+        profile = UserProfile.objects.create(user=user)
+        profile.save() 
 
         return user
     

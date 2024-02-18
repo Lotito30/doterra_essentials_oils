@@ -55,6 +55,8 @@ function AnimatedRoutes() {
       {/* DASHBOARD */}
       <Route exact path="/dashboard" element={<Dashboard />} />
       <Route exact path="/dashboard/payments" element={<Dashboard />} />
+      <Route exact path="/dashboard/payment/:transaction_id" element={<Dashboard />} />
+      <Route exact path="/dashboard/profile/edit" element={<Dashboard />} />
     </Routes>
   );
 }

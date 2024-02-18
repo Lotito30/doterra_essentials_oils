@@ -14,9 +14,11 @@ import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { Disclosure, Tab } from "@headlessui/react";
-import { StarIcon } from "@heroicons/react/solid";
+import { CheckIcon, ClockIcon, StarIcon } from "@heroicons/react/solid";
 import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
 import { Oval } from "react-loader-spinner";
+import GetSrcPhoto from "components/photo/GetSrcPhoto";
+
 const products = {
   rating: 4,
   details: [
@@ -102,11 +104,11 @@ function ProductDetails({
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
             {/* Image gallery */}
             <Tab.Group as="div" className="flex">
-              <Tab.Panels className="w-full aspect-w-1 aspect-h-1">
+              <Tab.Panels className="w-full lg:aspect-w-1 lg:aspect-h-1">
                 <Tab.Panel key={product.id}>
                   <img
-                    src={product.photo}
-                    className="w-full h-full object-center object-cover sm:rounded-lg"
+                    src={GetSrcPhoto(product.photo)}
+                    className="w-1/2 object-center object-cover lg:w-full mx-auto"
                   />
                 </Tab.Panel>
               </Tab.Panels>
@@ -143,21 +145,29 @@ function ProductDetails({
                   </div>
                   <p className="sr-only">{products.rating} out of 5 stars</p>
                 </div>
-                <p className="mt-2">
+              </div>
+                <p className="mt-2 flex space-x-1">
                   {product &&
                   product !== null &&
                   product !== undefined &&
                   product.quantity > 0 ? (
-                    <span className="text-green-500 font-semibold">
-                      In Stock
-                    </span>
+                    <>
+                      <CheckIcon
+                        className="flex-shrink-0 h-5 w-5 text-green-500"
+                        aria-hidden="true"
+                      />
+                      <span className="text-green-500 font-semibold">In Stock</span>
+                    </>
                   ) : (
-                    <span className="text-red-500 font-semibold">
-                      Out of Stock
-                    </span>
+                    <>
+                      <ClockIcon
+                        className="flex-shrink-0 h-5 w-5 text-gray-300"
+                        aria-hidden="true"
+                      />
+                      <span className="text-red-500 font-semibold">Out of Stock</span> 
+                    </>
                   )}
                 </p>
-              </div>
 
               <div className="mt-4">
                 <h3 className="sr-only">Description</h3>

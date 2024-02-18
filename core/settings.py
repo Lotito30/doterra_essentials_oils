@@ -36,7 +36,7 @@ DJANGO_APPS =[
     'django.contrib.staticfiles',
 ]
 
-PROJECT_APPS =['apps.user',]
+PROJECT_APPS =['apps.user', 'apps.user_profile',]
 
 ECOMMERCE_APPS =[
     'apps.category',
@@ -45,6 +45,7 @@ ECOMMERCE_APPS =[
     'apps.shipping', 
     'apps.orders',
     'apps.payment',
+    'apps.coupons',
     ]
 
 THIRD_PARTY_APPS =[
@@ -78,7 +79,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -164,7 +166,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 

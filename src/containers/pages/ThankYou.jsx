@@ -6,31 +6,35 @@ import { reset } from "../../redux/actions/payment";
 
 const Thankyou = ({ isAuthenticated, reset }) => {
   useEffect(() => {
-    const fetch = async ()  => {
+    const fetch = async () => {
       if (!isAuthenticated) {
-        return <Navigate to="/" />;
+        return <Navigate to="/"/>;
       }
       await reset();
-    } 
-   fetch()
-    
+    };
+    fetch();
   }, []);
 
- 
   return (
     <Layout>
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-              Thank You.
-            </p>
-            <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
-              Hope you enjoyed shopping in lotitoils.
-            </p>
-          </div>
+      <section className="max-w-3xl  py-12  mx-auto">
+        <div className="p-8 text-center sm:p-12 bg-gray-100 rounded-3xl shadow-2xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-orange-standard">
+            Your order is on the way
+          </p>
+
+          <h2 className="mt-6 text-3xl font-bold">
+            Thanks for your purchase, we're getting it ready!
+          </h2>
+
+          <a
+            className="mt-8 inline-block w-full rounded-full bg-orange-standard py-4 text-sm font-bold text-white shadow-xl"
+            href="#"
+          >
+            Go Home
+          </a>
         </div>
-      </div>
+      </section>
     </Layout>
   );
 };
