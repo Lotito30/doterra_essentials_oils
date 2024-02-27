@@ -4,7 +4,6 @@ import SignUp from "containers/auth/SignUp";
 import Error404 from "containers/errors/Error404";
 import AboutUs from "containers/pages/AboutUs";
 import ContactUs from "containers/pages/ContactUs";
-import Experience from "containers/pages/Experience";
 import Shop from "containers/pages/Shop";
 import {
   Route,
@@ -22,9 +21,7 @@ import Cart from "containers/pages/Cart";
 import Checkout from "containers/pages/Checkout";
 import Dashboard from "containers/pages/Dashboard";
 import Thankyou from "containers/pages/ThankYou";
-
-
-
+import WishList from "containers/pages/WishList";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -36,7 +33,7 @@ function AnimatedRoutes() {
       <Route exact path="/shop" element={<Shop />} />
       <Route exact path="/product/:productId" element={<ProductDetails />} />
 
-      <Route exact path="/experience" element={<Experience />} />
+      <Route exact path="/wishlist" element={<WishList />} />
       <Route exact path="/about" element={<AboutUs />} />
       <Route exact path="/contact" element={<ContactUs />} />
 

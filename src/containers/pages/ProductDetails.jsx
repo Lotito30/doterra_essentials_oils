@@ -1,24 +1,32 @@
+import { Disclosure, Tab } from "@headlessui/react";
+import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
+import { CheckIcon, ClockIcon, StarIcon } from "@heroicons/react/solid";
+import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Oval } from "react-loader-spinner";
+import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
-  get_items,
   add_item,
-  get_total,
   get_item_total,
+  get_items,
+  get_total,
 } from "../../redux/actions/cart";
 import {
   get_product,
   get_related_products,
 } from "../../redux/actions/products";
-import { useParams } from "react-router-dom";
-import { connect } from "react-redux";
-import { useEffect, useState } from "react";
-import { Disclosure, Tab } from "@headlessui/react";
-import { CheckIcon, ClockIcon, StarIcon } from "@heroicons/react/solid";
-import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
-import { Oval } from "react-loader-spinner";
-import GetSrcPhoto from "components/photo/GetSrcPhoto";
+import {
+  add_wishlist_item,
+  get_wishlist_item_total,
+  get_wishlist_items,
+  remove_wishlist_item,
+} from "../../redux/actions/wishlist";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 const products = {
   rating: 4,
   details: [
@@ -42,6 +50,7 @@ function classNames(...classes) {
 }
 
 function ProductDetails({
+  isAuthenticated,
   product,
   get_product,
   get_related_products,
@@ -49,8 +58,17 @@ function ProductDetails({
   add_item,
   get_total,
   get_item_total,
+  add_wishlist_item,
+  get_wishlist_items,
+  get_wishlist_item_total,
+  remove_wishlist_item,
+  wishlist,
 }) {
+  const params = useParams();
+  const productId = params.productId;
+
   const [loading, setLoading] = useState(false);
+
   const addToCart = async () => {
     if (
       product &&
@@ -66,13 +84,31 @@ function ProductDetails({
       setLoading(false);
     }
   };
-  const params = useParams();
-
-  const productId = params.productId;
+  const addToWishList = async () => {
+    if (
+      isAuthenticated &&
+      product &&
+      product !== null &&
+      product !== undefined &&
+      wishlist &&
+      wishlist !== undefined &&
+      wishlist !== null
+    ) {
+      !wishlist.find(
+        (item) => item.product.id.toString() === product.id.toString()
+      )
+        ? await add_wishlist_item(product.id)
+        : await remove_wishlist_item(product.id);
+      await get_wishlist_items();
+      await get_wishlist_item_total();
+    }
+  };
 
   useEffect(() => {
     get_product(productId);
     get_related_products(productId);
+    get_wishlist_items();
+    get_wishlist_item_total();
   }, []);
 
   return (
@@ -122,7 +158,7 @@ function ProductDetails({
 
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl text-gray-900">{product.price} AED</p>
+                <p className="text-3xl text-gray-900">AED {product.price} </p>
               </div>
 
               {/* Reviews */}
@@ -146,28 +182,32 @@ function ProductDetails({
                   <p className="sr-only">{products.rating} out of 5 stars</p>
                 </div>
               </div>
-                <p className="mt-2 flex space-x-1">
-                  {product &&
-                  product !== null &&
-                  product !== undefined &&
-                  product.quantity > 0 ? (
-                    <>
-                      <CheckIcon
-                        className="flex-shrink-0 h-5 w-5 text-green-500"
-                        aria-hidden="true"
-                      />
-                      <span className="text-green-500 font-semibold">In Stock</span>
-                    </>
-                  ) : (
-                    <>
-                      <ClockIcon
-                        className="flex-shrink-0 h-5 w-5 text-gray-300"
-                        aria-hidden="true"
-                      />
-                      <span className="text-red-500 font-semibold">Out of Stock</span> 
-                    </>
-                  )}
-                </p>
+              <p className="mt-2 flex space-x-1">
+                {product &&
+                product !== null &&
+                product !== undefined &&
+                product.quantity > 0 ? (
+                  <>
+                    <CheckIcon
+                      className="flex-shrink-0 h-5 w-5 text-green-500"
+                      aria-hidden="true"
+                    />
+                    <span className="text-green-500 font-semibold">
+                      In Stock
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <ClockIcon
+                      className="flex-shrink-0 h-5 w-5 text-gray-300"
+                      aria-hidden="true"
+                    />
+                    <span className="text-red-500 font-semibold">
+                      Out of Stock
+                    </span>
+                  </>
+                )}
+              </p>
 
               <div className="mt-4">
                 <h3 className="sr-only">Description</h3>
@@ -200,15 +240,22 @@ function ProductDetails({
                       Add to cart
                     </button>
                   )}
-
+                  
                   <button
-                    type="button"
-                    className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                    onClick={addToWishList}
+                    className={`ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 
+                    `}
                   >
-                    <HeartIcon
-                      className="h-6 w-6 flex-shrink-0"
+                    {wishlist && product?.id && wishlist.find(
+                      (item) =>
+                        item.product.id.toString() === product.id.toString()
+                    ) 
+                    ? <FontAwesomeIcon icon={faHeart} className="h-5 w-5 flex-shrink-0 text-red-500"/>
+                    : <HeartIcon
+                      className="h-5 w-5 flex-shrink-0"
                       aria-hidden="true"
                     />
+                  }
                     <span className="sr-only">Add to favorites</span>
                   </button>
                 </div>
@@ -275,7 +322,9 @@ function ProductDetails({
 }
 
 const mapStateToProps = (state) => ({
+  isAuthenticated: state.Auth.isAuthenticated,
   product: state.Products.product,
+  wishlist: state.Wishlist.items,
 });
 export default connect(mapStateToProps, {
   get_product,
@@ -284,4 +333,8 @@ export default connect(mapStateToProps, {
   add_item,
   get_total,
   get_item_total,
+  add_wishlist_item,
+  get_wishlist_items,
+  get_wishlist_item_total,
+  remove_wishlist_item,
 })(ProductDetails);

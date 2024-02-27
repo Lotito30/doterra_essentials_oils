@@ -78,9 +78,9 @@ function Navbar({
       icon: iconProduct,
     },
     {
-      name: "Experience",
+      name: "Wishlist",
       description: "Feel the Power of Nature",
-      href: "/experience",
+      href: "/wishlist",
       icon: IconExperience,
     },
     {
@@ -113,10 +113,10 @@ function Navbar({
       name: "Shop",
       href: "/shop",
     },
-    {
-      name: "Experience",
-      href: "/experience",
-    },
+    // {
+    //   name: "Experience",
+    //   href: "/experience",
+    // },
     {
       name: "About Us",
       href: "/about",

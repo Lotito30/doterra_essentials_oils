@@ -16,7 +16,7 @@ function Card({ data }) {
         </h5>
         <div className="mt-5">
           <span className=" text-xl font-semibold text-gray-900 ">
-            {data.price} AED
+            AED {data.price} 
           </span>
         </div>
       </Link>

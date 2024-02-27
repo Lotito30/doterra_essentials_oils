@@ -130,7 +130,7 @@ function Cart({
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
       <div className="bg-white">
-        <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Shopping Cart Items <span className="text-green-500">({total_items})</span>
           </h1>
@@ -151,7 +151,7 @@ function Cart({
             {/* Order summary */}
             <section
               aria-labelledby="summary-heading"
-              className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
+              className="m-auto max-w-2xl mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5 lg:m-0 "
             >
               <h2
                 id="summary-heading"
@@ -178,10 +178,10 @@ function Cart({
                       </dt>
 
                       <dd className="text-sm font-medium text-gray-900">
-                        {(parseFloat(item.product.price) * item.count).toFixed(
+                        AED {(parseFloat(item.product.price) * item.count).toFixed(
                           2
                         )}{" "}
-                        AED
+                        
                       </dd>
                     </div>
                   ))}
@@ -190,7 +190,7 @@ function Cart({
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {amount.toFixed(2)} AED
+                  AED {amount.toFixed(2)} 
                   </dd>
                 </div>
               </dl>
