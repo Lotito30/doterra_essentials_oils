@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { countries } from "../../helpers/FixedCountries";
 import { refresh } from "../../redux/actions/auth";
 import {
@@ -13,7 +13,7 @@ import {
   get_payment_total,
   process_payment,
 } from "../../redux/actions/payment";
-import { check_coupon } from "../../redux/actions/coupons";
+import { check_coupon, reset_coupon } from "../../redux/actions/coupons";
 import { TicketIcon, TruckIcon } from "@heroicons/react/solid";
 
 {
@@ -45,9 +45,10 @@ const Checkout = ({
   check_coupon,
   coupon,
   total_after_coupon,
-  notFound,
   profile,
+  reset_coupon,
 }) => {
+  const navigate = useNavigate()
   const paymentMethods = [
     { id: "cash", label: "Cash on Delivery" },
     { id: "credit", label: "Credit Card" },
@@ -65,16 +66,11 @@ const Checkout = ({
     country_region: "United Arab Emirates",
     telephone_number: "",
     coupon_name: "",
-    shipping_id: 1,
+    shipping_id: "",
   });
-
   const apply_coupon = async (e) => {
     e.preventDefault();
     await check_coupon(coupon_name);
-    setFormData({
-      ...formData,
-      coupon_name: "",
-    });
   };
   const [data, setData] = useState({
     instance: {},
@@ -101,7 +97,7 @@ const Checkout = ({
     await process_payment(
       nonce,
       shipping_id,
-      coupon ? coupon.name : "",
+      coupon_name,
       full_name,
       address_line_1,
       address_line_2,
@@ -111,6 +107,7 @@ const Checkout = ({
       country_region,
       telephone_number
     );
+    
   };
   const handleButtonClick = (newFormData) => {
     setFormData({
@@ -128,25 +125,24 @@ const Checkout = ({
   useEffect(() => {
     const FecthClient = async () => {
       await get_client_token();
+      reset_coupon();
     };
     FecthClient();
   }, []);
 
   useEffect(() => {
     const FecthPaymentTotal = async () => {
-      if (coupon && coupon !== null && coupon !== undefined) {
-        await get_payment_total(shipping_id, coupon.name);
-      } else {
-        await get_payment_total(shipping_id, "default");
-      }
+      await get_payment_total(
+        shipping_id,
+        coupon && coupon !== null ? coupon.name : "default"
+      );
     };
     FecthPaymentTotal();
   }, [shipping_id, coupon]);
-
+  
   const handleSelectMethod = (methodId) => {
     setSelectedMethod(methodId);
   };
-
   const renderShipping = () => {
     if (shipping && shipping !== null && shipping !== undefined) {
       return (
@@ -159,11 +155,10 @@ const Checkout = ({
                 name="shipping_id"
                 type="radio"
                 required
-                checked={shipping_id === shipping_option.id}
               />
               <label className="form-check-label ml-4">
                 {shipping_option.time_to_delivery} -{" "}
-                <span className="text-green-500">
+                <span className="text-black">
                   {shipping_option.price} AED
                 </span>
               </label>
@@ -200,6 +195,7 @@ const Checkout = ({
   if (made_payment) {
     return <Navigate to={"/thankyou"} />;
   }
+
   return (
     <Layout>
       <Helmet>
@@ -230,11 +226,7 @@ const Checkout = ({
         <div className="relative">
           <form
             className="border-t border-gray-200 pt-4 flex items-center justify-end"
-            onSubmit={
-              coupon && coupon !== null && coupon !== undefined
-                ? ""
-                : (e) => apply_coupon(e)
-            }
+            onSubmit={(e) => apply_coupon(e)}
           >
             <span className="sr-only">Coupon</span>
 
@@ -245,20 +237,22 @@ const Checkout = ({
                 className="placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
                 onChange={(e) => onChange(e)}
                 value={coupon_name}
-                placeholder="Enter your coupon"
-              />
+                placeholder="Enter your coupon"      
+                disabled={coupon && coupon !== null && coupon !== undefined}
+                required    
+                />
               <button
                 type="submit"
                 className="inline-flex rounded-md bg-orange-standard px-1 py-2 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
+                disabled={coupon && coupon !== null && coupon !== undefined}
               >
                 Apply coupon
               </button>
             </dd>
           </form>
           {/* AGREGAR CONDICION CUANDO AGREGA EL CUPON */}
-          {coupon && coupon !== null && coupon !== undefined ? (
-            <div className="absolute right-0">
-              <span className="inline-flex items-center justify-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-green-500">
+            <div className="absolute right-0 mt-2">
+              <span className="inline-flex items-center justify-center gap-1 rounded-lg px-2.5 py-0.5 text-black">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -273,16 +267,9 @@ const Checkout = ({
                     d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
                   />
                 </svg>
-                Coupon '{coupon.name}' is applied.
+                Enter your coupon code if you have one.
               </span>
             </div>
-          ) : notFound && notFound !== null && notFound !== undefined ? (
-            <div className="text-red-500 absolute right-8">
-              Coupon does not exist
-            </div>
-          ) : (
-            ""
-          )}
         </div>
         <form
           className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16"
@@ -358,7 +345,7 @@ const Checkout = ({
                       map de items con su nombre, valor unitario y precio
                       multiplicado por la cantidad de productos comprados
                     </span>
-                    <dt className="text-sm text-gray-600">
+                    <dt className="text-sm text-black font-bold">
                       {item.product.name} x {item.count}
                     </dt>
 
@@ -372,22 +359,20 @@ const Checkout = ({
             <dl className="mt-8">
               <div className="flex items-center justify-between">
                 <span className="sr-only">Subtotal</span>
-                <dt className="text-sm text-gray-600 font-bold">Subtotal</dt>
+                <dt className="text-sm text-gray-600">Subtotal</dt>
                 <dd className="text-sm font-medium text-gray-900">
                   {original_price} AED
                 </dd>
               </div>
-              <div className="flex items-center justify-between mt-3 mb-2">
-                <span className="sr-only">Discount selected</span>
-                <dt className="text-sm text-green-500">Discount</dt>
-                <dd className="text-sm font-medium text-green-500">
-                  -{" "}
-                  {coupon && coupon !== null && coupon !== undefined
-                    ? coupon.discount_price
-                    : 0}{" "}
-                  AED
-                </dd>
-              </div>
+              {coupon && coupon !== null && coupon !== undefined && (
+                <div className="flex items-center justify-between mt-3 mb-2">
+                  <span className="sr-only">Discount selected</span>
+                  <dt className="text-sm text-green-500">Discount</dt>
+                  <dd className="text-sm font-medium text-green-500">
+                   - {coupon.discount_price} AED
+                  </dd>
+                </div>
+              )}{" "}
               <div className="flex items-center justify-between mt-3 mb-2">
                 <span className="sr-only">Shipping selected</span>
                 <dt className="text-sm text-gray-600">Shipping</dt>
@@ -395,13 +380,12 @@ const Checkout = ({
                   {shipping_cost} AED
                 </dd>
               </div>
-
               {coupon && coupon !== null && coupon !== undefined ? (
                 <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="text-base font-medium text-gray-900">
+                  <dt className="text-black font-bold text-2xl">
                     Order total
                   </dt>
-                  <dd className="text-base font-medium text-gray-900">
+                  <dd className="text-xl font-medium text-gray-900">
                     {(
                       parseFloat(total_after_coupon) + parseFloat(shipping_cost)
                     ).toFixed(2)}{" "}
@@ -410,15 +394,14 @@ const Checkout = ({
                 </div>
               ) : (
                 <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="text-base font-medium text-gray-900">
+                  <dt className="text-xl text-gray-900 font-bold">
                     Order total
                   </dt>
-                  <dd className="text-base font-medium text-gray-900">
+                  <dd className="text-xl font-medium text-gray-900">
                     {total_amount} AED
                   </dd>
                 </div>
               )}
-
               <div className=" pt-4">
                 <div className="max-w-md mx-auto p-8 bg-white shadow-md rounded-md">
                   <h2 className="text-2xl font-bold mb-6">
@@ -513,7 +496,7 @@ const mapStateToProps = (state) => ({
   amount: state.Cart.amount,
   shipping: state.Shipping.shipping,
   clientToken: state.Payment.clientToken,
-  // made_payment: state.payment.made_payment,
+  made_payment: state.Payment.made_payment,
   loading: state.Payment.loading,
   original_price: state.Payment.original_price,
   total_after_coupon: state.Payment.total_after_coupon,
@@ -522,7 +505,6 @@ const mapStateToProps = (state) => ({
   // estimated_tax: state.Payment.estimated_tax,
   shipping_cost: state.Payment.shipping_cost,
   coupon: state.Coupons.coupon,
-  notFound: state.Coupons.notFound,
   profile: state.Profile.profile,
 });
 
@@ -532,4 +514,5 @@ export default connect(mapStateToProps, {
   get_client_token,
   process_payment,
   check_coupon,
+  reset_coupon,
 })(Checkout);

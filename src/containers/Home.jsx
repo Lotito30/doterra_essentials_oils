@@ -4,32 +4,34 @@ import Content from "components/home/Content";
 import Featured from "components/home/Featured";
 import Features from "components/home/FeaturesSection";
 import Header from "components/home/Header";
-import Statistic from "components/home/Statistic";
-// import Footer from "components/navigation/Footer";
-// import Navbar from "components/navigation/Navbar";
+import headerImg from "assets/img/error404.webp";
+import CarouselProducts from "components/carousel/CarouselProducts";
 import Layout from "hocs/layouts/Layout";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { connect } from "react-redux";
 import {
+  get_products,
   get_products_by_arrival,
   get_products_by_sold,
 } from "../redux/actions/products";
-import ProductsArrival from "components/home/ProductsArrival";
-import ProductsSold from "components/home/ProductsSold";
-import headerImg from "assets/img/error404.webp";
-import { Helmet } from "react-helmet-async";
 
 function Home({
   get_products_by_arrival,
   get_products_by_sold,
   products_arrival,
   products_sold,
+  get_products,
+  products,
 }) {
   useEffect(() => {
-    get_products_by_arrival();
-    get_products_by_sold();
-  }, []);
-
+    const fetchProducts = async () =>{
+      get_products_by_arrival();
+      get_products_by_sold();
+    }
+    fetchProducts() 
+  }, [get_products_by_arrival, get_products_by_sold, get_products]);
+  
   return (
     <Layout>
       <Helmet>
@@ -55,13 +57,13 @@ function Home({
         <meta name="twitter:image" content={headerImg} />
       </Helmet>
       <Header />
-      <Statistic />
-      <Featured />
-      <ProductsArrival data={products_arrival} />
-      <ProductsSold data={products_sold} />
+      {/* <Statistic /> */}
+      <Featured/>
+      <CarouselProducts title={"New Arrivals"} description={"Explore the latest in our natural oil collection. Freshly curated, high-quality products await. Discover your new favorite today."} data={products_arrival} />
+      <CarouselProducts title={"Best Seller"} description={"Dive into our Best Sellers. These popular natural oils have won over our customers. Experience their charm and make them yours."} data={products_sold} />
       <Features />
       <CTA />
-      <Content />
+      {products && products.length > 0 && <Content products={products}/>}
       <Blog />
     </Layout>
   );
@@ -70,9 +72,11 @@ function Home({
 const mapStateToProps = (state) => ({
   products_arrival: state.Products.products_arrival,
   products_sold: state.Products.products_sold,
+  products: state.Products.products,
 });
 
 export default connect(mapStateToProps, {
   get_products_by_arrival,
   get_products_by_sold,
+  get_products,
 })(Home);

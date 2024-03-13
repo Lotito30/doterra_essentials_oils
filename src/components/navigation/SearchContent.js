@@ -10,7 +10,11 @@ function SearchContent({ search_products, onSubmit }) {
     search_products.map((product, index) => {
       let srcPhoto = GetSrcPhoto(product.photo);
       return (
-        <Link onClick={() => onSubmit(product.name,0)} key={index} to={'/shop'}>
+        <Link
+          onClick={() => onSubmit(product.name, 0)}
+          key={index}
+          to={`/product/${product.id}`}
+        >
           <div className="flex items-center justify-between px-2 overflow-x-hidden gap-2 ">
             <img
               src={srcPhoto}

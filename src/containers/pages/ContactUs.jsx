@@ -79,6 +79,7 @@ function ContactUs() {
                         placeholder="Enter your message*"
                         rows="5"
                         style={{ resize: "none" }}
+                        required
                       ></textarea>
                     </div>
                     <div>

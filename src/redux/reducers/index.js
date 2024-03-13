@@ -10,6 +10,7 @@ import Products from "./products";
 import Shipping from "./shipping";
 import Profile from "./profile";
 import Wishlist from "./wishlist";
+import Reviews from "./reviews";
 
 export default combineReducers({
   Auth,
@@ -23,4 +24,5 @@ export default combineReducers({
   Coupons,
   Profile,
   Wishlist,
+  Reviews,
 });

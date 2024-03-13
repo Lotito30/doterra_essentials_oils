@@ -1,6 +1,10 @@
 import { Popover, Transition } from "@headlessui/react";
-import { ShoppingCartIcon, XCircleIcon } from "@heroicons/react/solid";
-import icono from "assets/img/iconodoTERRA3.png";
+import {
+  ShoppingCartIcon,
+  UserIcon,
+  XCircleIcon,
+} from "@heroicons/react/solid";
+import icono from "assets/img/dōTERRALogo.png";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -9,8 +13,9 @@ import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
 import SearchBox from "./SearchBox";
-import { SearchContext } from "./SearchContext";
 import SearchContent from "./SearchContent";
+import { SearchContext } from "./SearchContext";
+import Alert from "components/alert";
 
 function Navbar({
   isAuthenticated,
@@ -20,6 +25,7 @@ function Navbar({
   total_items,
   get_categories,
   search_products,
+  user,
 }) {
   const navigate = useNavigate();
   const { searchClick, setSearchClick } = useContext(SearchContext);
@@ -35,7 +41,7 @@ function Navbar({
       await get_categories();
     };
     fecthCategories();
-  }, []);
+  }, [get_categories]);
 
   const { category_id, search } = formData;
 
@@ -58,6 +64,8 @@ function Navbar({
 
   const handleSearchCLick = () => {
     if (searchClick) {
+      setSearchClick(false);
+      onSubmit("", 0);
       return;
     } else {
       setSearchClick(true);
@@ -113,10 +121,9 @@ function Navbar({
       name: "Shop",
       href: "/shop",
     },
-    // {
-    //   name: "Experience",
-    //   href: "/experience",
-    // },
+    {
+      name: "Caterogies",
+    },
     {
       name: "About Us",
       href: "/about",
@@ -209,6 +216,17 @@ function Navbar({
               <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-3/4 transform px-4 sm:px-0">
                 <div className="overflow-hidden rounded-lg shadow-lg ring-0">
                   <div className="relative grid gap-6 bg-white p-7">
+                    {user ? (
+                      <div className="ml-1 flex items-center gap-6">
+                        <UserIcon className="h-8 w-8" />
+                        <p className="text-lg text-gray-900">
+                          Hi! {user.first_name} {user.last_name}
+                        </p>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
                     {solutions.map((item) => (
                       <Link
                         key={item.name}
@@ -222,8 +240,9 @@ function Navbar({
                         } 
                         ${
                           (item.name === "Sign out" && !isAuthenticated) ||
-                          (item.name === "Sign up" && isAuthenticated) ||
-                          (item.name === "Dashboard" && !isAuthenticated)
+                          (item.name === "Wishlist" && !isAuthenticated) ||
+                          (item.name === "Dashboard" && !isAuthenticated) ||
+                          (item.name === "Sign up" && isAuthenticated)
                             ? "hidden"
                             : ""
                         }`}
@@ -281,12 +300,16 @@ function Navbar({
         id="navbar"
         className="transition duration-400 ease-in-out fixed top-0 w-full z-40 min-w-[420px]"
       >
-        <div className="px-6 w-full lg:px-12">
-          <div className="flex h-16 items-center justify-between">
+        <div className="px-6 w-full lg:px-12 ">
+          <div className="flex h-16 items-center justify-between max-w-7xl mx-auto">
             <div className="md:flex md:items-center md:gap-12 ">
               <Link to="/" className="text-orange-standard flex items-center">
-                <img src={icono} className="w-16 h-16" alt="doTERRA" />
-                <h2 className="hidden lg:block text-black text-2xl font-bold">
+                <img
+                  src="https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/iconoPestana.jpeg"
+                  className="w-16 h-16"
+                  alt="doTERRA"
+                />
+                <h2 className="hidden lg:block text-black text-2xl font-bold sr-only">
                   dōTERRA
                 </h2>
               </Link>
@@ -316,19 +339,21 @@ function Navbar({
 
             <div className="flex items-center gap-2 relative">
               <div className="relative">
-                <SearchBox
-                  categories={categories}
-                  search={search}
-                  onSubmit={onSubmit}
-                  onChange={onChange}
-                  handleSearchCLick={handleSearchCLick}
-                />
+                {isAuthenticated && (
+                  <SearchBox
+                    categories={categories}
+                    search={search}
+                    onSubmit={onSubmit}
+                    onChange={onChange}
+                    handleSearchCLick={handleSearchCLick}
+                  />
+                )}
                 {searchClick &&
                   search_products &&
                   search_products !== null &&
                   search_products !== undefined &&
                   search_products.length > 0 && (
-                    <div className="h-52 absolute top-12 w-full right-0 border-2 rounded-sm p-2 bg-gray-100 flex flex-col gap-2 overflow-y-auto">
+                    <div className="h-52 absolute top-11 w-full right-0 border-2 rounded-sm p-3 shadow-navbar bg-gray-100 flex flex-col gap-2 overflow-y-auto">
                       <div>
                         <h3>Recent Search</h3>
                       </div>
@@ -340,11 +365,11 @@ function Navbar({
                   )}
               </div>
 
-              <button className="rounded-full p-2 hover:bg-gray-200 relative">
-                <ShoppingCartIcon
-                  className="w-7 h-7 text-black"
-                  onClick={handleCartCLick}
-                />
+              <button
+                className="rounded-full p-2 hover:bg-gray-200 relative"
+                onClick={handleCartCLick}
+              >
+                <ShoppingCartIcon className="w-7 h-7 text-black" />
                 <span className="text-xs absolute top-5 left-2.5 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
                   {isAuthenticated ? total_items : 0}
                 </span>
@@ -375,6 +400,7 @@ function Navbar({
             </div>
           </div>
         </div>
+        <Alert />
       </navbar>
     </>
   );

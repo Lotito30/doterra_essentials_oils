@@ -188,9 +188,9 @@ class ListRelatedView(APIView):
             related_products = related_products.exclude(id=product_id)
             related_products = ProductSerializer(related_products, many=True)
 
-            if len(related_products.data) > 3:
+            if len(related_products.data) > 6:
                 return Response(
-                    {'related_products': related_products.data[:3]},
+                    {'related_products': related_products.data[:6]},
                     status=status.HTTP_200_OK)
             elif len(related_products.data) > 0:
                 return Response(

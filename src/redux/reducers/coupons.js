@@ -1,8 +1,7 @@
-import { GET_COUPON_SUCCESS, GET_COUPON_FAIL } from "../actions/types";
+import { GET_COUPON_SUCCESS, GET_COUPON_FAIL, RESET_COUPON } from "../actions/types";
 
 const initialState = {
   coupon: null,
-  notFound : null,
 };
 
 export default function Coupons(state = initialState, action) {
@@ -13,14 +12,14 @@ export default function Coupons(state = initialState, action) {
       return {
         ...state,
         coupon: payload.coupon,
-        notFound:null,
       };
 
-    case GET_COUPON_FAIL:
+    case 
+    GET_COUPON_FAIL,
+    RESET_COUPON:
       return {
         ...state,
         coupon: null,
-        notFound:payload.error,
       };
     default:
       return state;

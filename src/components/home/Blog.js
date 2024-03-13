@@ -11,7 +11,7 @@ function Blog () {
         </h2>
       </div>
     </div>
-
+{/* BUSCAR LOS PRODUCTOS QUE TENGAN REVIEW Y MOSTRAR 4 REVIEWS EN CAROUSEL INFINITO */}
     <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
       <blockquote class="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8">
         <div>

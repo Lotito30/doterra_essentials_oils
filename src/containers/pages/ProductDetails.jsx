@@ -1,13 +1,17 @@
 import { Disclosure, Tab } from "@headlessui/react";
 import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
-import { CheckIcon, ClockIcon, StarIcon } from "@heroicons/react/solid";
+import { BanIcon, CheckIcon, ClockIcon, StarIcon, XCircleIcon } from "@heroicons/react/solid";
 import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import {
+  get_products_by_arrival,
+  get_products_by_sold,
+} from "../../redux/actions/products";
 import {
   add_item,
   get_item_total,
@@ -19,14 +23,23 @@ import {
   get_related_products,
 } from "../../redux/actions/products";
 import {
+  create_review,
+  delete_review,
+  filter_reviews,
+  get_review,
+  get_reviews,
+  update_review,
+} from "../../redux/actions/reviews";
+import {
   add_wishlist_item,
   get_wishlist_item_total,
   get_wishlist_items,
   remove_wishlist_item,
 } from "../../redux/actions/wishlist";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CarouselProducts from "components/carousel/CarouselProducts";
 const products = {
   rating: 4,
   details: [
@@ -62,7 +75,19 @@ function ProductDetails({
   get_wishlist_items,
   get_wishlist_item_total,
   remove_wishlist_item,
+  get_products_by_arrival,
+  get_products_by_sold,
   wishlist,
+  products_sold,
+  related_products,
+  get_reviews,
+  get_review,
+  create_review,
+  update_review,
+  delete_review,
+  filter_reviews,
+  review,
+  reviews,
 }) {
   const params = useParams();
   const productId = params.productId;
@@ -103,13 +128,21 @@ function ProductDetails({
       await get_wishlist_item_total();
     }
   };
-
+  
   useEffect(() => {
     get_product(productId);
     get_related_products(productId);
+    get_products_by_arrival();
+    get_products_by_sold();
     get_wishlist_items();
     get_wishlist_item_total();
   }, []);
+  
+  useEffect(() => {
+    get_reviews(productId);
+  }, [productId]);
+  const reduceRating = reviews ? reviews.reduce((previous, current) => {return Number(previous) + Number(current.rating)},1) : 0
+  const averageRating = reviews ? reduceRating / reviews.length : 4
 
   return (
     <Layout>
@@ -136,20 +169,19 @@ function ProductDetails({
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
       {product && product !== undefined && product !== null && (
-        <div className="max-w-2xl mx-auto px-4 py-14 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
+        <div className="max-w-2xl mx-auto px-4 py-14 sm:px-6 lg:max-w-7xl lg:px-8 ">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start p-4">
             {/* Image gallery */}
             <Tab.Group as="div" className="flex">
               <Tab.Panels className="w-full lg:aspect-w-1 lg:aspect-h-1">
                 <Tab.Panel key={product.id}>
                   <img
                     src={GetSrcPhoto(product.photo)}
-                    className="w-1/2 object-center object-cover lg:w-full mx-auto"
+                    className="w-1/2 object-center object-cover lg:w-4/6 mx-auto"
                   />
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
-
             {/* Product info */}
             <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
               <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 capitalize">
@@ -161,7 +193,6 @@ function ProductDetails({
                 <p className="text-3xl text-gray-900">AED {product.price} </p>
               </div>
 
-              {/* Reviews */}
               <div className="mt-3">
                 <h3 className="sr-only">Reviews</h3>
                 <div className="flex items-center">
@@ -170,8 +201,8 @@ function ProductDetails({
                       <StarIcon
                         key={rating}
                         className={classNames(
-                          products.rating > rating
-                            ? "text-orange-standard"
+                          averageRating > rating
+                            ? "text-yellow-400"
                             : "text-gray-300",
                           "h-5 w-5 flex-shrink-0"
                         )}
@@ -198,7 +229,7 @@ function ProductDetails({
                   </>
                 ) : (
                   <>
-                    <ClockIcon
+                    <BanIcon
                       className="flex-shrink-0 h-5 w-5 text-gray-300"
                       aria-hidden="true"
                     />
@@ -240,22 +271,28 @@ function ProductDetails({
                       Add to cart
                     </button>
                   )}
-                  
+
                   <button
                     onClick={addToWishList}
                     className={`ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 
                     `}
                   >
-                    {wishlist && product?.id && wishlist.find(
+                    {wishlist &&
+                    product?.id &&
+                    wishlist.find(
                       (item) =>
                         item.product.id.toString() === product.id.toString()
-                    ) 
-                    ? <FontAwesomeIcon icon={faHeart} className="h-5 w-5 flex-shrink-0 text-red-500"/>
-                    : <HeartIcon
-                      className="h-5 w-5 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                  }
+                    ) ? (
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        className="h-5 w-5 flex-shrink-0 text-red-500"
+                      />
+                    ) : (
+                      <HeartIcon
+                        className="h-5 w-5 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                    )}
                     <span className="sr-only">Add to favorites</span>
                   </button>
                 </div>
@@ -315,6 +352,88 @@ function ProductDetails({
               </section>
             </div>
           </div>
+          {/* DESCRIPTION PRODUCTS */}
+          <section className="my-5 ">
+            <div className="">
+              <div className="shadow-card">
+                <div>
+                  <h1 className="text-2xl uppercase">
+                    Descripcion del producto en un recuadro
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          {/* SOLD PRODUCTS */}
+          <section className="my-5 ">
+            <div>
+              <div>
+                <CarouselProducts
+                  title={"Best Seller"}
+                  description={"Best Seller Description"}
+                  data={products_sold}
+                />
+              </div>
+            </div>
+          </section>
+          {/* INTEREST PRODUCTS */}
+          <section className="my-5 ">
+            <div>
+              <CarouselProducts
+                title={"This might interest you"}
+                description={"This might interest you description"}
+                data={""}
+              />
+            </div>
+          </section>
+          {/* REVIEWS  */}
+          <section className="my-5">
+            {/* SI COMPRO PUEDE SER PERMITIDO QUE EL HAGA REVIEW */}
+            <div className="shadow-card">
+              <div className="">
+                <div>
+                  <Link
+                    to={`/create-review/product/${productId}`}
+                    className="underline"
+                  >
+                    Create Review
+                  </Link>
+                  {reviews &&
+                    reviews.map((rev, index) => (
+                      <blockquote class="flex flex-col justify-between bg-white p-4" key={index}>
+                        <div>
+                          <div class="flex">
+                            {[0, 1, 2, 3, 4].map((star) => (
+                              <StarIcon
+                                key={star}
+                                className={classNames(
+                                  rev.rating >= star
+                                    ? "text-yellow-400"
+                                    : "text-gray-300",
+                                  "h-5 w-5 flex-shrink-0"
+                                )}
+                                aria-hidden="true"
+                              />
+                            ))}
+                          </div>
+
+                          <div class="mt-2">
+                            <p class="mt-2 leading-relaxed text-gray-700">
+                              {rev.comment}
+                            </p>
+                          </div>
+                        </div>
+
+                        <footer class="mt-1 text-sm font-medium text-gray-700">
+                          &mdash; {rev.user}
+                        </footer>
+                      </blockquote>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       )}
     </Layout>
@@ -325,6 +444,10 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   product: state.Products.product,
   wishlist: state.Wishlist.items,
+  reviews: state.Reviews.reviews,
+  review: state.Reviews.review,
+  products_sold: state.Products.products_sold,
+  related_products: state.Products.related_products,
 });
 export default connect(mapStateToProps, {
   get_product,
@@ -337,4 +460,12 @@ export default connect(mapStateToProps, {
   get_wishlist_items,
   get_wishlist_item_total,
   remove_wishlist_item,
+  get_reviews,
+  get_review,
+  create_review,
+  update_review,
+  delete_review,
+  filter_reviews,
+  get_products_by_arrival,
+  get_products_by_sold,
 })(ProductDetails);

@@ -1,8 +1,21 @@
-import fondoHome3 from "assets/img/fondoHome3.webp";
-import fondoHome4 from "assets/img/fondoHome4.webp";
-import fondoHome from "assets/img/fondoHome.jpg";
+import GetSrcPhoto from "components/photo/GetSrcPhoto";
+import { useEffect, useState } from "react";
 
-function Content() {
+function Content({ products }) {
+  const [srcPhoto, setSrcPhoto] = useState();
+
+  useEffect(() => {
+    let selectedPhotos = [];
+    while (selectedPhotos.length < 3) {
+      let numberPhoto = Math.floor(Math.random() * products.length);
+
+      if (!selectedPhotos.includes(numberPhoto)) {
+        selectedPhotos.push(numberPhoto);
+      }
+    }
+    setSrcPhoto(selectedPhotos)
+  }, []);
+
   return (
     <div className="px-4 pb-10 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
       <div className="grid gap-10 lg:grid-cols-2">
@@ -25,20 +38,20 @@ function Content() {
         <div className="flex items-center justify-center -mx-4 lg:pl-8">
           <div className="flex flex-col items-end px-3">
             <img
-              className="object-cover mb-6 rounded shadow-lg h-28 sm:h-48 xl:h-56 w-28 sm:w-48 xl:w-56"
-              src={fondoHome}
+              className="object-cover mb-6 rounded-xl shadow-navbar h-28 sm:h-48 xl:h-56 w-28 sm:w-48 xl:w-56"
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[0]].photo) : ""}
               alt=""
             />
             <img
-              className="object-cover w-20 h-20 rounded shadow-lg sm:h-32 xl:h-40 sm:w-32 xl:w-40"
-              src={fondoHome3}
+              className="object-cover w-20 h-20 rounded-lg shadow-navbar sm:h-32 xl:h-40 sm:w-32 xl:w-40"
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[1]].photo) : ""}
               alt=""
             />
           </div>
           <div className="px-3">
             <img
-              className="object-cover w-40 h-40 rounded shadow-lg sm:h-64 xl:h-80 sm:w-64 xl:w-80"
-              src={fondoHome4}
+              className="object-cover w-40 h-40 rounded-lg shadow-navbar sm:h-64 xl:h-80 sm:w-64 xl:w-80"
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[2]].photo) : ""}
               alt=""
             />
           </div>

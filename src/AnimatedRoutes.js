@@ -22,6 +22,7 @@ import Checkout from "containers/pages/Checkout";
 import Dashboard from "containers/pages/Dashboard";
 import Thankyou from "containers/pages/ThankYou";
 import WishList from "containers/pages/WishList";
+import ReviewsProductDetail from "containers/pages/CreateReview";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -54,6 +55,10 @@ function AnimatedRoutes() {
       <Route exact path="/dashboard/payments" element={<Dashboard />} />
       <Route exact path="/dashboard/payment/:transaction_id" element={<Dashboard />} />
       <Route exact path="/dashboard/profile/edit" element={<Dashboard />} />
+
+      {/* REVIEWS */}
+      <Route exact path="/create-review/product/:productId" element={<ReviewsProductDetail />} />
+
     </Routes>
   );
 }

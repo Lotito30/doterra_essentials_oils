@@ -14,10 +14,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { setAlert } from "../../redux/actions/alert";
 import { get_shipping_options } from "../../redux/actions/shipping";
 
+
 function Cart({
-  get_items,
-  get_total,
-  get_item_total,
   isAuthenticated,
   items,
   amount,
@@ -26,6 +24,9 @@ function Cart({
   update_item,
   setAlert,
   get_shipping_options,
+  get_items,
+  get_total,
+  get_item_total,
 }) {
   const navigate = useNavigate();
   const [render, setRender] = useState(false);
@@ -42,7 +43,7 @@ function Cart({
       await get_shipping_options();
     };
     fetchItems();
-  }, [render, isAuthenticated, navigate]);
+  }, [render, isAuthenticated, get_shipping_options ]);
 
   const showItems = () => {
     return (
@@ -132,7 +133,7 @@ function Cart({
       <div className="bg-white">
         <div className="max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Shopping Cart Items <span className="text-green-500">({total_items})</span>
+            Shopping Cart Items <span className="text-gray-500">({total_items})</span>
           </h1>
           <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
             <section aria-labelledby="cart-heading" className="lg:col-span-7">
@@ -173,15 +174,15 @@ function Cart({
                         map de items con su nombre, valor unitario y precio
                         multiplicado por la cantidad de productos comprados
                       </span>
-                      <dt className="text-sm text-gray-600">
+                      <dt className="text-sm text-black font-bold">
                         {item.product.name} x {item.count}
                       </dt>
 
                       <dd className="text-sm font-medium text-gray-900">
-                        AED {(parseFloat(item.product.price) * item.count).toFixed(
+                        {(parseFloat(item.product.price) * item.count).toFixed(
                           2
                         )}{" "}
-                        
+                        AED
                       </dd>
                     </div>
                   ))}
@@ -190,7 +191,7 @@ function Cart({
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                  AED {amount.toFixed(2)} 
+                   {amount.toFixed(2)} AED
                   </dd>
                 </div>
               </dl>
@@ -214,12 +215,12 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  get_items,
-  get_total,
-  get_item_total,
   remove_item,
   update_item,
   setAlert,
   // remove_wishlist_item
   get_shipping_options,
+  get_items,
+  get_total,
+  get_item_total,
 })(Cart);

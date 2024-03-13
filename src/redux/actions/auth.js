@@ -118,7 +118,7 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
       dispatch({
         type: REMOVE_AUTH_LOADING,
       });
-      dispatch(setAlert("Error connecting to server, try again later", "red"));
+      dispatch(setAlert(error.response.data.email, "red"));
     }
 };
 
@@ -197,7 +197,7 @@ export const signin = (email, password) => async (dispatch) => {
       dispatch({
         type: LOGIN_FAIL,
       });
-      dispatch(setAlert("Error Logging In", "red"));
+      dispatch(setAlert("Email address or Password is incorrect", "red"));
     }
   } catch (error) {
     console.error("Error response data:", error.response.data); 
@@ -207,7 +207,7 @@ export const signin = (email, password) => async (dispatch) => {
     dispatch({
       type: REMOVE_AUTH_LOADING,
     });
-    dispatch(setAlert("Error Logging In, try again later", "red"));
+    dispatch(setAlert("Email address or Password is incorrect", "red"));
   }
 };
 
@@ -416,5 +416,4 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT,
   });
-  dispatch(setAlert("Succesfully logged out", "green"));
 };

@@ -24,6 +24,7 @@ import {
   SYNCH_CART_SUCCESS,
   SYNCH_CART_FAIL,
 } from "./types";
+import { setAlert } from "./alert";
 
 export const add_item = (product) => async (dispatch) => {
   if (localStorage.getItem("access")) {
@@ -50,16 +51,20 @@ export const add_item = (product) => async (dispatch) => {
           type: ADD_ITEM_SUCCESS,
           payload: res.data,
         });
+        dispatch(setAlert("Item added to your cart", "green"))
       } else {
         dispatch({
           type: ADD_ITEM_FAIL,
         });
+        dispatch(setAlert("Item don't added", "red"))
       }
     } catch (err) {
       console.log(`Error response data add_item ${JSON.stringify(err.response.data)}`);
       dispatch({
         type: ADD_ITEM_FAIL,
       });
+      dispatch(setAlert(err.response.data.error, "red"))
+
     }
   } else {
     let cart = [];
@@ -316,15 +321,19 @@ export const remove_item = (item) => async (dispatch) => {
           type: REMOVE_ITEM_SUCCESS,
           payload: res.data,
         });
+        dispatch(setAlert("Item removed from you cart", "red"))
       } else {
         dispatch({
           type: REMOVE_ITEM_FAIL,
         });
+        dispatch(setAlert("Item not removed", "red"))
+
       }
     } catch (err) {
       dispatch({
         type: REMOVE_ITEM_FAIL,
       });
+      dispatch(setAlert("Item not removed", "red"))
     }
   } else {
     let cart = [];
@@ -339,7 +348,6 @@ export const remove_item = (item) => async (dispatch) => {
         }
       });
     }
-
     dispatch({
       type: REMOVE_ITEM,
       payload: new_cart,

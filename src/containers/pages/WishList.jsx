@@ -1,15 +1,17 @@
+import { TrashIcon } from "@heroicons/react/solid";
+import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { connect } from "react-redux";
+import { Link, Navigate } from "react-router-dom";
 import {
   get_wishlist_item_total,
   get_wishlist_items,
   remove_wishlist_item,
 } from "../../redux/actions/wishlist";
-import { useEffect } from "react";
-import GetSrcPhoto from "components/photo/GetSrcPhoto";
-import { Link } from "react-router-dom";
-import { TrashIcon } from "@heroicons/react/solid";
+import CarouselProducts from "components/carousel/CarouselProducts";
+import { get_related_products } from "../../redux/actions/products";
 
 function WishList({
   wishlist,
@@ -17,12 +19,31 @@ function WishList({
   get_wishlist_item_total,
   total_items,
   remove_wishlist_item,
+  isAuthenticated,
+  related_products,
+  get_related_products,
 }) {
+  const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     get_wishlist_items();
     get_wishlist_item_total();
-  }, [remove_wishlist_item]);
+    setDataLoaded(true);
+  }, []);
 
+  useEffect(() => {
+    if (wishlist && wishlist.length > 0) {
+      const fetchRelated = async () => {
+        await get_related_products(wishlist[0].product.category);
+      };
+      fetchRelated();
+    }
+
+    
+  }, []);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
   const showItems = () => {
     return (
       <div>
@@ -33,10 +54,7 @@ function WishList({
             return (
               <div key={index}>
                 <article className="rounded-xl p-4 ring ring-indigo-50 sm:p-6 lg:p-8 relative mb-3">
-                  <Link
-                    to={`/product/${item.product.id}`}
-                    className="cursor-pointer"
-                  >
+                  <Link to={`/product/${item.product.id}`}>
                     <div className="flex items-start sm:gap-8 ">
                       <img
                         className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48 "
@@ -52,8 +70,8 @@ function WishList({
                         </p>
 
                         <div className="mt-4 sm:flex sm:items-center sm:gap-2">
-                          <p className="mt-2 text-xl font-medium text-gray-500 sm:mt-0">
-                            AED {item.product.price}
+                          <p className="text-2xl text-gray-900">
+                            {item.product.price} AED
                           </p>
                         </div>
                       </div>
@@ -107,39 +125,36 @@ function WishList({
       </Helmet>
       <div className="max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Wishlist Items <span className="text-green-500">({total_items})</span>
+          Wishlist Items <span className="text-gray-500">({total_items})</span>
         </h1>
         <div className="mt-6 grid grid-cols-1 gap-y-3 items-start">
           <section aria-labelledby="cart-heading">
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping wishlist
             </h2>
-            <ul role="list" className="">
-              {wishlist && showItems()}
-            </ul>
+            {dataLoaded ? (
+              <ul role="list" className="">
+                {wishlist && showItems()}
+              </ul>
+            ) : (
+              <p>Loaded...</p>
+            )}
           </section>
 
-          {/* RELATED ITEMS */}
-          <section
-            aria-labelledby="summary-heading"
-            className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0"
-          >
-            <h2
-              id="summary-heading"
-              className="text-lg font-medium text-gray-900"
-            >
-              Related Items
-            </h2>
-            <div className="mt-2">
-              <div className="flex items-center justify-between mt-0.5">
-                <span className="sr-only">
-                  map de items con su nombre, valor unitario y precio
-                  multiplicado por la cantidad de productos comprados
-                </span>
+          {/* RELATED PRODUCTS */}
+          {wishlist && wishlist.length > 0 && (
+            <section className="my-5">
+              <div>
+                <div>
+                  <CarouselProducts
+                    title={"Related Products"}
+                    description={"Related Products description"}
+                    data={related_products}
+                  />
+                </div>
               </div>
-            </div>
-            <dl className="mt-6 space-y-4">CARUSEL</dl>
-          </section>
+            </section>
+          )}
         </div>
       </div>
     </Layout>
@@ -148,10 +163,13 @@ function WishList({
 const mapStateToProps = (state) => ({
   wishlist: state.Wishlist.items,
   total_items: state.Wishlist.total_items,
+  isAuthenticated: state.Auth.isAuthenticated,
+  related_products: state.Products.related_products,
 });
 
 export default connect(mapStateToProps, {
   get_wishlist_items,
   get_wishlist_item_total,
   remove_wishlist_item,
+  get_related_products,
 })(WishList);

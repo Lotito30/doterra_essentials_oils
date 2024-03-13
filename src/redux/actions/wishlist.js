@@ -10,6 +10,7 @@ import {
     REMOVE_WISHLIST_ITEM_FAIL,
     CLEAR_WISHLIST,
 } from './types';
+import { setAlert } from './alert';
 
 export const get_wishlist_items = () => async dispatch => {
     if (localStorage.getItem('access')) {
@@ -63,6 +64,7 @@ export const add_wishlist_item = product_id => async dispatch => {
                     type: ADD_WISHLIST_ITEM_SUCCESS,
                     payload: res.data
                 });
+                dispatch(setAlert('item added to your wishlist','green'))
             } else {
                 dispatch({
                     type: ADD_WISHLIST_ITEM_FAIL
@@ -70,7 +72,7 @@ export const add_wishlist_item = product_id => async dispatch => {
             }
         } catch(err) {
             console.log(`Error response: ${JSON.stringify(err.response.data)}`)
-
+            
             dispatch({
                 type: ADD_WISHLIST_ITEM_FAIL
             });
@@ -131,6 +133,8 @@ export const remove_wishlist_item = product_id => async dispatch => {
                     type: REMOVE_WISHLIST_ITEM_SUCCESS,
                     payload: res.data
                 });
+                 dispatch(setAlert('item removed from your wishlist','green'))
+
             } else {
                 dispatch({
                     type: REMOVE_WISHLIST_ITEM_FAIL
@@ -141,6 +145,7 @@ export const remove_wishlist_item = product_id => async dispatch => {
             dispatch({
                 type: REMOVE_WISHLIST_ITEM_FAIL
             });
+
         }
     }
 

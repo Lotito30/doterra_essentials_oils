@@ -4,18 +4,7 @@ import Card from "components/card/CardShop";
 function ProductsArrival({ data }) {
   return (
     <>
-      <section>
-        <div className="max-w-xl md:mx-auto sm:text-center px-6 lg:max-w-2xl text-center py-8">
-          <div>
-            <p className="inline-block px-3 mb-4 text-xs font-semibold tracking-wider text-orange-standard uppercase rounded-full bg-teal-accent-400">
-              New Arrivals
-            </p>
-          </div>
-          <h2 className="max-w-lg font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl mx-auto text-center">
-            Discover the latest essential oils in our collection
-          </h2>
-        </div>
-      </section>
+      
       <div className="max-w-2xl mx-auto py-8 px-4 lg:max-w-7xl lg:px-8">
         <header className="pt-4">
           <h2 className="font-bold text-gray-900 text-4xl">New Arrivals</h2>

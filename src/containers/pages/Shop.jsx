@@ -1,18 +1,16 @@
-import Layout from "hocs/layouts/Layout";
-import { Fragment, useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
-import { connect } from "react-redux";
-import { get_categories } from "../../redux/actions/categories";
-import {
-  get_filtered_products,
-  get_products,
-} from "../../redux/actions/products";
-import { Oval } from "react-loader-spinner";
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { FilterIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/solid";
 import Card from "components/card/CardShop";
 import { prices } from "helpers/fixedPrices";
+import Layout from "hocs/layouts/Layout";
+import { Fragment, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { Oval } from "react-loader-spinner";
+import { connect } from "react-redux";
+import { get_categories } from "../../redux/actions/categories";
+import { get_filtered_products } from "../../redux/actions/products";
+import CarouselProducts from "components/carousel/CarouselProducts";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +19,6 @@ function classNames(...classes) {
 function Products({
   get_categories,
   categories,
-  get_products,
   products,
   get_filtered_products,
   filtered_products,
@@ -43,10 +40,9 @@ function Products({
   useEffect(() => {
     const fetchCategories = async () => {
       await get_categories();
-      await get_products();
     };
     fetchCategories();
-  }, []);
+  }, [get_categories]);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -127,7 +123,6 @@ function Products({
 
     return results;
   };
-
   return (
     <Layout>
       <Helmet>
@@ -773,11 +768,18 @@ function Products({
                 <div className="lg:col-span-3">
                   {products && showProducts()}
                 </div>
+              </div>
+            </section>
+            {/* interested in PRODUCTS */}
+            {/* RECORRER LOS PRODUCTOS Y AL AZAR MOSTRAR 6 PRODUCTOS CON RANDOM */}
+            <section className="my-5 sr-only">
+              <div>
                 <div>
-                  <h1 className="text-2xl">Related Products</h1>
-                </div>
-                <div>
-                  <h1 className="text-2xl">Products you may be interested in</h1>
+                  <CarouselProducts
+                    title={"Products you may be interested in"}
+                    description={"Products you may be interested in description"}
+                    data={categories}
+                  />
                 </div>
               </div>
             </section>
@@ -797,6 +799,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   get_categories,
-  get_products,
   get_filtered_products,
 })(Products);

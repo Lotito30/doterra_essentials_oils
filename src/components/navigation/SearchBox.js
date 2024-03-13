@@ -16,7 +16,7 @@ const SearchBox = ({ search, onSubmit, onChange, handleSearchCLick }) => {
         >
           <XIcon
             className="w-6 h-6 cursor-pointer"
-            onClick={() => setSearchClick(false)}
+            onClick={handleSearchCLick}
           />
           {/* SEARCH */}
           <label htmlFor="Search" className="sr-only">
