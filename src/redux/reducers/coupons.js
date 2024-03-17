@@ -14,9 +14,8 @@ export default function Coupons(state = initialState, action) {
         coupon: payload.coupon,
       };
 
-    case 
-    GET_COUPON_FAIL,
-    RESET_COUPON:
+    case GET_COUPON_FAIL:
+    case RESET_COUPON:
       return {
         ...state,
         coupon: null,

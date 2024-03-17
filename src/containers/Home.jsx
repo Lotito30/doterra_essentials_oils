@@ -60,11 +60,11 @@ function Home({
       <Header />
       {/* <Statistic /> */}
       <Featured/>
-      {products && products_arrival && <CarouselProducts title={"New Arrivals"} description={"Explore the latest in our natural oil collection. Freshly curated, high-quality products await. Discover your new favorite today."} data={products_arrival} />}
-      {products && products_sold && <CarouselProducts title={"Best Seller"} description={"Dive into our Best Sellers. These popular natural oils have won over our customers. Experience their charm and make them yours."} data={products_sold} />}
+      {products_arrival?.length >= 3 && <CarouselProducts title={"New Arrivals"} description={"Explore the latest in our natural oil collection. Freshly curated, high-quality products await. Discover your new favorite today."} data={products_arrival} />}
+      {products_sold?.length >= 3 && <CarouselProducts title={"Best Seller"} description={"Dive into our Best Sellers. These popular natural oils have won over our customers. Experience their charm and make them yours."} data={products_sold} />}
       <Features />
       <CTA />
-      {products && products.length >= 3 && <Content products={products}/>}
+      {products?.length >= 3 && <Content products={products}/>}
       <Blog />
     </Layout>
   );

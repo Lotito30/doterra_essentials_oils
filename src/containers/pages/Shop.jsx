@@ -62,58 +62,24 @@ function Products({
   },[])
   const showProducts = () => {
     let results = [];
-    let display = [];
 
-    if (
-      filtered_products &&
-      filtered_products !== null &&
-      filtered_products !== undefined &&
-      filtered
-    ) {
-      filtered_products.map((product, index) => {
-        return display.push(
-          <div key={index}>
-            <Card data={product} />
-          </div>
-        );
-      });
-    } else if (
-      search_products &&
-      search_products.length > 0 &&
-      search_products !== null &&
-      search_products !== undefined
-    ) {
-      search_products.map((product, index) => {
-        return display.push(
-          <div key={index}>
-            <Card data={product} />
-          </div>
-        );
-      });
-    } else if (
-      !filtered &&
-      products &&
-      products !== null &&
-      products !== undefined
-    ) {
-      products.map((product, index) => {
-        return display.push(
-          <div key={index}>
-            <Card data={product} />
-          </div>
-        );
-      });
+    const productsList = filtered ? filtered_products : search_products || products
+    
+    if(!productsList || productsList.length === 0){
+      return <p>No products to display</p>
     }
 
-    for (let i = 0; i < display.length; i += 3) {
+    for (let i = 0; i < productsList.length; i += 3) {
       results.push(
         <div
           key={i}
           className="mb-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 md:grid-cols-3 xl:gap-x-8"
         >
-          {display[i] ? display[i] : <div className=""></div>}
-          {display[i + 1] ? display[i + 1] : <div className=""></div>}
-          {display[i + 2] ? display[i + 2] : <div className=""></div>}
+          {productsList.slice(i, i+3).map((product,index) => (
+            <div key={index}>
+              <Card data={product}/>
+            </div>
+          ))}
         </div>
       );
     }

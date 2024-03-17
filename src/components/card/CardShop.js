@@ -2,7 +2,6 @@ import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import { Link } from "react-router-dom";
 
 function Card({ data }) {
-  const srcPhoto = GetSrcPhoto(data.photo);
   return (
     data &&
     data !== null && (
@@ -10,7 +9,7 @@ function Card({ data }) {
         <Link to={`/product/${data.id}`}>
           <img
             alt={data.name}
-            src={srcPhoto}
+            src={GetSrcPhoto(data.photo)}
             className="w-1/2 object-center object-fill md:w-5/6 lg:w-4/6 mx-auto"
           />
           <h5 className="text-2xl font-semibold tracking-tight mt-2 underline text-orange-standard">
