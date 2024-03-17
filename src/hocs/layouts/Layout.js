@@ -16,6 +16,7 @@ import { get_item_total, get_items, get_total } from "../../redux/actions/cart";
 import { SearchProvider } from "components/navigation/SearchContext";
 import { get_user_profile } from "../../redux/actions/profile";
 import { get_products } from "../../redux/actions/products";
+import { get_categories } from "../../redux/actions/categories";
 
 function Layout(props) {
 
@@ -25,12 +26,12 @@ function Layout(props) {
       if (props.isAuthenticated) {
         await props.refresh();
         await props.load_user();
-        await props.get_products();
-        await props.get_items();
-        await props.get_total();
-        await props.get_item_total();
         await props.get_user_profile();
       }
+      await props.get_categories();
+      // await props.get_items();
+      // await props.get_total();
+      // await props.get_item_total();
     };
     fetchUser();
   }, [props.isAuthenticated]);
@@ -56,7 +57,8 @@ function Layout(props) {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
-  profile: state.Profile.profile
+  profile: state.Profile.profile,
+  categories: state.Categories.categories
 });
 
 export default connect(mapStateToProps, {
@@ -68,4 +70,5 @@ export default connect(mapStateToProps, {
   get_item_total,
   get_user_profile,
   get_products,
+  get_categories,
 })(Layout);

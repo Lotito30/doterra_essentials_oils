@@ -6,9 +6,9 @@ function Alert({ alert }) {
     <div
       className={`rounded-md bg-${
         alert?.alertType
-      }-500 p-3 absolute top-6 left-1/2 -translate-x-1/2 w-auto z-50 mx-auto -translate-y-10 transition-transform ease-in-out transform ${
+      }-500 p-3 absolute top-0 left-1/2 -translate-x-1/2 w-auto mx-auto -translate-y-10 transition-transform ease-in-out transform ${
         alert ? "translate-y-10 opacity-100" : "translate-y-0 opacity-0"
-      } duration-300`}
+      } duration-200 -z-50`}
     >
       <div className="flex items-center gap-2 justify-center">
         <div className="flex-shrink-0">

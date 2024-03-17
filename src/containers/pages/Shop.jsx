@@ -2,28 +2,27 @@ import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { FilterIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/solid";
 import Card from "components/card/CardShop";
+import CarouselProducts from "components/carousel/CarouselProducts";
 import { prices } from "helpers/fixedPrices";
 import Layout from "hocs/layouts/Layout";
 import { Fragment, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { get_categories } from "../../redux/actions/categories";
-import { get_filtered_products } from "../../redux/actions/products";
-import CarouselProducts from "components/carousel/CarouselProducts";
+import { get_filtered_products, get_products } from "../../redux/actions/products";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function Products({
-  get_categories,
-  categories,
   products,
   get_filtered_products,
   filtered_products,
   search_products,
   loading,
+  categories,
+  get_products,
 }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filtered, setFiltered] = useState(false);
@@ -36,13 +35,6 @@ function Products({
   });
 
   const { category_id, price_range, sortBy, order } = formData;
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      await get_categories();
-    };
-    fetchCategories();
-  }, [get_categories]);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,7 +54,12 @@ function Products({
     });
     await get_filtered_products("0", "Any", "created", "asc");
   };
-
+  useEffect(() => {
+    const fetchProduct = async () => {
+      await get_products()
+    }
+    fetchProduct()
+  },[])
   const showProducts = () => {
     let results = [];
     let display = [];
@@ -120,7 +117,6 @@ function Products({
         </div>
       );
     }
-
     return results;
   };
   return (
@@ -798,6 +794,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  get_categories,
   get_filtered_products,
+  get_products,
 })(Products);

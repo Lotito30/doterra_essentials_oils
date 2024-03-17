@@ -29,7 +29,8 @@ function WishList({
     get_wishlist_item_total();
     setDataLoaded(true);
   }, []);
-
+  
+  
   useEffect(() => {
     if (wishlist && wishlist.length > 0) {
       const fetchRelated = async () => {
@@ -40,10 +41,11 @@ function WishList({
 
     
   }, []);
-
-  if (!isAuthenticated) {
+  
+if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
+
   const showItems = () => {
     return (
       <div>

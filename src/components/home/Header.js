@@ -3,10 +3,14 @@ import { Typewriter } from "react-simple-typewriter";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { IoLogoWhatsapp } from "react-icons/io";
 function Header() {
-  const home = "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome.jpeg"
-  const home1 = "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome1.jpeg"
-  const home3 = "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome3.jpeg"
+  const home =
+    "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome.jpeg";
+  const home1 =
+    "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome1.jpeg";
+  const home3 =
+    "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome3.jpeg";
   const imgCarrusel = [home, home1, home3];
   const settings = {
     dots: false,
@@ -21,24 +25,27 @@ function Header() {
   return (
     <main>
       <div class="px-4 mx-auto max-w-7xl pt-10 lg:pt-5 sm:px-6 md:px-12 lg:px-16 lg:pb-8 relative">
-        <Link to="/">
-          <img
-            class="fixed bottom-5 right-2 w-30 h-20 z-10"
-            alt="Oils"
-            src="https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/iconoWhatsapp.png"
+        <a
+          className="fixed bottom-5 right-2 w-30 h-20 z-10 cursor-pointer "
+          href="https://wa.me/971554693255?text=Hello!%20I'm%20reaching%20out%20from%20the%20doTERRA%20website%20and%20I%20have%20a%20query.%20Can%20you%20please%20assist%20me?%20Thank%20you!"
+          target="_blank"
+        >
+          <IoLogoWhatsapp
+            size={50}
+            color="#25D366"
           />
-        </Link>
+        </a>
         <div class="flex flex-wrap items-center mx-auto max-w-7xl flex-col-reverse lg:flex-row">
           <div class="w-full lg:max-w-lg lg:w-1/2 hidden lg:inline-block">
-              <Slider {...settings}>
-                {imgCarrusel.map((img, index) => {
-                  return (
-                    <div key={index}>
-                      <img class="w-full h-96 border-none" alt="Oils" src={img} />
-                    </div>
-                  );
-                })}
-              </Slider>
+            <Slider {...settings}>
+              {imgCarrusel.map((img, index) => {
+                return (
+                  <div key={index}>
+                    <img class="w-full h-96 border-none" alt="Oils" src={img} />
+                  </div>
+                );
+              })}
+            </Slider>
           </div>
 
           <div class="flex flex-col items-start mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">

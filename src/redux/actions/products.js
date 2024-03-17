@@ -33,7 +33,8 @@ export const get_products = () => async (dispatch) => {
         dispatch({ 
             type: GET_PRODUCTS_SUCCESS, 
             payload: res.data 
-        });
+          });
+          
     }else{
         dispatch({
             type:GET_PRODUCTS_FAIL
@@ -64,6 +65,7 @@ export const get_products_by_arrival = () => async (dispatch) => {
             type: GET_PRODUCTS_BY_ARRIVAL_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:GET_PRODUCTS_BY_ARRIVAL_FAIL
@@ -94,6 +96,7 @@ export const get_products_by_sold = () => async (dispatch) => {
             type: GET_PRODUCTS_BY_SOLD_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:GET_PRODUCTS_BY_SOLD_FAIL
@@ -125,6 +128,7 @@ export const get_product = (productId) => async (dispatch) => {
             type: GET_PRODUCT_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:GET_PRODUCT_FAIL
@@ -156,6 +160,7 @@ export const get_related_products = (productId) => async (dispatch) => {
             type: RELATED_PRODUCTS_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:RELATED_PRODUCTS_FAIL
@@ -194,6 +199,7 @@ export const get_filtered_products = (category_id,price_range,sort_by,order) => 
             type: FILTER_PRODUCTS_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:FILTER_PRODUCTS_FAIL
@@ -231,6 +237,7 @@ export const get_search_products = (search, category_id) => async (dispatch) => 
             type: SEARCH_PRODUCTS_SUCCESS, 
             payload: res.data 
         });
+
     }else{
         dispatch({
             type:SEARCH_PRODUCTS_FAIL

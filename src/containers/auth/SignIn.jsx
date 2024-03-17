@@ -23,7 +23,6 @@ function SignIn({
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     signin(email, password);
   };
 

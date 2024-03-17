@@ -39,15 +39,15 @@ export default function CarouselProducts({ title, description, data }) {
 
         <p className="mt-4 max-w-xl text-gray-700">{description}</p>
       </header>
-      <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 xl:gap-x-8 slider-container shadow-card">
+      <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 xl:gap-x-8 slider-container shadow-card relative">
         <Slider {...settings}>
           {/* CARD */}
           {data &&
             data.map((product) => <Card key={product.id} data={product} />)}
-            <div className="text-center">
+            <div className="absolute top-1/2 translate-x-32">
             <Link
               to={"/shop"}
-              className="inline-block text-sm font-semibold text-orange-standard hover:text-orange-600"
+              className="inline-block text-md font-semibold text-orange-standard hover:text-orange-600"
             >
               See more products<span aria-hidden="true"> &rarr;</span>
             </Link>

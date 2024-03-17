@@ -1,11 +1,11 @@
+import headerImg from "assets/img/error404.webp";
+import CarouselProducts from "components/carousel/CarouselProducts";
 import Blog from "components/home/Blog";
 import CTA from "components/home/CTA";
 import Content from "components/home/Content";
 import Featured from "components/home/Featured";
 import Features from "components/home/FeaturesSection";
 import Header from "components/home/Header";
-import headerImg from "assets/img/error404.webp";
-import CarouselProducts from "components/carousel/CarouselProducts";
 import Layout from "hocs/layouts/Layout";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
@@ -28,6 +28,7 @@ function Home({
     const fetchProducts = async () =>{
       get_products_by_arrival();
       get_products_by_sold();
+      get_products();
     }
     fetchProducts() 
   }, [get_products_by_arrival, get_products_by_sold, get_products]);
@@ -59,11 +60,11 @@ function Home({
       <Header />
       {/* <Statistic /> */}
       <Featured/>
-      <CarouselProducts title={"New Arrivals"} description={"Explore the latest in our natural oil collection. Freshly curated, high-quality products await. Discover your new favorite today."} data={products_arrival} />
-      <CarouselProducts title={"Best Seller"} description={"Dive into our Best Sellers. These popular natural oils have won over our customers. Experience their charm and make them yours."} data={products_sold} />
+      {products && products_arrival && <CarouselProducts title={"New Arrivals"} description={"Explore the latest in our natural oil collection. Freshly curated, high-quality products await. Discover your new favorite today."} data={products_arrival} />}
+      {products && products_sold && <CarouselProducts title={"Best Seller"} description={"Dive into our Best Sellers. These popular natural oils have won over our customers. Experience their charm and make them yours."} data={products_sold} />}
       <Features />
       <CTA />
-      {products && products.length > 0 && <Content products={products}/>}
+      {products && products.length >= 3 && <Content products={products}/>}
       <Blog />
     </Layout>
   );

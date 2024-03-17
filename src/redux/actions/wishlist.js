@@ -133,7 +133,7 @@ export const remove_wishlist_item = product_id => async dispatch => {
                     type: REMOVE_WISHLIST_ITEM_SUCCESS,
                     payload: res.data
                 });
-                 dispatch(setAlert('item removed from your wishlist','green'))
+                 dispatch(setAlert('item removed from your wishlist','red'))
 
             } else {
                 dispatch({

@@ -13,7 +13,7 @@ class Product(models.Model):
     sold=models.IntegerField(default=0)
     date_created=models.DateTimeField( auto_now=False, auto_now_add=False,default=timezone.now)
 
-    # GUDARDAR FEATURES PARA EL PRODUCT DETAIL
+    # GUARDAR FEATURES PARA EL PRODUCT DETAIL
 
     def get_thumbnail(self):
         if self.photo:

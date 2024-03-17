@@ -33,8 +33,8 @@ export const add_item = (product) => async (dispatch) => {
         "Content-Type": "application/json",
         "Accept": "application/json",
         "Authorization": `JWT ${localStorage.getItem("access")}`,
-      },
-    };
+      }
+    }
 
     const product_id = product.id;
     const body = JSON.stringify({ product_id });
@@ -52,7 +52,9 @@ export const add_item = (product) => async (dispatch) => {
           payload: res.data,
         });
         dispatch(setAlert("Item added to your cart", "green"))
-      } else {
+      } else if(res.status === 200){
+        dispatch(setAlert(res.data.error, "red"))
+      }else {
         dispatch({
           type: ADD_ITEM_FAIL,
         });
@@ -95,7 +97,7 @@ export const add_item = (product) => async (dispatch) => {
       payload: cart,
     });
   }
-};
+}
 
 export const get_items = () => async (dispatch) => {
   if (localStorage.getItem("access")) {
@@ -179,9 +181,9 @@ export const get_total = () => async (dispatch) => {
       cart = JSON.parse(localStorage.getItem("cart"));
 
       cart.map((item) => {
-        total += parseFloat(item.product.price) * parseFloat(item.count);
+        total += parseFloat(item?.product?.price) * parseFloat(item.count);
         compare_total +=
-          parseFloat(item.product.compare_price) * parseFloat(item.count);
+          parseFloat(item?.product?.compare_price) * parseFloat(item.count);
       });
     }
 

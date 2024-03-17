@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   get_products_by_arrival,
   get_products_by_sold,
@@ -91,15 +91,16 @@ function ProductDetails({
 }) {
   const params = useParams();
   const productId = params.productId;
-
+const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
 
   const addToCart = async () => {
+    console.log("addtocart");
     if (
       product &&
       product !== null &&
-      product !== undefined &&
-      product.quantity > 0
+      product !== undefined && 
+      isAuthenticated
     ) {
       setLoading(true);
       await add_item(product);
@@ -107,6 +108,10 @@ function ProductDetails({
       await get_total();
       await get_item_total();
       setLoading(false);
+    }else{
+      console.log("addtocart else");
+      navigate('/signin')
+      return
     }
   };
   const addToWishList = async () => {
@@ -132,15 +137,14 @@ function ProductDetails({
   useEffect(() => {
     get_product(productId);
     get_related_products(productId);
-    get_products_by_arrival();
-    get_products_by_sold();
     get_wishlist_items();
     get_wishlist_item_total();
-  }, []);
+  }, [loading]);
   
   useEffect(() => {
     get_reviews(productId);
   }, [productId]);
+  
   const reduceRating = reviews ? reviews.reduce((previous, current) => {return Number(previous) + Number(current.rating)},1) : 0
   const averageRating = reviews ? reduceRating / reviews.length : 4
 
@@ -264,7 +268,6 @@ function ProductDetails({
                     </button>
                   ) : (
                     <button
-                      //  type="submit"
                       onClick={addToCart}
                       className="max-w-xs flex-1 bg-orange-standard border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium hover:bg-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-orange-standard sm:w-full transition ease-in-out duration-300"
                     >

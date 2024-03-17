@@ -124,8 +124,8 @@ const Checkout = ({
 
   useEffect(() => {
     const FecthClient = async () => {
-      await get_client_token();
       reset_coupon();
+      await get_client_token();
     };
     FecthClient();
   }, []);

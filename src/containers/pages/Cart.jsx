@@ -33,10 +33,6 @@ function Cart({
 
   useEffect(() => {
     const fetchItems = async () => {
-      if (!isAuthenticated) {
-        navigate("/");
-        return;
-      }
       await get_items();
       await get_total();
       await get_item_total();
@@ -106,6 +102,10 @@ function Cart({
     }
   };
 
+  if (!isAuthenticated) {
+    navigate("/");
+    return;
+  }
   return (
     <Layout>
       <Helmet>
@@ -179,7 +179,7 @@ function Cart({
                       </dt>
 
                       <dd className="text-sm font-medium text-gray-900">
-                        {(parseFloat(item.product.price) * item.count).toFixed(
+                        {(parseFloat(item?.product?.price) * item.count).toFixed(
                           2
                         )}{" "}
                         AED

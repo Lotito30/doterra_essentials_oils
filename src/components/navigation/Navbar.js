@@ -4,11 +4,9 @@ import {
   UserIcon,
   XCircleIcon,
 } from "@heroicons/react/solid";
-import icono from "assets/img/dōTERRALogo.png";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { DotLoader } from "react-spinners";
 import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
@@ -35,13 +33,6 @@ function Navbar({
     category_id: 0,
     search: "",
   });
-
-  useEffect(() => {
-    const fecthCategories = async () => {
-      await get_categories();
-    };
-    fecthCategories();
-  }, [get_categories]);
 
   const { category_id, search } = formData;
 
@@ -122,15 +113,15 @@ function Navbar({
       href: "/shop",
     },
     {
-      name: "Caterogies",
-    },
-    {
       name: "About Us",
       href: "/about",
     },
     {
       name: "Contact Us",
       href: "/contact",
+    },
+    {
+      name: "Categories",
     },
   ];
 
@@ -277,12 +268,6 @@ function Navbar({
         to="/signin"
       >
         Sign in
-        <DotLoader
-          className="ml-3"
-          loading={loading}
-          size={20}
-          color="#f2f2f2"
-        />
       </Link>
 
       <Link
@@ -321,10 +306,10 @@ function Navbar({
                   {navBar.map((item) => (
                     <NavLink
                       key={item.name}
-                      to={item.href}
+                      to={item.href || ""}
                       className={({ isActive }) =>
                         `border-b-2 font-bold ${
-                          isActive
+                          isActive && item.name !== "Categories" 
                             ? "text-black border-orange-standard"
                             : "text-gray-400 border-b-transparent hover:border-orange-standard"
                         }`
@@ -339,15 +324,14 @@ function Navbar({
 
             <div className="flex items-center gap-2 relative">
               <div className="relative">
-                {isAuthenticated && (
-                  <SearchBox
-                    categories={categories}
-                    search={search}
-                    onSubmit={onSubmit}
-                    onChange={onChange}
-                    handleSearchCLick={handleSearchCLick}
-                  />
-                )}
+                <SearchBox
+                  categories={categories}
+                  search={search}
+                  onSubmit={onSubmit}
+                  onChange={onChange}
+                  handleSearchCLick={handleSearchCLick}
+                />
+
                 {searchClick &&
                   search_products &&
                   search_products !== null &&

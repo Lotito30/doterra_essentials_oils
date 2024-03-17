@@ -4,7 +4,7 @@ from datetime import timedelta
 import os
 import environ
 
-# env para definir listas o algomas complicado
+# env para definir listas o algo mas complicado
 env = environ.Env() 
 environ.Env.read_env()
 
@@ -18,12 +18,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 DOMAIN = os.environ.get('DOMAIN')
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS_DEV')]
+ALLOWED_HOSTS = [
+                'doterraessentialoils.com',
+                 'www.doterraessentialoils.com',
+                 '127.0.0.1',
+                 'localhost',
+                ]
 
+# RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -82,7 +90,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -110,9 +117,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'doterraessentialoils',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost', 
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        },
+    },
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -122,18 +136,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    'http://www.doterraessentialoils.com',
 ]
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
+    'http://www.doterraessentialoils.com',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://www.doterraessentialoils.com',
 ]
 
 # Password validation
@@ -180,7 +197,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -265,14 +282,6 @@ AUTH_USER_MODEL='user.UserAccount'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # if not DEBUG:
-#     ALLOWED_HOSTS=env.list('ALLOWED_HOSTS_DEPLOY')
-#     CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
-#     CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEPLOY')
-
-#     DATABASES = {
-#         "default": env.db("DATABASE_URL")
-#     }
-#     DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 #     DEFAULT_FROM_EMAIL='Lotitoils - <lotitoils@gmail.com>'
 #     EMAIL_BACKEND='django.core.email.backends.smtp.EmailBackend'

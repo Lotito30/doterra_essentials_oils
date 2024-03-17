@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
+from apps import product
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
 from apps.product.models import Category
@@ -53,16 +54,16 @@ class ListProductsView(APIView):
             )
         if limit <= 0:
             limit = 9
-
+            
         if order == 'desc':
             sortBy = '-' + sortBy
-            products = Product.objects.order_by(sortBy).all()[:int(limit)]
-        elif order == 'asc':
-            products = Product.objects.order_by(sortBy).all()[:int(limit)]
-        else:
-            products = Product.objects.order_by(sortBy).all()
-
-
+            
+        products = Product.objects.all()
+        
+        if sortBy == "sold":
+            products = products.exclude(sold=0)
+        
+        products = Product.objects.order_by(sortBy)[:limit]
         products = ProductSerializer(products, many=True)
 
         if products:

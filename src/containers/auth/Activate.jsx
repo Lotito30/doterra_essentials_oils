@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { activate } from "../../redux/actions/auth";
-import Navbar from "components/navigation/Navbar";
 
 function Activate({ activate, loading }) {
+  const navigate = useNavigate()
   const params = useParams();
 
   const [activated, setActivated] = useState(false);
@@ -15,13 +15,10 @@ function Activate({ activate, loading }) {
   const activate_account = async () => {
     const uid = params.uid;
     const token = params.token;
-    await activate(uid, token);
-    setActivated(true);
+    if(await activate(uid, token) && !loading){
+      navigate('/')
+    };
   };
-
-  if (activated && !loading) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <Layout>

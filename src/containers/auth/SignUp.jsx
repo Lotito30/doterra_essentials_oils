@@ -3,12 +3,11 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/actions/auth";
 
 function SignUp({ signup, loading }) {
-  const [accountCreated, setAccountCreated] = useState(false);
-
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -26,9 +25,9 @@ function SignUp({ signup, loading }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    await signup(first_name, last_name, phone, email, password, re_password);
-    setAccountCreated(true);
+     if(await signup(first_name, last_name, phone, email, password, re_password)){
+       navigate('/')
+     }
   };
 
   return (
@@ -182,6 +181,12 @@ function SignUp({ signup, loading }) {
                         placeholder="Repeat your password*"
                       />
                     </div>
+                    <ul className="py-1 ml-1">
+                    <li className="text-xs">Ensure your password isn't too short. It should contain at least 8 characters.</li>
+                    <li className="text-xs">Ensure your password isn't too common.</li>
+                    <li className="text-xs">Ensure your password isn't entirely numeric.</li>
+                    </ul>
+  
                     <div className="pt-3">
                       {loading ? (
                         <button className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-orange-standard rounded-xl hover:bg-orange-standard focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-standard">

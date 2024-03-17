@@ -2,18 +2,18 @@ import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import { useEffect, useState } from "react";
 
 function Content({ products }) {
-  const [srcPhoto, setSrcPhoto] = useState();
+  const [srcPhoto, setSrcPhoto] = useState([]);
 
   useEffect(() => {
-    let selectedPhotos = [];
-    while (selectedPhotos.length < 3) {
-      let numberPhoto = Math.floor(Math.random() * products.length);
+      let selectedPhotos = [];
+      while (selectedPhotos.length <= 2) {
+        let numberPhoto = Math.floor(Math.random() * products.length);
 
-      if (!selectedPhotos.includes(numberPhoto)) {
-        selectedPhotos.push(numberPhoto);
+        if (!selectedPhotos.includes(numberPhoto)) {
+          selectedPhotos.push(numberPhoto);
+        }
       }
-    }
-    setSrcPhoto(selectedPhotos)
+      setSrcPhoto(selectedPhotos)
   }, []);
 
   return (
@@ -39,20 +39,20 @@ function Content({ products }) {
           <div className="flex flex-col items-end px-3">
             <img
               className="object-cover mb-6 rounded-xl shadow-navbar h-28 sm:h-48 xl:h-56 w-28 sm:w-48 xl:w-56"
-              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[0]].photo) : ""}
-              alt=""
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[0]]?.photo) : ""}
+              alt={products.name}
             />
             <img
               className="object-cover w-20 h-20 rounded-lg shadow-navbar sm:h-32 xl:h-40 sm:w-32 xl:w-40"
-              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[1]].photo) : ""}
-              alt=""
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[1]]?.photo) : ""}
+              alt={products.name}
             />
           </div>
           <div className="px-3">
             <img
               className="object-cover w-40 h-40 rounded-lg shadow-navbar sm:h-64 xl:h-80 sm:w-64 xl:w-80"
-              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[2]].photo) : ""}
-              alt=""
+              src={srcPhoto !== undefined ? GetSrcPhoto(products[srcPhoto[2]]?.photo) : ""}
+              alt={products.name}
             />
           </div>
         </div>
