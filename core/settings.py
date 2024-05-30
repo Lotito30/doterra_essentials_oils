@@ -4,7 +4,7 @@ from datetime import timedelta
 import os
 import environ
 
-# env para definir listas o algomas complicado
+# env para definir listas o algo mas complicado
 env = environ.Env() 
 environ.Env.read_env()
 
@@ -22,8 +22,13 @@ DEBUG = True
 
 DOMAIN = os.environ.get('DOMAIN')
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS_DEV')]
+ALLOWED_HOSTS = [
+                '*',
+                ]
 
+# RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -36,9 +41,19 @@ DJANGO_APPS =[
     'django.contrib.staticfiles',
 ]
 
-PROJECT_APPS =['apps.user',]
+PROJECT_APPS =['apps.user', 'apps.user_profile',]
 
-ECOMMERCE_APPS =['apps.category','apps.product','apps.cart','apps.shipping',]
+ECOMMERCE_APPS =[
+    'apps.category',
+    'apps.product',
+    'apps.cart',
+    'apps.shipping', 
+    'apps.orders',
+    'apps.payment',
+    'apps.coupons',
+    'apps.wishlist',
+    'apps.reviews',
+    ]
 
 THIRD_PARTY_APPS =[
     'corsheaders',
@@ -71,7 +86,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -99,9 +114,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'doterraessentialoils',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost', 
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        },
+    },
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -157,7 +179,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 
@@ -169,7 +191,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -244,19 +266,16 @@ DJOSER = {
     },
 }
 
+BT_ENVIRONMENT=os.environ.get('BT_ENVIRONMENT')
+BT_MERCHANT_ID=os.environ.get('BT_MERCHANT_ID')
+BT_PUBLIC_KEY=os.environ.get('BT_PUBLIC_KEY')
+BT_PRIVATE_KEY=os.environ.get('BT_PRIVATE_KEY')
+
 AUTH_USER_MODEL='user.UserAccount'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # if not DEBUG:
-#     ALLOWED_HOSTS=env.list('ALLOWED_HOSTS_DEPLOY')
-#     CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEPLOY')
-#     CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS_DEPLOY')
-
-#     DATABASES = {
-#         "default": env.db("DATABASE_URL")
-#     }
-#     DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 #     DEFAULT_FROM_EMAIL='Lotitoils - <lotitoils@gmail.com>'
 #     EMAIL_BACKEND='django.core.email.backends.smtp.EmailBackend'

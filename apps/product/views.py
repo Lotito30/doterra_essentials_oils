@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
+from apps import product
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
 from apps.product.models import Category
@@ -41,8 +42,8 @@ class ListProductsView(APIView):
         order = request.query_params.get('order')
         limit = request.query_params.get('limit')
         
-        if not limit:
-            limit = 9
+        if not limit or int(limit) <= 0:
+            limit = 6
 
         try:
             limit = int(limit)
@@ -51,20 +52,19 @@ class ListProductsView(APIView):
                 {'error':'Limit must be an integer'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        if limit <= 0:
-            limit = 9
-
         if order == 'desc':
-            sortby = '-' + sortBy
-            products = Product.objects.order_by(sortBy).all()[:int(limit)]
-        elif order == 'asc':
-            products = Product.objects.order_by(sortBy).all()[:int(limit)]
+            sortBy = '-' + sortBy
+            
+        products = Product.objects.all()
+        
+        if sortBy == "-sold":
+            products = products.exclude(sold=0)
+            products = Product.objects.filter(sold__gt=0).order_by(sortBy)[:limit] 
         else:
-            products = Product.objects.order_by(sortBy).all()
-
-
+            products = Product.objects.order_by(sortBy)[:limit]
+            
         products = ProductSerializer(products, many=True)
-
+        
         if products:
             return Response({'products':products.data}, status=status.HTTP_200_OK)
         else:
@@ -95,9 +95,6 @@ class ListSearchView(APIView):
             search_results = Product.objects.filter(
                 Q(description__icontains=search) | Q(name__icontains=search)
             )
-        print(f'Search: {search}')
-        print(f'Category ID: {category_id}')
-        print(f'Search Results Count: {search_results.count()}')
 
         if category_id == 0:
             search_results = ProductSerializer(search_results, many=True)
@@ -191,9 +188,9 @@ class ListRelatedView(APIView):
             related_products = related_products.exclude(id=product_id)
             related_products = ProductSerializer(related_products, many=True)
 
-            if len(related_products.data) > 3:
+            if len(related_products.data) > 6:
                 return Response(
-                    {'related_products': related_products.data[:3]},
+                    {'related_products': related_products.data[:6]},
                     status=status.HTTP_200_OK)
             elif len(related_products.data) > 0:
                 return Response(
@@ -291,3 +288,39 @@ class ListBySearchView(APIView):
             return Response(
                 {'error': 'No products found'},
                 status=status.HTTP_200_OK)
+            
+class CreateProduct(APIView):
+    def post(self,request,format=None):
+        user = self.request.user
+        data = self.request.data
+        
+        name = data['product']
+        photo = data['photo']
+        description = data['description']
+        price = str(data['price'])
+        compare_price = str(data['comprare_price'])
+        category = data['category']
+        quantity = str(data['quantity'])
+        
+        
+        try:
+            Product.objects.create(
+                name=name,
+                photo=photo,
+                description=description,
+                price=float(price),
+                comprare_price=float(compare_price),
+                category=category,
+                quantity=int(quantity),
+            )
+        except:
+            return Response(
+                {'error':'Product no created'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        
+        
+        
+        
+    

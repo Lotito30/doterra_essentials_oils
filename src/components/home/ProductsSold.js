@@ -1,4 +1,4 @@
-import Cart from "components/cart/cart";
+import Card from "components/card/CardShop";
 import { Link } from "react-router-dom";
 
 function ProductsSold({ data }) {
@@ -14,12 +14,13 @@ function ProductsSold({ data }) {
           </p>
         </header>
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          <Cart data={data}/>
+          {/* CARD */}
+          {data && data.map((product) => (<Card key={product.id} data={product}/>))}
         </div>
         <div className="mt-6">
           <Link
             to="/shop"
-            className="block text-sm font-semibold text-orange-standard hover:text-orange-standard"
+            className="inline-block text-sm font-semibold text-orange-standard hover:text-orange-standard"
           >
             See more products<span aria-hidden="true"> &rarr;</span>
           </Link>
