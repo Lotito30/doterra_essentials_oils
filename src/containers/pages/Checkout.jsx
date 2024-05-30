@@ -8,13 +8,13 @@ import { connect } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { countries } from "../../helpers/FixedCountries";
 import { refresh } from "../../redux/actions/auth";
+import { check_coupon, reset_coupon } from "../../redux/actions/coupons";
 import {
   get_client_token,
   get_payment_total,
   process_payment,
 } from "../../redux/actions/payment";
-import { check_coupon, reset_coupon } from "../../redux/actions/coupons";
-import { TicketIcon, TruckIcon } from "@heroicons/react/solid";
+import { get_shipping_options } from "../../redux/actions/shipping";
 
 {
   /* <Oval
@@ -47,8 +47,8 @@ const Checkout = ({
   total_after_coupon,
   profile,
   reset_coupon,
+  get_shipping_options,
 }) => {
-  const navigate = useNavigate()
   const paymentMethods = [
     { id: "cash", label: "Cash on Delivery" },
     { id: "credit", label: "Credit Card" },
@@ -57,14 +57,15 @@ const Checkout = ({
   const [selectedMethod, setSelectedMethod] = useState(paymentMethods[0].id);
 
   const [formData, setFormData] = useState({
-    full_name: user ? `${user.first_name} ${user.last_name}` : "",
-    address_line_1: "",
-    address_line_2: "",
+    full_name: `${user?.first_name} ${user?.last_name}`,
+    street: "",
+    building_villa: "",
+    department: "",
     city: "",
-    state_province_region: "",
+    district: "",
     postal_zip_code: "",
     country_region: "United Arab Emirates",
-    telephone_number: "",
+    telephone_number: user?.phone,
     coupon_name: "",
     shipping_id: "",
   });
@@ -77,10 +78,11 @@ const Checkout = ({
   });
   const {
     full_name,
-    address_line_1,
-    address_line_2,
+    street,
+    building_villa,
+    department,
     city,
-    state_province_region,
+    district,
     postal_zip_code,
     country_region,
     telephone_number,
@@ -99,23 +101,27 @@ const Checkout = ({
       shipping_id,
       coupon_name,
       full_name,
-      address_line_1,
-      address_line_2,
+      street,
+      building_villa,
+      department,
       city,
-      state_province_region,
+      district,
       postal_zip_code,
       country_region,
       telephone_number
     );
-    
+    if (!made_payment) {
+      setSelectedMethod("cash")
+    }
   };
   const handleButtonClick = (newFormData) => {
     setFormData({
       ...formData,
-      address_line_1: newFormData.address_line_1,
-      address_line_2: newFormData.address_line_2,
+      street: newFormData.street,
+      building_villa: newFormData.building_villa,
+      department: newFormData.department,
       city: newFormData.city,
-      state_province_region: newFormData.state_province_region,
+      district: newFormData.district,
       postal_zip_code: newFormData.zipcode,
       country_region: newFormData.country_region,
       telephone_number: newFormData.phone,
@@ -134,12 +140,19 @@ const Checkout = ({
     const FecthPaymentTotal = async () => {
       await get_payment_total(
         shipping_id,
-        coupon && coupon !== null ? coupon.name : "default"
+        coupon?.name || "default"
       );
     };
     FecthPaymentTotal();
   }, [shipping_id, coupon]);
-  
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      await get_shipping_options();
+    };
+    fetchItems();
+  }, [isAuthenticated, get_shipping_options]);
+
   const handleSelectMethod = (methodId) => {
     setSelectedMethod(methodId);
   };
@@ -158,9 +171,7 @@ const Checkout = ({
               />
               <label className="form-check-label ml-4">
                 {shipping_option.time_to_delivery} -{" "}
-                <span className="text-black">
-                  {shipping_option.price} AED
-                </span>
+                <span className="text-black">{shipping_option.price} AED</span>
               </label>
             </div>
           ))}
@@ -191,10 +202,10 @@ const Checkout = ({
   if (!isAuthenticated) {
     return <Navigate to={"/"} />;
   }
-
   if (made_payment) {
     return <Navigate to={"/thankyou"} />;
   }
+  
 
   return (
     <Layout>
@@ -237,39 +248,39 @@ const Checkout = ({
                 className="placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
                 onChange={(e) => onChange(e)}
                 value={coupon_name}
-                placeholder="Enter your coupon"      
-                disabled={coupon && coupon !== null && coupon !== undefined}
-                required    
-                />
+                placeholder="Enter your coupon"
+                disabled={coupon}
+                required
+              />
               <button
                 type="submit"
                 className="inline-flex rounded-md bg-orange-standard px-1 py-2 text-sm font-medium text-white shadow hover:bg-black transition duration-300 ease-in-out"
-                disabled={coupon && coupon !== null && coupon !== undefined}
+                disabled={coupon}
               >
                 Apply coupon
               </button>
             </dd>
           </form>
           {/* AGREGAR CONDICION CUANDO AGREGA EL CUPON */}
-            <div className="absolute right-0 mt-2">
-              <span className="inline-flex items-center justify-center gap-1 rounded-lg px-2.5 py-0.5 text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
-                  />
-                </svg>
-                Enter your coupon code if you have one.
-              </span>
-            </div>
+          <div className="absolute right-0 mt-2">
+            <span className="inline-flex items-center justify-center gap-1 rounded-lg px-2.5 py-0.5 text-black">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
+                />
+              </svg>
+              Enter your coupon code if you have one.
+            </span>
+          </div>
         </div>
         <form
           className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16"
@@ -282,10 +293,11 @@ const Checkout = ({
 
             <ShippingForm
               full_name={full_name}
-              address_line_1={address_line_1}
-              address_line_2={address_line_2}
+              street={street}
+              building_villa={building_villa}
+              department={department}
               city={city}
-              state_province_region={state_province_region}
+              district={district}
               postal_zip_code={postal_zip_code}
               telephone_number={telephone_number}
               countries={countries}
@@ -369,7 +381,7 @@ const Checkout = ({
                   <span className="sr-only">Discount selected</span>
                   <dt className="text-sm text-green-500">Discount</dt>
                   <dd className="text-sm font-medium text-green-500">
-                   - {coupon.discount_price} AED
+                    - {coupon.discount_price} AED
                   </dd>
                 </div>
               )}{" "}
@@ -382,9 +394,7 @@ const Checkout = ({
               </div>
               {coupon && coupon !== null && coupon !== undefined ? (
                 <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="text-black font-bold text-2xl">
-                    Order total
-                  </dt>
+                  <dt className="text-black font-bold text-2xl">Order total</dt>
                   <dd className="text-xl font-medium text-gray-900">
                     {(
                       parseFloat(total_after_coupon) + parseFloat(shipping_cost)
@@ -515,4 +525,5 @@ export default connect(mapStateToProps, {
   process_payment,
   check_coupon,
   reset_coupon,
+  get_shipping_options,
 })(Checkout);

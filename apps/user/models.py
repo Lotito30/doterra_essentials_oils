@@ -66,5 +66,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     def get_phone(self):
         return self.phone
     
+    def get_is_staff(self):
+        return self.is_staff
+    
     def __str__(self):
         return self.email

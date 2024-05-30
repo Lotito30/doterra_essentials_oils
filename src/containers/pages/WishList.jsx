@@ -1,4 +1,4 @@
-import { TrashIcon } from "@heroicons/react/solid";
+import { HeartIcon, TrashIcon } from "@heroicons/react/solid";
 import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
 import { useEffect, useState } from "react";
@@ -29,8 +29,7 @@ function WishList({
     get_wishlist_item_total();
     setDataLoaded(true);
   }, []);
-  
-  
+
   useEffect(() => {
     if (wishlist && wishlist.length > 0) {
       const fetchRelated = async () => {
@@ -38,21 +37,17 @@ function WishList({
       };
       fetchRelated();
     }
-
-    
   }, []);
-  
-if (!isAuthenticated) {
+
+  if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
   const showItems = () => {
-    return (
-      <div>
-        {wishlist &&
-          wishlist !== null &&
-          wishlist !== undefined &&
-          wishlist.map((item, index) => {
+    if (wishlist?.length > 0) {
+      return (
+        <div>
+          {wishlist?.map((item, index) => {
             return (
               <div key={index}>
                 <article className="rounded-xl p-4 ring ring-indigo-50 sm:p-6 lg:p-8 relative mb-3">
@@ -98,8 +93,26 @@ if (!isAuthenticated) {
               </div>
             );
           })}
-      </div>
-    );
+        </div>
+      );
+    } else {
+      return (
+        <section className="flex flex-col items-center justify-center mt-10 gap-2">
+          <HeartIcon className="h-10 w-10 text-green-500" />
+          <p className="text-gray-600">
+            You don't have any products added to your wishlist yet.
+          </p>
+          
+          <div className="text-gray-500 text-sm">
+            Click the <i className="far fa-heart text-red-500"></i> icon on a
+            product to add it to your wishlist.
+          </div>
+          <Link className="font-medium hover:underline hover:font-bold" to={'/shop'}>
+            Browse Products
+          </Link>
+        </section>
+      );
+    }
   };
   return (
     <Layout>
@@ -125,10 +138,11 @@ if (!isAuthenticated) {
         />
         {/* <meta name="twitter:image" content={headerImg} /> */}
       </Helmet>
-      <div className="max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Wishlist Items <span className="text-gray-500">({total_items})</span>
-        </h1>
+      <div className="max-w-7xl mx-auto pt-6 pb-24 px-4 sm:px-6 lg:px-8">
+        {/* <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl"> */}
+          {/* Wishlist Items */}
+          {/* <span className="text-gray-500">({total_items})</span> */}
+        {/* </h1> */}
         <div className="mt-6 grid grid-cols-1 gap-y-3 items-start">
           <section aria-labelledby="cart-heading">
             <h2 id="cart-heading" className="sr-only">

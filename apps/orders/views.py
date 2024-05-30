@@ -19,12 +19,14 @@ class ListOrdersView(APIView):
                 item['amount'] = order.amount
                 item['shipping_price'] = order.shipping_price
                 item['date_issued'] = order.date_issued
-                item['address_line_1'] = order.address_line_1
-                item['address_line_2'] = order.address_line_2
+                item['street'] = order.street
+                item['building_villa'] = order.building_villa
+                item['department'] = order.department
                 item['city'] = order.city
-                item['state_province_region'] = order.state_province_region
+                item['district'] = order.district
                 item['postal_zip_code'] = order.postal_zip_code
-
+                item['coupon_price'] = order.coupon_price
+                
                 result.append(item)
             
             return Response(
@@ -51,10 +53,11 @@ class ListOrderDetailView(APIView):
                 result['transaction_id'] = order.transaction_id
                 result['amount'] = order.amount
                 result['full_name'] = order.full_name
-                result['address_line_1'] = order.address_line_1
-                result['address_line_2'] = order.address_line_2
+                result['street'] = order.street
+                result['building_villa'] = order.building_villa
+                result['department'] = order.department
                 result['city'] = order.city
-                result['state_province_region'] = order.state_province_region
+                result['district'] = order.district
                 result['postal_zip_code'] = order.postal_zip_code
                 result['country_region'] = order.country_region
                 result['telephone_number'] = order.telephone_number
@@ -62,7 +65,8 @@ class ListOrderDetailView(APIView):
                 result['shipping_time'] = order.shipping_time
                 result['shipping_price'] = order.shipping_price
                 result['date_issued'] = order.date_issued
-
+                result['coupon_price'] = order.coupon_price
+                
                 order_items = OrderItem.objects.order_by('-date_added').filter(order=order)
                 result['order_items'] = []
 

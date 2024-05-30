@@ -18,15 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 DOMAIN = os.environ.get('DOMAIN')
 
 ALLOWED_HOSTS = [
-                'doterraessentialoils.com',
-                 'www.doterraessentialoils.com',
-                 '127.0.0.1',
-                 'localhost',
+                '*',
                 ]
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -136,21 +133,18 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    'http://www.doterraessentialoils.com',
 ]
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
-    'http://www.doterraessentialoils.com',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'http://www.doterraessentialoils.com',
 ]
 
 # Password validation

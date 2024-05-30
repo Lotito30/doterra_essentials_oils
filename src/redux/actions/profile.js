@@ -44,10 +44,11 @@ export const get_user_profile = () => async (dispatch) => {
 
 export const update_user_profile =
   (
-    address_line_1,
-    address_line_2,
+    street,
+    building_villa,
+    department,
     city,
-    state_province_region,
+    district,
     zipcode,
     phone,
     country_region
@@ -63,10 +64,11 @@ export const update_user_profile =
       };
 
       const body = JSON.stringify({
-        address_line_1,
-        address_line_2,
+        street,
+        building_villa,
+        department,
         city,
-        state_province_region,
+        district,
         zipcode,
         phone,
         country_region,

@@ -29,19 +29,21 @@ class UpdateUserProfileView(APIView):
             user = self.request.user
             data = self.request.data
 
-            address_line_1 = data['address_line_1']
-            address_line_2 = data['address_line_2']
+            street = data['street']
+            building_villa = data['building_villa']
+            department = data['department']
             city = data['city']
-            state_province_region = data['state_province_region']
+            district = data['district']
             zipcode = data['zipcode']
             phone = data['phone']
             country_region = data['country_region']
 
             UserProfile.objects.filter(user=user).update(
-                address_line_1=address_line_1,
-                address_line_2=address_line_2,
+                street=street,
+                building_villa=building_villa,
+                department=department,
                 city=city,
-                state_province_region=state_province_region,
+                district=district,
                 zipcode=zipcode,
                 phone=phone,
                 country_region=country_region

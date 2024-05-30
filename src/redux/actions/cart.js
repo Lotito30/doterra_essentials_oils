@@ -51,21 +51,21 @@ export const add_item = (product) => async (dispatch) => {
           type: ADD_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(setAlert("Item added to your cart", "green"))
+        dispatch(setAlert("Item added to your cart"))
       } else if(res.status === 200){
-        dispatch(setAlert(res.data.error, "red"))
+        dispatch(setAlert(res.data.error))
       }else {
         dispatch({
           type: ADD_ITEM_FAIL,
         });
-        dispatch(setAlert("Item don't added", "red"))
+        dispatch(setAlert("Item don't added"))
       }
     } catch (err) {
       console.log(`Error response data add_item ${JSON.stringify(err.response.data)}`);
       dispatch({
         type: ADD_ITEM_FAIL,
       });
-      dispatch(setAlert(err.response.data.error, "red"))
+      dispatch(setAlert(err.response.data.error))
 
     }
   } else {
@@ -323,19 +323,19 @@ export const remove_item = (item) => async (dispatch) => {
           type: REMOVE_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(setAlert("Item removed from you cart", "red"))
+        dispatch(setAlert("Item removed from you cart"))
       } else {
         dispatch({
           type: REMOVE_ITEM_FAIL,
         });
-        dispatch(setAlert("Item not removed", "red"))
+        dispatch(setAlert("Item not removed"))
 
       }
     } catch (err) {
       dispatch({
         type: REMOVE_ITEM_FAIL,
       });
-      dispatch(setAlert("Item not removed", "red"))
+      dispatch(setAlert("Item not removed"))
     }
   } else {
     let cart = [];

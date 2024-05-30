@@ -5,10 +5,11 @@ from apps.orders.countries import Countries
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    address_line_1 = models.CharField(max_length=255, default='')
-    address_line_2 = models.CharField(max_length=255, default='')
+    street = models.CharField(max_length=255, default='')
+    building_villa = models.CharField(max_length=255, default='')
+    department = models.CharField(max_length=255, default='', null=True)
     city = models.CharField(max_length=255, default='')
-    state_province_region = models.CharField(max_length=255, default='')
+    district = models.CharField(max_length=255, default='')
     zipcode = models.CharField(max_length=20, default='')
     phone = models.CharField(max_length=255, default='')
     country_region = models.CharField(

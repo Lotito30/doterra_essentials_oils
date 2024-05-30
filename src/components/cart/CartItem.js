@@ -27,19 +27,14 @@ const CartItem = ({
   const onChange = (e) => {
     const newCount = parseInt(e.target.value, 10); // Convertir a número
     setFormData({
-      ...formData,
-      [e.target.name]: newCount,
+      item_count: newCount,
     });
 
     const fecthData = async () => {
-      try {
-        if (item.product.quantity >= newCount) {
-          await update_item(item, newCount);
-        } else {
-          setAlert("Not enough in stock", "red");
-        }
-        setRender(!render);
-      } catch (error) {}
+      item?.product?.quantity >= newCount
+        ? await update_item(item, newCount)
+        : setAlert("Not enough in stock", "red");
+      setRender(!render);
     };
     fecthData();
   };
@@ -50,7 +45,7 @@ const CartItem = ({
   };
 
   return (
-    <li className="flex py-6 sm:py-10">
+    <li className="flex py-6 sm:py-10 border-t ">
       <div className="flex-shrink-0">
         <img
           src={GetSrcPhoto(item.product.photo)}

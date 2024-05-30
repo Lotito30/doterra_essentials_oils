@@ -1,18 +1,22 @@
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuAlt2Icon, XIcon } from "@heroicons/react/outline";
-import { SearchIcon, UserIcon } from "@heroicons/react/solid";
+import { Dialog, Transition } from "@headlessui/react";
+import { MenuAlt2Icon, XIcon } from "@heroicons/react/outline";
 import icono from "assets/img/iconodoTERRA3.png";
 import { DashboardContext } from "components/dashboard/DashboardContext";
 import DashboardLink from "components/dashboard/DashboardLink";
 import ShowDashboard from "components/dashboard/ShowDashboard";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { logout } from "../../redux/actions/auth";
 import { get_item_total, get_items, get_total } from "../../redux/actions/cart";
 import { get_order_detail, list_orders } from "../../redux/actions/orders";
-import { logout } from "../../redux/actions/auth";
-import { update_user_profile,get_user_profile } from "../../redux/actions/profile";
+import {
+  get_user_profile,
+  update_user_profile,
+} from "../../redux/actions/profile";
+import { create_product } from "../../redux/actions/products";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -20,53 +24,37 @@ function classNames(...classes) {
 
 const Dashboard = ({
   list_orders,
-  get_items,
-  get_total,
-  get_item_total,
   orders,
   order,
   isAuthenticated,
   user,
   get_order_detail,
-  logout,
-  loading,
   update_user_profile,
   profile,
   get_user_profile,
-  coupon
+  coupon,
+  products,
+  categories,
 }) => {
   const { content, setContent } = useContext(DashboardContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const params = useParams();
   const transaction_id = params.transaction_id;
-  const userNavigation = [
-    {
-      name: "Dashboard",
-      to: "/dashboard",
-      onClick: () => setContent("Dashboard"),
-    },
-    { name: "Settings", to: "#" },
-    { name: "Sign out", onClick: () => logout() },
-  ];
 
-  
   useEffect(() => {
+    setLoading(true);
     const fetchDashboard = async () => {
-      await get_items();
-      await get_total();
-      await get_item_total();
       await list_orders();
-      if (content === "Payment Detail") {
+      if (content === "Purchase Details") {
         await get_order_detail(transaction_id);
       }
-      // if(orders && orders !== null && orders !== undefined && orders.length > 0){
-      //   await get_order_detail(orders[1].transaction_id);
-      // }
-      get_user_profile()
+      await get_user_profile();
+      setLoading(false);
     };
     fetchDashboard();
-  }, [content,get_user_profile]);
+  }, [content, get_user_profile]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -159,7 +147,7 @@ const Dashboard = ({
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
                     {/* DASHBOARD LINK */}
-                    <DashboardLink />
+                    <DashboardLink user={user} />
                   </nav>
                 </div>
               </div>
@@ -187,7 +175,7 @@ const Dashboard = ({
             <div className="mt-5 flex-grow flex flex-col">
               <nav className="flex-1 px-2 pb-4 space-y-1">
                 {/* DASHBOARD LINK */}
-                <DashboardLink />
+                <DashboardLink user={user}/>
               </nav>
             </div>
           </div>
@@ -204,23 +192,6 @@ const Dashboard = ({
             </button>
             <div className="flex-1 px-4 flex justify-between">
               <div className="flex-1 flex">
-                {/* <form className="w-full flex md:ml-0" action="#" method="GET">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search
-                  </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                      <SearchIcon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                    <input
-                      id="search-field"
-                      className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                      placeholder="Search"
-                      type="search"
-                      name="search"
-                    />
-                  </div>
-                </form> */}
               </div>
               <div className="ml-4 flex items-center md:ml-6">
                 <button
@@ -228,64 +199,46 @@ const Dashboard = ({
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span className="sr-only">View notifications</span>
-                  {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
                 </button>
-
-                {/* Profile dropdown */}
-                <Menu as="div" className="ml-3 relative">
-                  <div>
-                    <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-offset-0 focus:ring-0">
-                      <span className="sr-only">Open user menu</span>
-                      <UserIcon className="h-6 w-6 rounded-full" />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <Link
-                              onClick={item.onClick}
-                              to={item.to}
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              {item.name}
-                            </Link>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
               </div>
             </div>
           </div>
 
           <main className="flex-1">
-            <div className="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              <h1 className="text-2xl mb-4 font-bold">{content}</h1>
-              <ShowDashboard
-                user={user}
-                orders={orders}
-                order={order}
-                get_order_detail={get_order_detail}
-                loading={loading}
-                update_user_profile={update_user_profile}
-                profile={profile}
-                coupon={coupon}
-              />
-            </div>
+            {loading ? (
+              <div className="flex w-full h-screen -mt-16 items-center justify-center">
+                <p className="w-max p-6 text-base rounded-xl">
+                  <Oval
+                    visible={true}
+                    height="100"
+                    width="100"
+                    color="#f59e0b"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    secondaryColor="transparent"
+                  />{" "}
+                </p>
+              </div>
+            ) : (
+              <div className="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <h1 className="text-2xl mb-4 font-bold">{content}</h1>
+
+                <ShowDashboard
+                  user={user}
+                  orders={orders}
+                  order={order}
+                  get_order_detail={get_order_detail}
+                  loading={loading}
+                  update_user_profile={update_user_profile}
+                  profile={profile}
+                  coupon={coupon}
+                  products={products}
+                  categories={categories}
+                  create_product={create_product}
+                />
+              </div>
+            )}
           </main>
         </div>
       </div>
@@ -298,9 +251,10 @@ const mapStateToProps = (state) => ({
   order: state.Orders.order,
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
-  loading: state.Auth.loading,
   profile: state.Profile.profile,
-  coupon:state.Coupons.coupon
+  coupon: state.Coupons.coupon,
+  products: state.Products.products,
+  categories: state.Categories.categories,
 });
 export default connect(mapStateToProps, {
   list_orders,
@@ -311,4 +265,5 @@ export default connect(mapStateToProps, {
   logout,
   update_user_profile,
   get_user_profile,
+  create_product,
 })(Dashboard);

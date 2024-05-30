@@ -1,12 +1,15 @@
 import { HomeIcon } from "@heroicons/react/solid";
+import { DashboardContext } from "components/dashboard/DashboardContext";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 const ShippingForm = ({
   full_name,
-  address_line_1,
-  address_line_2,
+  street,
+  building_villa,
+  department,
   city,
-  state_province_region,
+  district,
   postal_zip_code,
   telephone_number,
   countries,
@@ -15,36 +18,56 @@ const ShippingForm = ({
   profile,
   handleButtonClick,
 }) => {
+  const { content, setContent } = useContext(DashboardContext);
   return (
     <div>
       <article className="rounded-lg border border-gray-100 bg-white p-4 shadow-navbar sm:p-6">
         <div className="flex items-center gap-2">
           <HomeIcon className="h-6 w-6" />
           <h3 className="mt-0.5 text-lg font-medium text-gray-900">
-            Current Shipping Address
+            You shipping address -
           </h3>
+          <Link
+            to={"/dashboard/profile/edit"}
+            onClick={() => setContent("Profile")}
+            className="text-orange-standard hover:text-orange-300"
+          >
+            Update shipping address
+          </Link>
         </div>
 
-        <div className="mt-2 text-gray-500 flex flex-col gap-1">
-          <p className="text-lg">{profile.address_line_1}</p>
-          <p>
-            {" "}
-            {profile.zipcode} - {profile.state_province_region} - {profile.city}
-          </p>
-          <p className="font-bold text-xs">{profile.country_region}</p>
-        </div>
-        <Link
-          onClick={() => handleButtonClick(profile)}
-          className="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-orange-standard hover:text-black duration-300 transition ease-in-out"
-        >
-          Use Address
-          <span
-            aria-hidden="true"
-            className="block transition-all group-hover:ms-0.5 rtl:rotate-180"
-          >
-            &rarr;
-          </span>
-        </Link>
+        {profile.street === "" ||
+        profile.city === "" ||
+        profile.district === "" ? (
+          <>
+            <h3 className="my-2">You don't have a shipping address added. </h3>
+            <p>Please update your shipping address. </p>
+          </>
+        ) : (
+          <div className="mt-2 text-gray-500 flex flex-col gap-1">
+            <p className="text-lg">
+              {profile.street} - {profile?.building_villa}
+            </p>
+            <p>
+              {" "}
+              CP{profile?.zipcode} - {profile?.district} - {profile?.city} -{" "}
+              {profile?.phone}
+            </p>
+            <p className="font-bold text-xs mt-1">{profile.country_region}</p>
+            <Link
+              onClick={() => handleButtonClick(profile)}
+              className="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-orange-standard hover:text-orange-300 duration-300 transition ease-in-out"
+            >
+              Use address
+              <span
+                aria-hidden="true"
+                className="block transition-all group-hover:ms-0.5 rtl:rotate-180"
+              >
+                &rarr;
+              </span>
+            </Link>
+          </div>
+        )}
       </article>
 
       <div className="py-5">
@@ -80,16 +103,16 @@ const ShippingForm = ({
           htmlFor="username"
           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
         >
-          Address Line 1*
+          Street*
         </label>
         <div className="mt-1 sm:mt-0 sm:col-span-2">
           <div className="max-w-lg flex rounded-md shadow-sm">
             <input
               type="text"
-              name="address_line_1"
-              // placeholder={`${profile.address_line_1}`}
+              name="street"
+              // placeholder={`${profile.street}`}
               onChange={(e) => onChange(e)}
-              value={address_line_1}
+              value={street}
               required
               className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
             />
@@ -102,16 +125,16 @@ const ShippingForm = ({
           htmlFor="username"
           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
         >
-          Address Line 2
+          Building/Villa Name
         </label>
         <div className="mt-1 sm:mt-0 sm:col-span-2">
           <div className="max-w-lg flex rounded-md shadow-sm">
             <input
               type="text"
-              name="address_line_2"
-              // placeholder={`${profile.address_line_2}`}
+              name="building_villa"
+              // placeholder={`${profile.building_villa}`}
               onChange={(e) => onChange(e)}
-              value={address_line_2}
+              value={building_villa}
               className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
             />
           </div>
@@ -145,16 +168,37 @@ const ShippingForm = ({
           htmlFor="username"
           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
         >
-          State/Province/Region*
+          District*
         </label>
         <div className="mt-1 sm:mt-0 sm:col-span-2">
           <div className="max-w-lg flex rounded-md shadow-sm">
             <input
               type="text"
-              name="state_province_region"
+              name="district"
               // placeholder={`${profile.state_province_region}`}
               onChange={(e) => onChange(e)}
-              value={state_province_region}
+              value={district}
+              required
+              className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200 sm:pt-5">
+        <label
+          htmlFor="department"
+          className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+        >
+          Department*
+        </label>
+        <div className="mt-1 sm:mt-0 sm:col-span-2">
+          <div className="max-w-lg flex rounded-md shadow-sm">
+            <input
+              type="text"
+              name="department"
+              // placeholder={`${profile.state_province_region}`}
+              onChange={(e) => onChange(e)}
+              value={department}
               required
               className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
             />
@@ -167,7 +211,7 @@ const ShippingForm = ({
           htmlFor="username"
           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
         >
-          Postal Code*
+          Zipcode*
         </label>
         <div className="mt-1 sm:mt-0 sm:col-span-2">
           <div className="max-w-lg flex rounded-md shadow-sm">
@@ -223,10 +267,9 @@ const ShippingForm = ({
             <input
               type="tel"
               name="telephone_number"
-              // placeholder={`${profile.phone}`}
-              onChange={(e) => onChange(e)}
+              placeholder={`${telephone_number}`}
               value={telephone_number}
-              required
+              disabled
               className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
             />
           </div>

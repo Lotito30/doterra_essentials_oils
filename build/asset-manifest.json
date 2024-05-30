@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.72a862b7.css",
-    "main.js": "/static/js/main.f67a5db8.js",
+    "main.css": "/static/css/main.dca14d4e.css",
+    "main.js": "/static/js/main.60330602.js",
     "static/media/error404.webp": "/static/media/error404.ab749cacea13a0cb5fca.webp",
     "static/media/iconodoTERRA3.png": "/static/media/iconodoTERRA3.2370d11d202513625445.png",
     "static/media/fondoHome1.jpg": "/static/media/fondoHome1.2f9f1d3c8095e1154420.jpg",
@@ -12,11 +12,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.72a862b7.css.map": "/static/css/main.72a862b7.css.map",
-    "main.f67a5db8.js.map": "/static/js/main.f67a5db8.js.map"
+    "main.dca14d4e.css.map": "/static/css/main.dca14d4e.css.map",
+    "main.60330602.js.map": "/static/js/main.60330602.js.map"
   },
   "entrypoints": [
-    "static/css/main.72a862b7.css",
-    "static/js/main.f67a5db8.js"
+    "static/css/main.dca14d4e.css",
+    "static/js/main.60330602.js"
   ]
 }

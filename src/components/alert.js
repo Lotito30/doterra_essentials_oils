@@ -4,9 +4,7 @@ import { CheckCircleIcon } from "@heroicons/react/solid";
 function Alert({ alert }) {
   return (
     <div
-      className={`rounded-md bg-${
-        alert?.alertType
-      }-500 p-3 absolute top-0 left-1/2 -translate-x-1/2 w-auto mx-auto -translate-y-10 transition-transform ease-in-out transform ${
+      className={`rounded-md bg-green-500 p-3 absolute top-0 left-1/2 -translate-x-1/2 w-auto mx-auto -translate-y-10 transition-transform ease-in-out transform ${
         alert ? "translate-y-10 opacity-100" : "translate-y-0 opacity-0"
       } duration-200 -z-50`}
     >

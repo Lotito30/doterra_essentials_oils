@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/actions/auth";
 
 function SignUp({ signup, loading }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -25,9 +25,11 @@ function SignUp({ signup, loading }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-     if(await signup(first_name, last_name, phone, email, password, re_password)){
-       navigate('/')
-     }
+    if (
+      await signup(first_name, last_name, phone, email, password, re_password)
+    ) {
+      navigate("/");
+    }
   };
 
   return (
@@ -140,10 +142,12 @@ function SignUp({ signup, loading }) {
                         onChange={(e) => onChange(e)}
                         required
                         class="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                        placeholder="Enter your phone*"
+                        placeholder="Enter your phone"
                       />
                     </div>
-                    <p className="text-xs text-end">Don't enter +971 </p>
+                    <p className="text-xs text-end font-bold">
+                      Don't enter +971{" "}
+                    </p>
                     <div>
                       <label
                         for="password"
@@ -181,12 +185,19 @@ function SignUp({ signup, loading }) {
                         placeholder="Repeat your password*"
                       />
                     </div>
-                    <ul className="py-1 ml-1">
-                    <li className="text-xs">Ensure your password isn't too short. It should contain at least 8 characters.</li>
-                    <li className="text-xs">Ensure your password isn't too common.</li>
-                    <li className="text-xs">Ensure your password isn't entirely numeric.</li>
+                    <ul className="py-1 ml-1 ">
+                      <li className="text-xs">
+                        - Ensure your password isn't too short. It should contain
+                        at least 8 characters.
+                      </li>
+                      <li className="text-xs">
+                        - Ensure your password isn't too common.
+                      </li>
+                      <li className="text-xs">
+                        - Ensure your password isn't entirely numeric.
+                      </li>
                     </ul>
-  
+
                     <div className="pt-3">
                       {loading ? (
                         <button className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-orange-standard rounded-xl hover:bg-orange-standard focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-standard">
@@ -210,7 +221,7 @@ function SignUp({ signup, loading }) {
                       )}
                     </div>
                   </form>
-
+                  <span>(*) Required</span>
                   <div class="flex flex-col mt-4 lg:space-y-2">
                     <Link
                       to="/signin"
@@ -277,7 +288,7 @@ function SignUp({ signup, loading }) {
                             <span>Log in with Google</span>
                           </div>
                         </button>
-                        <span>(*) Required</span>
+                        
                       </form>
                     </div>
                   </div>

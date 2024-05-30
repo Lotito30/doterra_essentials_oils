@@ -1,19 +1,21 @@
 import { Popover, Transition } from "@headlessui/react";
 import {
+  ArrowCircleRightIcon,
+  ArrowRightIcon,
   ShoppingCartIcon,
   UserIcon,
   XCircleIcon,
+  BadgeCheckIcon,
 } from "@heroicons/react/solid";
-import { Fragment, useContext, useEffect, useState } from "react";
+import Alert from "components/alert";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
 import SearchBox from "./SearchBox";
-import SearchContent from "./SearchContent";
 import { SearchContext } from "./SearchContext";
-import Alert from "components/alert";
 
 function Navbar({
   isAuthenticated,
@@ -21,11 +23,12 @@ function Navbar({
   categories,
   get_search_products,
   total_items,
-  get_categories,
   search_products,
   user,
 }) {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+
   const { searchClick, setSearchClick } = useContext(SearchContext);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
 
@@ -45,6 +48,13 @@ function Navbar({
     await get_search_products(search, category_id);
   };
 
+  const handleSubmitSearch = async (e) => {
+    e.preventDefault();
+    await get_search_products(search, category_id);
+    console.log(search_products[0]?.id);
+    navigate(`/product/${search_products[0]?.id}`);
+  };
+
   const handleCartCLick = () => {
     if (!isAuthenticated) {
       setShowLoginMessage(!showLoginMessage);
@@ -56,11 +66,9 @@ function Navbar({
   const handleSearchCLick = () => {
     if (searchClick) {
       setSearchClick(false);
-      onSubmit("", 0);
-      return;
+      onSubmit(" ", 0);
     } else {
       setSearchClick(true);
-      return;
     }
   };
   const solutions = [
@@ -124,7 +132,25 @@ function Navbar({
       name: "Categories",
     },
   ];
-
+  const [showCategory, setShowCategory] = useState(false);
+  const showCategories = () => {
+    return (
+      <div
+        class={`absolute top-10 left-1/2 bg-white shadow-md  rounded-md z-10 -translate-x-2 `}
+        onMouseEnter={() => setShowCategory(true)}
+        onMouseLeave={() => setShowCategory(false)}
+      >
+        {categories?.map((category, index) => (
+          <div key={index} className=" cursor-pointer hover:bg-gray-100 px-3 py-2">
+            <div>
+            {category.name}
+            <ArrowCircleRightIcon className="h-4 w-4 inline-block ml-1"/>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
   const loading = true;
 
   window.onscroll = function () {
@@ -205,13 +231,14 @@ function Navbar({
               leaveTo="opacity-0 -translate-y-3"
             >
               <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-3/4 transform px-4 sm:px-0">
-                <div className="overflow-hidden rounded-lg shadow-lg ring-0">
-                  <div className="relative grid gap-6 bg-white p-7">
+                <div className="overflow-hidden rounded-md shadow-lg ring-0">
+                  <div className="relative grid gap-6 bg-white p-6">
                     {user ? (
-                      <div className="ml-1 flex items-center gap-6">
-                        <UserIcon className="h-8 w-8" />
-                        <p className="text-lg text-gray-900">
-                          Hi! {user.first_name} {user.last_name}
+                      <div className="flex items-center gap-6 ml-1">
+                        <UserIcon className="h-7 w-7" />
+                        <p className="text-lg text-gray-900 capitalize">
+                          Hi! {user.first_name} {user.last_name} 
+                          <BadgeCheckIcon className="h-6 w-6 text-blue-500 inline-block ml-2"/>
                         </p>
                       </div>
                     ) : (
@@ -279,8 +306,13 @@ function Navbar({
     </Fragment>
   );
 
+  useEffect(() => {
+    if (searchClick && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [searchClick]);
   return (
-    <>
+    <div>
       <navbar
         id="navbar"
         className="transition duration-400 ease-in-out fixed top-0 w-full z-40 min-w-[420px]"
@@ -308,12 +340,22 @@ function Navbar({
                       key={item.name}
                       to={item.href || ""}
                       className={({ isActive }) =>
-                        `border-b-2 font-bold ${
-                          isActive && item.name !== "Categories" 
+                        `border-b-2 font-bold  ${
+                          isActive && item.name !== "Categories"
                             ? "text-black border-orange-standard"
                             : "text-gray-400 border-b-transparent hover:border-orange-standard"
                         }`
                       }
+                      onMouseEnter={() => {
+                        if (item.name === "Categories") {
+                          setShowCategory(true);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (item.name === "Categories") {
+                          setShowCategory(false);
+                        }
+                      }}
                     >
                       {item.name}
                     </NavLink>
@@ -322,71 +364,62 @@ function Navbar({
               </nav>
             </div>
 
-            <div className="flex items-center gap-2 relative">
-              <div className="relative">
+            <div className="flex items-center">
+              <div className={`relative mr-2 ${searchClick ? '' : 'hover:scale-110'}`}>
                 <SearchBox
                   categories={categories}
                   search={search}
                   onSubmit={onSubmit}
                   onChange={onChange}
                   handleSearchCLick={handleSearchCLick}
+                  inputRef={inputRef}
+                  handleSubmitSearch={handleSubmitSearch}
+                  search_products={search_products}
                 />
-
-                {searchClick &&
-                  search_products &&
-                  search_products !== null &&
-                  search_products !== undefined &&
-                  search_products.length > 0 && (
-                    <div className="h-52 absolute top-11 w-full right-0 border-2 rounded-sm p-3 shadow-navbar bg-gray-100 flex flex-col gap-2 overflow-y-auto">
-                      <div>
-                        <h3>Recent Search</h3>
-                      </div>
-                      <SearchContent
-                        search_products={search_products}
-                        onSubmit={onSubmit}
-                      />
-                    </div>
-                  )}
               </div>
-
-              <button
-                className="rounded-full p-2 hover:bg-gray-200 relative"
-                onClick={handleCartCLick}
+              <div
+                className={`${searchClick ? "hidden" : "flex items-center"}`}
               >
-                <ShoppingCartIcon className="w-7 h-7 text-black" />
-                <span className="text-xs absolute top-5 left-2.5 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
-                  {isAuthenticated ? total_items : 0}
-                </span>
-                {showLoginMessage && (
-                  <span className="flex items-center gap-1 z-50 w-max text-sm absolute top-12 -right-20 sm:right-0  bg-gray-500 text-white font-semibold rounded-md p-2 sm:p-4">
-                    <button onClick={handleCartCLick}>
-                      <XCircleIcon className="w-6 h-6" />
-                    </button>
-                    No items found. You must log in to view your cart.
-                    <Link
-                      to="/signin"
-                      className="underline text-orange-standard hover:text-orange-400"
-                    >
-                      Sign In
-                    </Link>
+                <button
+                  className="rounded-full p-2 hover:bg-gray-200 relative"
+                  onClick={handleCartCLick}
+                >
+                  <ShoppingCartIcon className="w-6 h-6 text-black" />
+                  <span className="text-xs absolute top-4 left-2 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-1.5 text-center">
+                    {total_items > 0 && isAuthenticated && total_items}
                   </span>
-                )}
-              </button>
+                  {showLoginMessage && (
+                    <span className="flex items-center gap-1 z-50 w-max text-sm absolute top-12 -right-20 sm:right-0  bg-gray-500 text-white font-semibold rounded-md p-2 sm:p-4">
+                      <button onClick={handleCartCLick}>
+                        <XCircleIcon className="w-6 h-6" />
+                      </button>
+                      You must log in to view your cart.
+                      <Link
+                        to="/signin"
+                        className="underline text-orange-standard hover:text-orange-400"
+                      >
+                        Sign In
+                      </Link>
+                    </span>
+                  )}
+                </button>
 
-              {isAuthenticated ? (
-                <div className="sm:flex ">{authLinks}</div>
-              ) : (
-                <div className="inline-flex gap-2">
-                  <div className="inline-flex sm:gap-1">{guestLinks}</div>
-                  <div className="block md:hidden">{authLinks}</div>
-                </div>
-              )}
+                {isAuthenticated ? (
+                  <div className="sm:flex ">{authLinks}</div>
+                ) : (
+                  <div className="inline-flex gap-2">
+                    <div className="inline-flex sm:gap-1">{guestLinks}</div>
+                    <div className="block md:hidden">{authLinks}</div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
         <Alert />
+        {showCategory && showCategories()}
       </navbar>
-    </>
+    </div>
   );
 }
 

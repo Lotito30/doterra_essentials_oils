@@ -33,7 +33,7 @@ export default function CarouselProducts({ title, description, data }) {
     ],
   };
   return (
-    <div class="mx-auto max-w-2xl py-10 px-4 lg:max-w-7xl lg:px-8">
+    <div class="mx-auto max-w-2xl py-10 px-4 md:max-w-7xl lg:px-8">
       <header className="pt-4">
         <h2 className="font-bold text-gray-900 text-4xl">{title}</h2>
 
@@ -44,14 +44,12 @@ export default function CarouselProducts({ title, description, data }) {
           {/* CARD */}
           {data &&
             data.map((product) => <Card key={product.id} data={product} />)}
-            <div className="absolute top-1/2 translate-x-32">
             <Link
               to={"/shop"}
-              className="inline-block text-md font-semibold text-orange-standard hover:text-orange-600"
+              className="text-md font-semibold text-orange-standard hover:text-orange-600 text-center mt-36"
             >
               See more products<span aria-hidden="true"> &rarr;</span>
             </Link>
-          </div>
         </Slider>
           
       </div>

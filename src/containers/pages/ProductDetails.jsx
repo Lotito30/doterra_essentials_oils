@@ -95,11 +95,8 @@ const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
 
   const addToCart = async () => {
-    console.log("addtocart");
     if (
       product &&
-      product !== null &&
-      product !== undefined && 
       isAuthenticated
     ) {
       setLoading(true);
@@ -109,7 +106,6 @@ const navigate = useNavigate()
       await get_item_total();
       setLoading(false);
     }else{
-      console.log("addtocart else");
       navigate('/signin')
       return
     }
@@ -118,11 +114,7 @@ const navigate = useNavigate()
     if (
       isAuthenticated &&
       product &&
-      product !== null &&
-      product !== undefined &&
-      wishlist &&
-      wishlist !== undefined &&
-      wishlist !== null
+      wishlist
     ) {
       !wishlist.find(
         (item) => item.product.id.toString() === product.id.toString()
@@ -218,10 +210,7 @@ const navigate = useNavigate()
                 </div>
               </div>
               <p className="mt-2 flex space-x-1">
-                {product &&
-                product !== null &&
-                product !== undefined &&
-                product.quantity > 0 ? (
+                {product?.quantity > 0 ? (
                   <>
                     <CheckIcon
                       className="flex-shrink-0 h-5 w-5 text-green-500"
@@ -255,7 +244,7 @@ const navigate = useNavigate()
               <div className="mt-6">
                 <div className="mt-10 flex sm:flex-col1">
                   {loading ? (
-                    <button className="max-w-xs flex-1 bg-orange-standard border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium hover:bg-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-orange-standard sm:w-full transition ease-in-out duration-300">
+                    <button className="w-full flex-1 bg-orange-standard border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium hover:bg-black text-white focus:outline-none focus:ring-0 sm:w-full transition ease-in-out duration-300">
                       <Oval
                         visible={true}
                         height="20"
@@ -269,7 +258,7 @@ const navigate = useNavigate()
                   ) : (
                     <button
                       onClick={addToCart}
-                      className="max-w-xs flex-1 bg-orange-standard border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium hover:bg-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-orange-standard sm:w-full transition ease-in-out duration-300"
+                      className="inline-block w-full text-center bg-orange-standard border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-0  transition ease-in-out duration-300"
                     >
                       Add to cart
                     </button>

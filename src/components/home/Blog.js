@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
 
 function Blog () {
   return (
 <section class="bg-gray-50">
-  <div class="mx-auto max-w-screen-2xl px-8 py-12 lg:py-16">
+  <div class="px-4 mx-auto max-w-screen-2xl md:px-8 py-12 lg:py-16">
     <div class="md:flex md:items-end md:justify-between">
       <div class="max-w-xl">
         <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">

@@ -50,7 +50,6 @@ class GetPaymentTotalView(APIView):
 
         coupon_name = request.query_params.get('coupon_name')
         coupon_name = str(coupon_name)
-
         try:
             cart = Cart.objects.get(user=user)
 
@@ -91,7 +90,7 @@ class GetPaymentTotalView(APIView):
 
                 #Cupons
 
-                if coupon_name != '':
+                if coupon_name != "":
                     #Revisar si cupon de precio fijo es valido
                     if FixedPriceCoupon.objects.filter(name__iexact=coupon_name).exists():
                         fixed_price_coupon = FixedPriceCoupon.objects.get(
@@ -114,7 +113,7 @@ class GetPaymentTotalView(APIView):
                                             (discount_percentage / 100))
                             total_after_coupon = total_amount
 
-                total_after_coupon = round(total_after_coupon, 2)
+                    total_after_coupon = round(total_after_coupon, 2)
 
                 # impuesto estimado
 
@@ -161,14 +160,14 @@ class ProcessPaymentView(APIView):
         shipping_id = str(data['shipping_id'])
         coupon_name = str(data['coupon_name'])
         full_name = data['full_name']
-        address_line_1 = data['address_line_1']
-        address_line_2 = data['address_line_2']
+        street = data['street']
+        building_villa = data['building_villa']
+        department = data['department']
         city = data['city']
-        state_province_region = data['state_province_region']
+        district = data['district']
         postal_zip_code = data['postal_zip_code']
-        telephone_number = data['telephone_number']
         country_region = data['country_region']
-
+        telephone_number = data['telephone_number']
         # revisar si datos de shipping son validos
         if not Shipping.objects.filter(id__iexact=shipping_id).exists():
             return Response(
@@ -208,13 +207,13 @@ class ProcessPaymentView(APIView):
                              * float(cart_item.count))
         
         # Cupones
-        if coupon_name != '':
+        if coupon_name != "":
             if FixedPriceCoupon.objects.filter(name__iexact=coupon_name).exists():
+                
                 fixed_price_coupon = FixedPriceCoupon.objects.get(
                     name=coupon_name
                 )
                 discount_amount = float(fixed_price_coupon.discount_price)
-
                 if discount_amount < total_amount:
                     total_amount -= discount_amount
             
@@ -228,9 +227,10 @@ class ProcessPaymentView(APIView):
                 if discount_percentage > 1 and discount_percentage < 100:
                     total_amount -= (total_amount *
                                       (discount_percentage / 100))
-
+            coupon_price = fixed_price_coupon.discount_price or percentage_coupon.discount_percentage
+            coupon_price = float(coupon_price)
         # total_amount += (total_amount * tax)
-
+        
         shipping = Shipping.objects.get(id=int(shipping_id))
 
         shipping_name = shipping.name
@@ -261,7 +261,7 @@ class ProcessPaymentView(APIView):
             for cart_item in cart_items:
                 update_product = Product.objects.get(id=cart_item.product.id)
 
-                #encontrar cantidad despues de coompra
+                #encontrar cantidad despues de compra
                 quantity = int(update_product.quantity) - int(cart_item.count)
 
                 #obtener cantidad de producto por vender
@@ -274,35 +274,25 @@ class ProcessPaymentView(APIView):
             
             #crear orden
             try:
-                print(user)
-                print(newTransaction.transaction.id)
-                print(total_amount)
-                print(full_name)
-                print(address_line_1)
-                print(address_line_2)
-                print(city)
-                print(state_province_region)
-                print(postal_zip_code)
-                print(country_region)
-                print(telephone_number)
-                print(shipping_name)
-                print(shipping_time)
-                print(shipping_price)
+                if coupon_name == "":
+                    coupon_price = 0.00
                 order = Order.objects.create(
                     user=user,
                     transaction_id=newTransaction.transaction.id,
                     amount=total_amount,
                     full_name=full_name,
-                    address_line_1=address_line_1,
-                    address_line_2=address_line_2,
+                    street=street,
+                    building_villa=building_villa,
+                    department=department,
                     city=city,
-                    state_province_region=state_province_region,
+                    district=district,
                     postal_zip_code=postal_zip_code,
                     country_region=country_region,
                     telephone_number=telephone_number,
                     shipping_name=shipping_name,
                     shipping_time=shipping_time,
                     shipping_price=float(shipping_price),
+                    coupon_price=coupon_price,
                 )
             except:
                 return Response(

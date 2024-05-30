@@ -42,8 +42,8 @@ class ListProductsView(APIView):
         order = request.query_params.get('order')
         limit = request.query_params.get('limit')
         
-        if not limit:
-            limit = 9
+        if not limit or int(limit) <= 0:
+            limit = 6
 
         try:
             limit = int(limit)
@@ -52,20 +52,19 @@ class ListProductsView(APIView):
                 {'error':'Limit must be an integer'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        if limit <= 0:
-            limit = 9
-            
         if order == 'desc':
             sortBy = '-' + sortBy
             
         products = Product.objects.all()
         
-        if sortBy == "sold":
+        if sortBy == "-sold":
             products = products.exclude(sold=0)
-        
-        products = Product.objects.order_by(sortBy)[:limit]
+            products = Product.objects.filter(sold__gt=0).order_by(sortBy)[:limit] 
+        else:
+            products = Product.objects.order_by(sortBy)[:limit]
+            
         products = ProductSerializer(products, many=True)
-
+        
         if products:
             return Response({'products':products.data}, status=status.HTTP_200_OK)
         else:
@@ -289,3 +288,39 @@ class ListBySearchView(APIView):
             return Response(
                 {'error': 'No products found'},
                 status=status.HTTP_200_OK)
+            
+class CreateProduct(APIView):
+    def post(self,request,format=None):
+        user = self.request.user
+        data = self.request.data
+        
+        name = data['product']
+        photo = data['photo']
+        description = data['description']
+        price = str(data['price'])
+        compare_price = str(data['comprare_price'])
+        category = data['category']
+        quantity = str(data['quantity'])
+        
+        
+        try:
+            Product.objects.create(
+                name=name,
+                photo=photo,
+                description=description,
+                price=float(price),
+                comprare_price=float(compare_price),
+                category=category,
+                quantity=int(quantity),
+            )
+        except:
+            return Response(
+                {'error':'Product no created'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        
+        
+        
+        
+    

@@ -38,7 +38,7 @@ export const get_payment_total =
         });
       }
     } catch (error) {
-      console.log(`Error response data (Get_payment): ${error.response.data}`);
+      console.log(`Error response data (Get_payment): ${JSON.stringify(error.response.data)}`);
       dispatch({
         type: GET_PAYMENT_TOTAL_FAIL,
       });
@@ -84,10 +84,11 @@ export const process_payment =
     shipping_id,
     coupon_name,
     full_name,
-    address_line_1,
-    address_line_2,
+    street,
+    building_villa,
+    department,
     city,
-    state_province_region,
+    district,
     postal_zip_code,
     telephone_number,
     country_region
@@ -106,10 +107,11 @@ export const process_payment =
       shipping_id,
       coupon_name,
       full_name,
-      address_line_1,
-      address_line_2,
+      street,
+      building_villa,
+      department,
       city,
-      state_province_region,
+      district,
       postal_zip_code,
       country_region,
       telephone_number,
@@ -136,9 +138,9 @@ export const process_payment =
         });
         dispatch(setAlert(res.data.error, "red"));
       }
-    } catch (err) {
+    } catch (error) {
       console.log(
-        `Error response data make-payment: ${JSON.stringify(err.response)}`
+        `Error response data make-payment: ${JSON.stringify(error.response.data)}`
       );
       dispatch({
         type: PAYMENT_FAIL,
