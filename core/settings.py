@@ -26,8 +26,10 @@ if not DEBUG:
 DOMAIN = os.environ.get('DOMAIN')
 
 ALLOWED_HOSTS = [
-                '*',
-                ]
+    'doterra-essentials-oils-2fbd0f7ae026.herokuapp.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 # if RENDER_EXTERNAL_HOSTNAME:
