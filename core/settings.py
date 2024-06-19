@@ -21,15 +21,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+DOMAIN = os.environ.get('DOMAIN')
 if not DEBUG:
     DOMAIN = 'https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com'
-DOMAIN = os.environ.get('DOMAIN')
 
 ALLOWED_HOSTS = [
-    'doterra-essentials-oils-2fbd0f7ae026.herokuapp.com',
-    'localhost',
-    '127.0.0.1',
-]
+                '*',
+                ]
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 # if RENDER_EXTERNAL_HOSTNAME:
@@ -118,7 +116,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
