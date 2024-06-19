@@ -22,7 +22,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-DOMAIN = os.environ.get('DOMAIN')
+DOMAIN = os.environ.get('DOMAIN', 'https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com')
 
 ALLOWED_HOSTS = [
                 '*',
