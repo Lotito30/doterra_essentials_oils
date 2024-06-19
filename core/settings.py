@@ -3,7 +3,6 @@ from datetime import timedelta
 # para definir variables de ambientes 
 import os
 import environ
-import dj_database_url
 
 # env para definir listas o algo mas complicado
 env = environ.Env() 
@@ -19,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 DOMAIN = os.environ.get('DOMAIN')
 
@@ -114,15 +113,19 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('JAWSDB_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'doterraessentialoils',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost', 
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        },
+    },
 }
-if 'JAWSDB_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.parse(os.environ['JAWSDB_URL'])
-    
+
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
@@ -132,10 +135,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
 CORS_ALLOWED_ORIGIN_REGEXES = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
