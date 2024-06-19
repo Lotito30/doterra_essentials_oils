@@ -1,54 +1,67 @@
+import Home from "containers/Home";
+import SignIn from "containers/auth/SignIn";
+import SignUp from "containers/auth/SignUp";
+import Error404 from "containers/errors/Error404";
+import AboutUs from "containers/pages/AboutUs";
+import ContactUs from "containers/pages/ContactUs";
+import Shop from "containers/pages/Shop";
 import {
-  BrowserRouter as Router,
   Route,
   Routes,
-  useLocation,
+  useLocation
 } from "react-router-dom";
-import Error404 from "containers/errors/Error404";
-import Home from "containers/pages/Home";
-import ContactUs from "containers/pages/ContactUs";
-import AboutUs from "containers/pages/AboutUs";
-import Experience from "containers/pages/Experience";
-import Shop from "containers/pages/Shop";
-import UserSingIn from "containers/auth/UserSignIn";
-import UserSingUp from "containers/auth/UserSignUp";
 
-import Activate from './containers/auth/Activate'
+import Activate from "./containers/auth/Activate";
 
-import { AnimatePresence } from "framer-motion";
 import Reset_Password from "containers/auth/ResetPassword";
 import Reset_Password_Confirm from "containers/auth/ResetPasswordConfirm";
 import ProductDetails from "containers/pages/ProductDetails";
-// import Search from "containers/pages/Search";
+
 import Cart from "containers/pages/Cart";
 import Checkout from "containers/pages/Checkout";
+import Dashboard from "containers/pages/Dashboard";
+import Thankyou from "containers/pages/ThankYou";
+import WishList from "containers/pages/WishList";
+import ReviewsProductDetail from "containers/pages/CreateReview";
 
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence>
-      <Routes location={location} key={location.pathname}>
+    <Routes location={location} key={location.pathname}>
+      <Route path="*" element={<Error404 />} />
+      <Route exact path="/" element={<Home />} />
 
-        <Route path="*" element={<Error404 />} />
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/shop" element={<Shop />} />
-        <Route exact path="/experience" element={<Experience />} />
-        <Route exact path="/about" element={<AboutUs />} />
-        <Route exact path="/contact" element={<ContactUs />} />
-        <Route exact path="/product/:productId" element={<ProductDetails />} />
-        <Route exact path="/cart" element={<Cart />} />
-        <Route exact path="/checkout" element={<Checkout />} />
-        {/* <Route exact path="/search" element={<Search />} /> */}
+      <Route exact path="/shop" element={<Shop />} />
+      <Route exact path="/product/:productId" element={<ProductDetails />} />
 
-        {/* AUTHENTICATION */}
-        <Route exact path="/signin" element={<UserSingIn />} />
-        <Route exact path="/signup" element={<UserSingUp />} />
-        <Route exact path="/activate/:uid/:token" element={<Activate />} />
-        <Route exact path="/reset_password" element={<Reset_Password />} />
-        <Route exact path="/password/reset/confirm/:uid/:token" element={< Reset_Password_Confirm />} />
-        
-      </Routes>
-    </AnimatePresence>
+      <Route exact path="/wishlist" element={<WishList />} />
+      <Route exact path="/about" element={<AboutUs />} />
+      <Route exact path="/contact" element={<ContactUs />} />
+
+      <Route exact path="/cart" element={<Cart />} />
+      <Route exact path="/checkout" element={<Checkout />} />
+
+      {/* AUTHENTICATION */}
+      <Route exact path="/signin" element={<SignIn />} />
+      <Route exact path="/signup" element={<SignUp />} />
+      <Route exact path="/activate/:uid/:token" element={<Activate />} />
+      <Route exact path="/reset_password" element={<Reset_Password />} />
+      <Route exact path="/password/reset/confirm/:uid/:token" element={<Reset_Password_Confirm />} />
+
+      <Route exact path="/thankyou" element={<Thankyou />} />
+      
+      {/* DASHBOARD */}
+      <Route exact path="/dashboard" element={<Dashboard />} />
+      <Route exact path="/dashboard/payments" element={<Dashboard />} />
+      <Route exact path="/dashboard/payment/:transaction_id" element={<Dashboard />} />
+      <Route exact path="/dashboard/profile/edit" element={<Dashboard />} />
+      <Route exact path="/dashboard/sales" element={<Dashboard />} />
+      <Route exact path="/dashboard/products" element={<Dashboard />} />
+
+      {/* REVIEWS */}
+      <Route exact path="/create-review/product/:productId" element={<ReviewsProductDetail />} />
+
+    </Routes>
   );
 }
 

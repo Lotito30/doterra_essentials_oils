@@ -94,10 +94,10 @@ class AddItemView(APIView):
                         result.append(item)
 
                     return Response({'cart': result}, status=status.HTTP_201_CREATED)
-                else:
-                    return Response(
-                        {'error': 'Not enough of this item in stock'},
-                        status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {'error': 'Not enough of this item in stock'},
+                    status=status.HTTP_200_OK)
         except:
             return Response(
                 {'error': 'Something went wrong when adding item to cart'},

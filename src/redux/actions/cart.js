@@ -24,6 +24,7 @@ import {
   SYNCH_CART_SUCCESS,
   SYNCH_CART_FAIL,
 } from "./types";
+import { setAlert } from "./alert";
 
 export const add_item = (product) => async (dispatch) => {
   if (localStorage.getItem("access")) {
@@ -32,8 +33,8 @@ export const add_item = (product) => async (dispatch) => {
         "Content-Type": "application/json",
         "Accept": "application/json",
         "Authorization": `JWT ${localStorage.getItem("access")}`,
-      },
-    };
+      }
+    }
 
     const product_id = product.id;
     const body = JSON.stringify({ product_id });
@@ -50,16 +51,22 @@ export const add_item = (product) => async (dispatch) => {
           type: ADD_ITEM_SUCCESS,
           payload: res.data,
         });
-      } else {
+        dispatch(setAlert("Item added to your cart"))
+      } else if(res.status === 200){
+        dispatch(setAlert(res.data.error))
+      }else {
         dispatch({
           type: ADD_ITEM_FAIL,
         });
+        dispatch(setAlert("Item don't added"))
       }
     } catch (err) {
       console.log(`Error response data add_item ${JSON.stringify(err.response.data)}`);
       dispatch({
         type: ADD_ITEM_FAIL,
       });
+      dispatch(setAlert(err.response.data.error))
+
     }
   } else {
     let cart = [];
@@ -90,7 +97,7 @@ export const add_item = (product) => async (dispatch) => {
       payload: cart,
     });
   }
-};
+}
 
 export const get_items = () => async (dispatch) => {
   if (localStorage.getItem("access")) {
@@ -174,9 +181,9 @@ export const get_total = () => async (dispatch) => {
       cart = JSON.parse(localStorage.getItem("cart"));
 
       cart.map((item) => {
-        total += parseFloat(item.product.price) * parseFloat(item.count);
+        total += parseFloat(item?.product?.price) * parseFloat(item.count);
         compare_total +=
-          parseFloat(item.product.compare_price) * parseFloat(item.count);
+          parseFloat(item?.product?.compare_price) * parseFloat(item.count);
       });
     }
 
@@ -316,15 +323,19 @@ export const remove_item = (item) => async (dispatch) => {
           type: REMOVE_ITEM_SUCCESS,
           payload: res.data,
         });
+        dispatch(setAlert("Item removed from you cart"))
       } else {
         dispatch({
           type: REMOVE_ITEM_FAIL,
         });
+        dispatch(setAlert("Item not removed"))
+
       }
     } catch (err) {
       dispatch({
         type: REMOVE_ITEM_FAIL,
       });
+      dispatch(setAlert("Item not removed"))
     }
   } else {
     let cart = [];
@@ -339,7 +350,6 @@ export const remove_item = (item) => async (dispatch) => {
         }
       });
     }
-
     dispatch({
       type: REMOVE_ITEM,
       payload: new_cart,

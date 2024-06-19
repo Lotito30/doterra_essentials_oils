@@ -9,10 +9,14 @@ p{
   @apply text-gray-500 font-sans text-sm; 
 }
 
- body{
+body{
   /* background-color: rgb(252,254,233); */
   background-color: rgb(254,254,254);
 } 
+
+/* html {
+  scroll-behavior: smooth;
+} */
 /* Estilo general de la barra de desplazamiento */
 ::-webkit-scrollbar {
     width: 10px;

@@ -15,11 +15,12 @@ import {
   FILTER_PRODUCTS_SUCCESS,
   FILTER_PRODUCTS_FAIL,
 } from "./types";
+import { setAlert } from "./alert";
 
 export const get_products = () => async (dispatch) => {
   const config = {
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   };
 
@@ -30,86 +31,86 @@ export const get_products = () => async (dispatch) => {
     );
 
     if (res.status === 200) {
-        dispatch({ 
-            type: GET_PRODUCTS_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:GET_PRODUCTS_FAIL
-        })
+      dispatch({
+        type: GET_PRODUCTS_SUCCESS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: GET_PRODUCTS_FAIL,
+      });
     }
   } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
-        type:GET_PRODUCTS_FAIL
-    })
+      type: GET_PRODUCTS_FAIL,
+    });
   }
 };
 export const get_products_by_arrival = () => async (dispatch) => {
   const config = {
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   };
 
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/product/get-products?sortBy=date_created&order=desc&limit=3`,
+      `${process.env.REACT_APP_API_URL}/api/product/get-products?sortBy=date_created&order=desc&limit=6`,
       config
     );
 
     if (res.status === 200) {
-        dispatch({ 
-            type: GET_PRODUCTS_BY_ARRIVAL_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:GET_PRODUCTS_BY_ARRIVAL_FAIL
-        })
+      dispatch({
+        type: GET_PRODUCTS_BY_ARRIVAL_SUCCESS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: GET_PRODUCTS_BY_ARRIVAL_FAIL,
+      });
     }
   } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
-        type:GET_PRODUCTS_BY_ARRIVAL_FAIL
-    })
+      type: GET_PRODUCTS_BY_ARRIVAL_FAIL,
+    });
   }
 };
 export const get_products_by_sold = () => async (dispatch) => {
   const config = {
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   };
 
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/product/get-products?sortBy=sold&order=desc&limit=3`,
+      `${process.env.REACT_APP_API_URL}/api/product/get-products?sortBy=sold&order=desc&limit=6`,
       config
     );
 
     if (res.status === 200) {
-        dispatch({ 
-            type: GET_PRODUCTS_BY_SOLD_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:GET_PRODUCTS_BY_SOLD_FAIL
-        })
+      dispatch({
+        type: GET_PRODUCTS_BY_SOLD_SUCCESS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: GET_PRODUCTS_BY_SOLD_FAIL,
+      });
     }
   } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
-        type:GET_PRODUCTS_BY_SOLD_FAIL
-    })
+      type: GET_PRODUCTS_BY_SOLD_FAIL,
+    });
   }
 };
 export const get_product = (productId) => async (dispatch) => {
   const config = {
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   };
 
@@ -120,28 +121,27 @@ export const get_product = (productId) => async (dispatch) => {
     );
 
     if (res.status === 200 && !res.data.error) {
- 
-        dispatch({ 
-            type: GET_PRODUCT_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:GET_PRODUCT_FAIL
-        })
+      dispatch({
+        type: GET_PRODUCT_SUCCESS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: GET_PRODUCT_FAIL,
+      });
     }
   } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
+    console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
-        type:GET_PRODUCT_FAIL
-    })
+      type: GET_PRODUCT_FAIL,
+    });
   }
 };
 
 export const get_related_products = (productId) => async (dispatch) => {
   const config = {
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   };
 
@@ -152,99 +152,137 @@ export const get_related_products = (productId) => async (dispatch) => {
     );
 
     if (res.status === 200 && !res.data.error) {
-        dispatch({ 
-            type: RELATED_PRODUCTS_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:RELATED_PRODUCTS_FAIL
-        })
-    }
-  } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
-    dispatch({
-        type:RELATED_PRODUCTS_FAIL
-    })
-  }
-};
-export const get_filtered_products = (category_id,price_range,sort_by,order) => async (dispatch) => {
-  const config = {
-    headers: {
-      "Accept": "application/json",
-      "Content-Type":"application/json"
-    },
-  };
-
-  const body = JSON.stringify({
-    category_id,
-    price_range,
-    sort_by,
-    order
-  })
-  try {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/product/by/search`,
-      body,
-      config
-    );
-
-    if (res.status === 200 && !res.data.error) {
-        dispatch({ 
-            type: FILTER_PRODUCTS_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
-        dispatch({
-            type:FILTER_PRODUCTS_FAIL
-        })
+      dispatch({
+        type: RELATED_PRODUCTS_SUCCESS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: RELATED_PRODUCTS_FAIL,
+      });
     }
   } catch (error) {
     console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
     dispatch({
-        type:FILTER_PRODUCTS_FAIL
-    })
+      type: RELATED_PRODUCTS_FAIL,
+    });
   }
 };
-export const get_search_products = (search, category_id) => async (dispatch) => {
-  const config = {
-    headers: {
-      "Accept": "application/json",
-      "Content-Type":"application/json"
-    },
-  };
+export const get_filtered_products =
+  (category_id, price_range, sort_by, order) => async (dispatch) => {
+    const config = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
 
-  const body = JSON.stringify({
-    search,
-    category_id,
-  })
+    const body = JSON.stringify({
+      category_id,
+      price_range,
+      sort_by,
+      order,
+    });
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/product/by/search`,
+        body,
+        config
+      );
 
-  try {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/product/search`,
-      body,
-      config
-    );
-
-    if (res.status === 200 && !res.data.error) {
-        dispatch({ 
-            type: SEARCH_PRODUCTS_SUCCESS, 
-            payload: res.data 
-        });
-    }else{
+      if (res.status === 200 && !res.data.error) {
         dispatch({
-            type:SEARCH_PRODUCTS_FAIL
-        })
+          type: FILTER_PRODUCTS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: FILTER_PRODUCTS_FAIL,
+        });
+      }
+    } catch (error) {
+      console.log(
+        `Error response data: ${JSON.stringify(error.response.data)}`
+      );
+      dispatch({
+        type: FILTER_PRODUCTS_FAIL,
+      });
     }
-  } catch (error) {
-        console.log(`Error response data: ${JSON.stringify(error.response.data)}`);
-    dispatch({
-        type:SEARCH_PRODUCTS_FAIL
-    })
-  }
-};
+  };
+export const get_search_products =
+  (search, category_id) => async (dispatch) => {
+    const config = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
 
+    const body = JSON.stringify({
+      search,
+      category_id,
+    });
 
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/product/search`,
+        body,
+        config
+      );
 
+      if (res.status === 200 && !res.data.error) {
+        dispatch({
+          type: SEARCH_PRODUCTS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: SEARCH_PRODUCTS_FAIL,
+        });
+      }
+    } catch (error) {
+      console.log(
+        `Error response data: ${JSON.stringify(error.response.data)}`
+      );
+      dispatch({
+        type: SEARCH_PRODUCTS_FAIL,
+      });
+    }
+  };
+export const create_product =
+  (product, photo, description, price, compare_price, category, quantity) =>
+  async (dispatch) => {
+    const config = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `JWT ${localStorage.getItem("access")}`,
+      },
+    };
+    const body = JSON.stringify({
+      product,
+      photo,
+      description,
+      price,
+      compare_price,
+      category,
+      quantity,
+    });
 
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/product/create-product`,
+        body,
+        config
+      );
 
+      if (res.status === 200) {
+        dispatch(setAlert("Product created"));
+      } else {
+        dispatch(setAlert("Product don't created"));
+      }
+    } catch (error) {
+      console.log(
+        `Error response data: ${JSON.stringify(error.response.data)}`
+      );
+    }
+  };

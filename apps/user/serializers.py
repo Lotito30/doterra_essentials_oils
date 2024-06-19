@@ -15,4 +15,5 @@ class UserCreateSerializer(UserCreateSerializer):
             'get_full_name',
             'get_short_name',
             'get_phone',
+            'get_is_staff',
         )

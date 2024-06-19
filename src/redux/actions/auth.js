@@ -101,15 +101,16 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
             "green"
           )
         );
+        return true
       } else {
         dispatch({
           type: SIGNUP_FAIL,
         });
         dispatch(setAlert("Error verify the data entered", "red"));
       }
-      dispatch({
-        type: REMOVE_AUTH_LOADING,
-      });
+        dispatch({
+          type: REMOVE_AUTH_LOADING,
+        });
     } catch (error) {
       console.error("Error response data:", error.response.data); // Imprime los detalles del error proporcionados por el servidor
       dispatch({
@@ -118,7 +119,17 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
       dispatch({
         type: REMOVE_AUTH_LOADING,
       });
-      dispatch(setAlert("Error connecting to server, try again later", "red"));
+      dispatch(setAlert(
+          error.response.data?.email 
+          ? error.response.data.email
+          : error.response.data?.phone
+          ? `Phone ${error.response.data.phone}`
+          : error.response.data?.non_field_errors 
+          ? error.response.data.non_field_errors 
+          : "Your password must meet security requirements",
+          "red"
+        ))
+      return false
     }
 };
 
@@ -197,7 +208,7 @@ export const signin = (email, password) => async (dispatch) => {
       dispatch({
         type: LOGIN_FAIL,
       });
-      dispatch(setAlert("Error Logging In", "red"));
+      dispatch(setAlert("Email address or Password is incorrect", "red"));
     }
   } catch (error) {
     console.error("Error response data:", error.response.data); 
@@ -207,7 +218,7 @@ export const signin = (email, password) => async (dispatch) => {
     dispatch({
       type: REMOVE_AUTH_LOADING,
     });
-    dispatch(setAlert("Error Logging In, try again later", "red"));
+    dispatch(setAlert("Email address or Password is incorrect", "red"));
   }
 };
 
@@ -238,6 +249,7 @@ export const activate = (uid, token) => async (dispatch) => {
         type: ACTIVATION_SUCCESS,
       });
       dispatch(setAlert("Account Successfully Activated", "green"));
+      return true
     } else {
       dispatch({
         type: ACTIVATION_FAIL,
@@ -256,6 +268,7 @@ export const activate = (uid, token) => async (dispatch) => {
       type: REMOVE_AUTH_LOADING,
     });
     dispatch(setAlert("Error activating account", "red"));
+    return false
   }
 };
 
@@ -416,5 +429,4 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT,
   });
-  dispatch(setAlert("Succesfully logged out", "green"));
 };

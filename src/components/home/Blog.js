@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
 
 function Blog () {
   return (
 <section class="bg-gray-50">
-  <div class="mx-auto max-w-screen-2xl px-8 py-12 lg:py-16">
+  <div class="px-4 mx-auto max-w-screen-2xl md:px-8 py-12 lg:py-16">
     <div class="md:flex md:items-end md:justify-between">
       <div class="max-w-xl">
         <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -11,7 +10,7 @@ function Blog () {
         </h2>
       </div>
     </div>
-
+{/* BUSCAR LOS PRODUCTOS QUE TENGAN REVIEW Y MOSTRAR 4 REVIEWS EN CAROUSEL INFINITO */}
     <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
       <blockquote class="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8">
         <div>

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import fotoError from "assets/img/error404.webp";
 
 function Error404() {
   return (
@@ -7,7 +6,7 @@ function Error404() {
       <div class="w-full h-full overflow-hidden hidden lg:block">
         <img
           class="px-3 inset-0 object-cover w-full h-full"
-          src={fotoError}
+          src="https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/error404.webp"
           alt=""
         />
       </div>
@@ -27,7 +26,7 @@ function Error404() {
             Go back home
           </Link>
           <Link
-            to="/contactus"
+            to="/contact"
             class="transition duration-300 ease-in-out text-sm font-semibold text-gray-900 px-3 py-2.5 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Contact support <span aria-hidden="true">&rarr;</span>

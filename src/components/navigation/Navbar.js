@@ -1,52 +1,83 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
+import {
+  ArrowCircleRightIcon,
+  ArrowRightIcon,
+  ShoppingCartIcon,
+  UserIcon,
+  XCircleIcon,
+  BadgeCheckIcon,
+} from "@heroicons/react/solid";
+import Alert from "components/alert";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import { Link, NavLink, Navigate } from "react-router-dom";
-import { DotLoader } from "react-spinners";
-import icono from "assets/img/iconodoTERRA3.png";
-import Alert from "../../components/alert";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/actions/auth";
 import { get_categories } from "../../redux/actions/categories";
 import { get_search_products } from "../../redux/actions/products";
-import SearchBox from "../../components/navigation/Search";
-import { ShoppingCartIcon } from "@heroicons/react/solid";
-// import { ChevronDownIcon } from "@heroicons/react/solid";
+import SearchBox from "./SearchBox";
+import { SearchContext } from "./SearchContext";
 
 function Navbar({
   isAuthenticated,
-  user,
   logout,
-  get_categories,
   categories,
   get_search_products,
-  total_items
+  total_items,
+  search_products,
+  user,
 }) {
-  const [render, setRender] = useState(false);
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+
+  const { searchClick, setSearchClick } = useContext(SearchContext);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
+
   const [formData, setFormData] = useState({
     category_id: 0,
     search: "",
   });
-  useEffect(() => {
-    get_categories();
-  }, [render]);
 
   const { category_id, search } = formData;
 
-  const onChange = (e) => {
+  const onChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    onSubmit(search, category_id);
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (search, category_id) => {
+    await get_search_products(search, category_id);
+  };
+
+  const handleSubmitSearch = async (e) => {
     e.preventDefault();
     await get_search_products(search, category_id);
-    setRender(!render);
+    console.log(search_products[0]?.id);
+    navigate(`/product/${search_products[0]?.id}`);
   };
 
-  if (render) {
-    return <Navigate to="/shop" />;
-  }
+  const handleCartCLick = () => {
+    if (!isAuthenticated) {
+      setShowLoginMessage(!showLoginMessage);
+      return null;
+    }
+    navigate("/cart");
+  };
 
+  const handleSearchCLick = () => {
+    if (searchClick) {
+      setSearchClick(false);
+      onSubmit(" ", 0);
+    } else {
+      setSearchClick(true);
+    }
+  };
   const solutions = [
+    {
+      name: "Dashboard",
+      description: "Discover Our Range of Oils",
+      href: "/dashboard",
+      icon: iconDashboard,
+    },
     {
       name: "Shop",
       description: "Discover Our Range of Oils",
@@ -54,9 +85,9 @@ function Navbar({
       icon: iconProduct,
     },
     {
-      name: "Experience",
+      name: "Wishlist",
       description: "Feel the Power of Nature",
-      href: "/experience",
+      href: "/wishlist",
       icon: IconExperience,
     },
     {
@@ -78,7 +109,7 @@ function Navbar({
       icon: IconSignUp,
     },
     {
-      name: "Log out",
+      name: "Sign out",
       description: "End your current session now",
       onclick: () => logout(),
       icon: IconLogOut,
@@ -90,10 +121,6 @@ function Navbar({
       href: "/shop",
     },
     {
-      name: "Experience",
-      href: "/experience",
-    },
-    {
       name: "About Us",
       href: "/about",
     },
@@ -101,8 +128,29 @@ function Navbar({
       name: "Contact Us",
       href: "/contact",
     },
+    {
+      name: "Categories",
+    },
   ];
-
+  const [showCategory, setShowCategory] = useState(false);
+  const showCategories = () => {
+    return (
+      <div
+        class={`absolute top-10 left-1/2 bg-white shadow-md  rounded-md z-10 -translate-x-2 `}
+        onMouseEnter={() => setShowCategory(true)}
+        onMouseLeave={() => setShowCategory(false)}
+      >
+        {categories?.map((category, index) => (
+          <div key={index} className=" cursor-pointer hover:bg-gray-100 px-3 py-2">
+            <div>
+            {category.name}
+            <ArrowCircleRightIcon className="h-4 w-4 inline-block ml-1"/>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
   const loading = true;
 
   window.onscroll = function () {
@@ -124,11 +172,6 @@ function Navbar({
     }
   }
 
-  // function classNames(...classes) {
-  //   return classes.filter(Boolean).join(" ");
-  // }
-  const ClassPopoverButton =
-    "rounded-md bg-orange-standard px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-white/75";
   const authLinks = (
     <div className="block">
       <Popover className="relative">
@@ -137,7 +180,7 @@ function Navbar({
             <Popover.Button
               className={`
 
-                group inline-flex items-center text-black text-base font-mediumtransition-all duration-300 ease-in-out p-3 bg-gray-200 rounded-lg hover:bg-gray-300`}
+                group inline-flex items-center text-black text-base font-mediumtransition-all duration-300 ease-in-out p-2 hover:bg-gray-200 rounded-full`}
             >
               {open ? (
                 <svg
@@ -145,8 +188,8 @@ function Navbar({
                   className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
+                  stroke=""
+                  stroke-width=""
                 >
                   <path
                     d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z"
@@ -167,16 +210,14 @@ function Navbar({
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
-                  fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="3"
+                  style={{
+                    fill: "#0F0F0F",
+                    transform: "",
+                    msFilter: "",
+                  }}
                 >
-                  <path
-                    d="M4 4H21M4 12H21M4 20H21"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  ></path>
+                  <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
                 </svg>
               )}
             </Popover.Button>
@@ -190,16 +231,36 @@ function Navbar({
               leaveTo="opacity-0 -translate-y-3"
             >
               <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-3/4 transform px-4 sm:px-0">
-                <div className="overflow-hidden rounded-lg shadow-lg ring-0">
-                  <div className="relative grid gap-6 bg-white p-7">
+                <div className="overflow-hidden rounded-md shadow-lg ring-0">
+                  <div className="relative grid gap-6 bg-white p-6">
+                    {user ? (
+                      <div className="flex items-center gap-6 ml-1">
+                        <UserIcon className="h-7 w-7" />
+                        <p className="text-lg text-gray-900 capitalize">
+                          Hi! {user.first_name} {user.last_name} 
+                          <BadgeCheckIcon className="h-6 w-6 text-blue-500 inline-block ml-2"/>
+                        </p>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
                     {solutions.map((item) => (
                       <Link
                         key={item.name}
                         onClick={item.onclick}
                         to={item.href}
-                        className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 ${
-                          item.name === "Log out" ? 'hover:bg-red-300' : 'hover:bg-gray-100'} ${
-                          item.name === "Log out" && isAuthenticated === false || item.name === "Sign up" && isAuthenticated === true
+                        className={`-m-3 flex items-center rounded-lg p-2 transition duration-400 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 hover:scale-105 
+                        ${
+                          item.name === "Sign out"
+                            ? "hover:bg-red-300"
+                            : "hover:bg-gray-100"
+                        } 
+                        ${
+                          (item.name === "Sign out" && !isAuthenticated) ||
+                          (item.name === "Wishlist" && !isAuthenticated) ||
+                          (item.name === "Dashboard" && !isAuthenticated) ||
+                          (item.name === "Sign up" && isAuthenticated)
                             ? "hidden"
                             : ""
                         }`}
@@ -234,12 +295,6 @@ function Navbar({
         to="/signin"
       >
         Sign in
-        <DotLoader
-          className="ml-3"
-          loading={loading}
-          size={20}
-          color="#f2f2f2"
-        />
       </Link>
 
       <Link
@@ -251,37 +306,56 @@ function Navbar({
     </Fragment>
   );
 
+  useEffect(() => {
+    if (searchClick && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [searchClick]);
   return (
-    <>
+    <div>
       <navbar
         id="navbar"
         className="transition duration-400 ease-in-out fixed top-0 w-full z-40 min-w-[420px]"
       >
-        <div className="px-6 w-full lg:px-12">
-          <div className="flex h-16 items-center justify-between">
+        <div className="px-6 w-full lg:px-12 ">
+          <div className="flex h-16 items-center justify-between max-w-7xl mx-auto">
             <div className="md:flex md:items-center md:gap-12 ">
               <Link to="/" className="text-orange-standard flex items-center">
-                <img src={icono} className="w-16 h-16" alt="doTERRA" />
-                <h2 className="hidden lg:block text-black text-2xl font-bold">
+                <img
+                  src="https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/iconoPestana.jpeg"
+                  className="w-16 h-16"
+                  alt="doTERRA"
+                />
+                <h2 className="hidden lg:block text-black text-2xl font-bold sr-only">
                   dōTERRA
                 </h2>
               </Link>
             </div>
 
-            <div className="hidden md:block">
+            <div className={searchClick ? "hidden" : "hidden md:block"}>
               <nav aria-label="Global">
                 <ul className="flex items-center gap-6 text-sm">
                   {navBar.map((item) => (
                     <NavLink
                       key={item.name}
-                      to={item.href}
+                      to={item.href || ""}
                       className={({ isActive }) =>
-                        `border-b-2 font-bold ${
-                          isActive
+                        `border-b-2 font-bold  ${
+                          isActive && item.name !== "Categories"
                             ? "text-black border-orange-standard"
                             : "text-gray-400 border-b-transparent hover:border-orange-standard"
                         }`
                       }
+                      onMouseEnter={() => {
+                        if (item.name === "Categories") {
+                          setShowCategory(true);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (item.name === "Categories") {
+                          setShowCategory(false);
+                        }
+                      }}
                     >
                       {item.name}
                     </NavLink>
@@ -290,57 +364,96 @@ function Navbar({
               </nav>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Link
-                to="/cart"
-                className="rounded-full p-2 hover:bg-gray-200 "
+            <div className="flex items-center">
+              <div className={`relative mr-2 ${searchClick ? '' : 'hover:scale-110'}`}>
+                <SearchBox
+                  categories={categories}
+                  search={search}
+                  onSubmit={onSubmit}
+                  onChange={onChange}
+                  handleSearchCLick={handleSearchCLick}
+                  inputRef={inputRef}
+                  handleSubmitSearch={handleSubmitSearch}
+                  search_products={search_products}
+                />
+              </div>
+              <div
+                className={`${searchClick ? "hidden" : "flex items-center"}`}
               >
-                <ShoppingCartIcon className="w-6 h-6 text-black hover:scale-110" />
-                <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">
-                  {isAuthenticated ? total_items : 0}
+                <button
+                  className="rounded-full p-2 hover:bg-gray-200 relative"
+                  onClick={handleCartCLick}
+                >
+                  <ShoppingCartIcon className="w-6 h-6 text-black" />
+                  <span className="text-xs absolute top-4 left-2 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-1.5 text-center">
+                    {total_items > 0 && isAuthenticated && total_items}
                   </span>
-              </Link>
-              <SearchBox
-                categories={categories}
-                search={search}
-                onSubmit={onSubmit}
-                onChange={onChange}
-              />
-              {isAuthenticated ? (
-                <div className="sm:flex ">{authLinks}</div>
-              ) : (
-                <div className="inline-flex gap-2">
-                  <div className="inline-flex sm:gap-1">{guestLinks}</div>
-                  <div className="block md:hidden">{authLinks}</div>
-                </div>
-              )}
+                  {showLoginMessage && (
+                    <span className="flex items-center gap-1 z-50 w-max text-sm absolute top-12 -right-20 sm:right-0  bg-gray-500 text-white font-semibold rounded-md p-2 sm:p-4">
+                      <button onClick={handleCartCLick}>
+                        <XCircleIcon className="w-6 h-6" />
+                      </button>
+                      You must log in to view your cart.
+                      <Link
+                        to="/signin"
+                        className="underline text-orange-standard hover:text-orange-400"
+                      >
+                        Sign In
+                      </Link>
+                    </span>
+                  )}
+                </button>
+
+                {isAuthenticated ? (
+                  <div className="sm:flex ">{authLinks}</div>
+                ) : (
+                  <div className="inline-flex gap-2">
+                    <div className="inline-flex sm:gap-1">{guestLinks}</div>
+                    <div className="block md:hidden">{authLinks}</div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
+        <Alert />
+        {showCategory && showCategories()}
       </navbar>
-      <Alert />
-    </>
+    </div>
   );
 }
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
+  total_items: state.Cart.total_items,
   categories: state.Categories.categories,
-  total_items: state.Cart.total_items
+  search_products: state.Products.search_products,
 });
 
 export default connect(mapStateToProps, {
   logout,
-  get_categories,
   get_search_products,
+  get_categories,
 })(Navbar);
-
+function iconDashboard() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30px"
+      height="30px"
+      viewBox="0 0 24 24"
+      style={{ fill: "rgba(0, 0, 0, 1)", transform: "", msFilter: "" }}
+    >
+      <path d="M4 13h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1zm-1 7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4zm10 0a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v7zm1-10h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z"></path>
+    </svg>
+  );
+}
 function iconProduct() {
   return (
     <svg
-      width="50px"
-      height="50px"
+      width="40px"
+      height="40px"
       viewBox="-100 0 1424 1024"
       xmlns="http://www.w3.org/2000/svg"
       fill="#000000"
@@ -355,8 +468,8 @@ function iconProduct() {
 function IconExperience() {
   return (
     <svg
-      width="50px"
-      height="50px"
+      width="40px"
+      height="40px"
       viewBox="-4 0 32 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -378,8 +491,8 @@ function IconAbout() {
   return (
     <svg
       fill="#000000"
-      height="50px"
-      width="50px"
+      height="40px"
+      width="40px"
       version="1.1"
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
@@ -410,8 +523,8 @@ function IconContact() {
   return (
     <svg
       fill="#000000"
-      width="50px"
-      height="50px"
+      width="40px"
+      height="40px"
       viewBox="-5 0 80 70"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -453,8 +566,8 @@ function IconContact() {
 function IconSignUp() {
   return (
     <svg
-      height="50px"
-      width="50px"
+      height="40px"
+      width="40px"
       viewBox="-120 0 680 550"
       fill="#000000"
       xmlns="http://www.w3.org/2000/svg"
@@ -468,8 +581,8 @@ function IconSignUp() {
 function IconLogOut() {
   return (
     <svg
-      height="100px"
-      width="100px"
+      height="40px"
+      width="40px"
       fill="#000000"
       viewBox="-5 0 28 24"
       xmlns="http://www.w3.org/2000/svg"

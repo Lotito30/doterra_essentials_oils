@@ -38,7 +38,7 @@ function Features() {
         Unlock the Infinite Potential of Nature's Purest Gifts with doTERRA
         </p>
       </div>
-      <div className="grid max-w-screen-lg gap-8 row-gap-10 mx-auto lg:grid-cols-2">
+      <div className="grid max-w-screen-lg gap-8 row-gap-10 mx-auto md:grid-cols-2">
         <div className="flex flex-col max-w-md sm:mx-auto sm:flex-row">
           <div className="mr-4">
             <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-indigo-50">
