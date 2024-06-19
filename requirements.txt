@@ -12,11 +12,7 @@ social-auth-app-django
 
 pytz
 
-<<<<<<< HEAD
 mutagen
-=======
-mutagen 
->>>>>>> 729318c22f41ca5533fae626e2f2663bfcce990e
 
 argon2-cffi 
 
@@ -35,8 +31,5 @@ whitenoise
 mysqlclient
 environ
 
-<<<<<<< HEAD
 requests
-=======
-requests
->>>>>>> 729318c22f41ca5533fae626e2f2663bfcce990e
+
