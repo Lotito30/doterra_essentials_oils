@@ -3,6 +3,8 @@ from datetime import timedelta
 # para definir variables de ambientes 
 import os
 import environ
+import dj_database_url
+
 
 # env para definir listas o algo mas complicado
 env = environ.Env() 
@@ -113,18 +115,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'doterraessentialoils',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost', 
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        },
-    },
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
+
+# En producción, Heroku establece la variable de entorno JAWSDB_URL
+if 'JAWSDB_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.parse(os.environ['JAWSDB_URL'])
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
