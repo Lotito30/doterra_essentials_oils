@@ -33,4 +33,4 @@ environ
 
 requests
 
-dj_database_url
+dj-database-url
