@@ -115,12 +115,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
-
-# En producción, Heroku establece la variable de entorno JAWSDB_URL
-if 'JAWSDB_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.parse(os.environ['JAWSDB_URL'])
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -275,7 +271,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # if not DEBUG:
 
-#     DEFAULT_FROM_EMAIL='Lotitoils - <lotitoils@gmail.com>'
+#     DEFAULT_FROM_EMAIL='dominguezjesu26 - <dominguezjesu26@gmail.com>'
 #     EMAIL_BACKEND='django.core.email.backends.smtp.EmailBackend'
 #     EMAIL_HOST=env('EMAIL_HOST')
 #     EMAIL_HOST_USER=env('EMAIL_HOST_USER')
