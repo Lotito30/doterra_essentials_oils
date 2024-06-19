@@ -1,1 +1,1 @@
-web: gunicorn doterra_essentials_oils.wsgi --log-file -
+web: gunicorn core.wsgi --log-file -
