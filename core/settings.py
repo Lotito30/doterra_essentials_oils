@@ -125,7 +125,6 @@ if 'JAWSDB_URL' in os.environ:
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com/",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",
