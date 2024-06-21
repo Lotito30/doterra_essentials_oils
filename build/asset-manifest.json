@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.6fbca4da.css",
-    "main.js": "/static/js/main.32b99322.js",
+    "main.js": "/static/js/main.5e41cd50.js",
     "static/media/error404.webp": "/static/media/error404.ab749cacea13a0cb5fca.webp",
     "static/media/iconodoTERRA3.png": "/static/media/iconodoTERRA3.2370d11d202513625445.png",
     "static/media/fondoHome1.jpg": "/static/media/fondoHome1.2f9f1d3c8095e1154420.jpg",
@@ -13,10 +13,10 @@
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
     "main.6fbca4da.css.map": "/static/css/main.6fbca4da.css.map",
-    "main.32b99322.js.map": "/static/js/main.32b99322.js.map"
+    "main.5e41cd50.js.map": "/static/js/main.5e41cd50.js.map"
   },
   "entrypoints": [
     "static/css/main.6fbca4da.css",
-    "static/js/main.32b99322.js"
+    "static/js/main.5e41cd50.js"
   ]
 }
