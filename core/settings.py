@@ -25,9 +25,8 @@ if not DEBUG:
     DOMAIN = 'https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com'
 DOMAIN = os.environ.get('DOMAIN')
 
-ALLOWED_HOSTS = [
-                '*',
-                ]
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
+
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 # if RENDER_EXTERNAL_HOSTNAME:
@@ -119,27 +118,35 @@ DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+# Configuración adicional para asegurar el uso de TLS
+DATABASES['default']['CONN_MAX_AGE'] = 600  # Mantener la conexión abierta por más tiempo
+DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}  # Forzar uso de SSL
+
+# Permitir el uso de credenciales
 CORS_ALLOW_CREDENTIALS = True
+
+# Lista de orígenes permitidos
 CORS_ALLOWED_ORIGINS = [
+    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+
+# Si necesitas utilizar patrones de origen, úsalos con cuidado
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com/",
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
+    r"^https://.*\.herokuapp\.com$",  # Permitir todos los subdominios de herokuapp.com
+    r"^http://localhost:[0-9]+$",  # Permitir localhost en cualquier puerto
 ]
+
+# Lista de orígenes confiables para CSRF
 CSRF_TRUSTED_ORIGINS = [
-    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com/",
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
+    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
 
 # Password validation
