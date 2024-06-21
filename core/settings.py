@@ -115,12 +115,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
-# Configuración adicional para asegurar el uso de TLS
-DATABASES['default']['CONN_MAX_AGE'] = 600  # Mantener la conexión abierta por más tiempo
-DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}  # Forzar uso de SSL
+# Configuración para PostgreSQL en producción (Heroku)
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Permitir el uso de credenciales
 CORS_ALLOW_CREDENTIALS = True
