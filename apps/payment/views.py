@@ -97,9 +97,8 @@ class GetPaymentTotalView(APIView):
                         name=coupon_name
                     )
                         discount_amount = float(fixed_price_coupon.discount_price)
-                        if discount_amount < total_amount:
-                            total_amount -= discount_amount
-                            total_after_coupon = total_amount
+                        total_amount -= discount_amount
+                        total_after_coupon = total_amount
 
                     elif PercentageCoupon.objects.filter(name__iexact=coupon_name).exists():
                         percentage_coupon = PercentageCoupon.objects.get(
@@ -114,7 +113,10 @@ class GetPaymentTotalView(APIView):
                             total_after_coupon = total_amount
 
                     total_after_coupon = round(total_after_coupon, 2)
-
+                    if total_after_coupon < 0:
+                        total_after_coupon = round(0, 2)
+                        total_amount = round(0, 2)
+                        
                 # impuesto estimado
 
                 # estimated_tax = round(total_amount * tax, 2)
@@ -141,8 +143,6 @@ class GetPaymentTotalView(APIView):
                      },
                      status=status.HTTP_200_OK
                 )
-
-
         except:
             return Response(
                 {'error':'Something went wrong when retrieving payment total information'},

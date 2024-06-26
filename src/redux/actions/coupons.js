@@ -21,15 +21,15 @@ export const check_coupon = (coupon_name) => async (dispatch) => {
         type: GET_COUPON_SUCCESS,
         payload: res.data,
       });
-      dispatch(setAlert("Coupon applied", "green"));
+      dispatch(setAlert("Coupon applied"));
     } else {
       dispatch({
         type: GET_COUPON_FAIL,
       });
       if (res.data.error) {
-        dispatch(setAlert(res.data.error, "red"));
+        dispatch(setAlert(res.data.error));
       } else {
-        dispatch(setAlert("This coupon does not exist", "red"));
+        dispatch(setAlert("This coupon does not exist"));
       }
     }
   } catch (err) {
@@ -37,7 +37,7 @@ export const check_coupon = (coupon_name) => async (dispatch) => {
       type: GET_COUPON_FAIL,
       payload: { error: "Coupon does not exist" },
     });
-    dispatch(setAlert("This coupon does not exist", "red"));
+    dispatch(setAlert("This coupon does not exist"));
   }
 
   window.scrollTo(0, 0);

@@ -1,7 +1,7 @@
 import DropIn from "braintree-web-drop-in-react";
 import ShippingForm from "components/checkout/ShippingForm";
 import Layout from "hocs/layouts/Layout";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
@@ -116,26 +116,24 @@ const Checkout = ({
       telephone_number: newFormData.phone,
     });
   };
-  
-    const fetchClient = useCallback(async () => {
+
+  useEffect(() => {
+    const FecthClient = async () => {
       reset_coupon();
       await get_client_token();
-    }, [reset_coupon, get_client_token]);
-  
-    const fetchPaymentTotal = useCallback(async () => {
+    };
+    FecthClient();
+  }, []);
+
+  useEffect(() => {
+    const FecthPaymentTotal = async () => {
       await get_payment_total(
         shipping_id,
         coupon?.name || "default"
       );
-    }, [get_payment_total, shipping_id, coupon]);
-  
-    useEffect(() => {
-      fetchClient();
-    }, [fetchClient]);
-  
-    useEffect(() => {
-      fetchPaymentTotal();
-    }, [fetchPaymentTotal]);
+    };
+    FecthPaymentTotal();
+  }, [shipping_id, coupon]);
 
   useEffect(() => {
     const fetchItems = async () => {
