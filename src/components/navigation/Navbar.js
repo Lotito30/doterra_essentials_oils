@@ -1,7 +1,5 @@
 import { Popover, Transition } from "@headlessui/react";
 import {
-  ArrowCircleRightIcon,
-  ArrowRightIcon,
   ShoppingCartIcon,
   UserIcon,
   XCircleIcon,
@@ -121,37 +119,14 @@ function Navbar({
       href: "/shop",
     },
     {
-      name: "About Us",
+      name: "About",
       href: "/about",
     },
     {
-      name: "Contact Us",
+      name: "Contact",
       href: "/contact",
     },
-    {
-      name: "Categories",
-    },
   ];
-  const [showCategory, setShowCategory] = useState(false);
-  const showCategories = () => {
-    return (
-      <div
-        class={`absolute top-10 left-1/2 bg-white shadow-md  rounded-md z-10 -translate-x-2 `}
-        onMouseEnter={() => setShowCategory(true)}
-        onMouseLeave={() => setShowCategory(false)}
-      >
-        {categories?.map((category, index) => (
-          <div key={index} className=" cursor-pointer hover:bg-gray-100 px-3 py-2">
-            <div>
-            {category.name}
-            <ArrowCircleRightIcon className="h-4 w-4 inline-block ml-1"/>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-  const loading = true;
 
   window.onscroll = function () {
     scrollFunction();
@@ -346,16 +321,6 @@ function Navbar({
                             : "text-gray-400 border-b-transparent hover:border-orange-standard"
                         }`
                       }
-                      onMouseEnter={() => {
-                        if (item.name === "Categories") {
-                          setShowCategory(true);
-                        }
-                      }}
-                      onMouseLeave={() => {
-                        if (item.name === "Categories") {
-                          setShowCategory(false);
-                        }
-                      }}
                     >
                       {item.name}
                     </NavLink>
@@ -417,7 +382,6 @@ function Navbar({
           </div>
         </div>
         <Alert />
-        {showCategory && showCategories()}
       </navbar>
     </div>
   );

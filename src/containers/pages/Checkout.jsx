@@ -1,11 +1,11 @@
 import DropIn from "braintree-web-drop-in-react";
 import ShippingForm from "components/checkout/ShippingForm";
 import Layout from "hocs/layouts/Layout";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { countries } from "../../helpers/FixedCountries";
 import { refresh } from "../../redux/actions/auth";
 import { check_coupon, reset_coupon } from "../../redux/actions/coupons";
@@ -16,17 +16,6 @@ import {
 } from "../../redux/actions/payment";
 import { get_shipping_options } from "../../redux/actions/shipping";
 
-{
-  /* <Oval
-  visible={true}
-  height="20"
-  width="20"
-  color="#FFF"
-  ariaLabel="oval-loading"
-  wrapperStyle={{}}
-  wrapperClass=""
-/>; */
-}
 const Checkout = ({
   isAuthenticated,
   shipping,
@@ -73,7 +62,7 @@ const Checkout = ({
     e.preventDefault();
     await check_coupon(coupon_name);
   };
-  const [data, setData] = useState({
+  const [data] = useState({
     instance: {},
   });
   const {
@@ -127,24 +116,26 @@ const Checkout = ({
       telephone_number: newFormData.phone,
     });
   };
-
-  useEffect(() => {
-    const FecthClient = async () => {
+  
+    const fetchClient = useCallback(async () => {
       reset_coupon();
       await get_client_token();
-    };
-    FecthClient();
-  }, []);
-
-  useEffect(() => {
-    const FecthPaymentTotal = async () => {
+    }, [reset_coupon, get_client_token]);
+  
+    const fetchPaymentTotal = useCallback(async () => {
       await get_payment_total(
         shipping_id,
         coupon?.name || "default"
       );
-    };
-    FecthPaymentTotal();
-  }, [shipping_id, coupon]);
+    }, [get_payment_total, shipping_id, coupon]);
+  
+    useEffect(() => {
+      fetchClient();
+    }, [fetchClient]);
+  
+    useEffect(() => {
+      fetchPaymentTotal();
+    }, [fetchPaymentTotal]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -171,7 +162,7 @@ const Checkout = ({
               />
               <label className="form-check-label ml-4">
                 {shipping_option.time_to_delivery} -{" "}
-                <span className="text-black">{shipping_option.price} AED</span>
+                <span className="text-black">{shipping_option.price} $</span>
               </label>
             </div>
           ))}
@@ -329,14 +320,13 @@ const Checkout = ({
             <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
               <dt className="flex items-center text-sm text-gray-600">
                 <span>Shipping </span>
-                <a
-                  href="#"
+                <button
                   className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
                 >
                   <span className="sr-only">
                     Learn more about how shipping is calculated
                   </span>
-                </a>
+                </button>
               </dt>
               <dd className="w-4/5 text-sm font-medium text-gray-900">
                 {renderShipping()}
@@ -363,7 +353,7 @@ const Checkout = ({
 
                     <dd className="text-sm font-medium text-gray-900">
                       {(parseFloat(item.product.price) * item.count).toFixed(2)}{" "}
-                      AED
+                      $
                     </dd>
                   </div>
                 ))}
@@ -373,7 +363,7 @@ const Checkout = ({
                 <span className="sr-only">Subtotal</span>
                 <dt className="text-sm text-gray-600">Subtotal</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  {original_price} AED
+                  {original_price} $
                 </dd>
               </div>
               {coupon && coupon !== null && coupon !== undefined && (
@@ -381,7 +371,7 @@ const Checkout = ({
                   <span className="sr-only">Discount selected</span>
                   <dt className="text-sm text-green-500">Discount</dt>
                   <dd className="text-sm font-medium text-green-500">
-                    - {coupon.discount_price} AED
+                    - {coupon.discount_price} $
                   </dd>
                 </div>
               )}{" "}
@@ -389,7 +379,7 @@ const Checkout = ({
                 <span className="sr-only">Shipping selected</span>
                 <dt className="text-sm text-gray-600">Shipping</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  {shipping_cost} AED
+                  {shipping_cost} $
                 </dd>
               </div>
               {coupon && coupon !== null && coupon !== undefined ? (
@@ -399,7 +389,7 @@ const Checkout = ({
                     {(
                       parseFloat(total_after_coupon) + parseFloat(shipping_cost)
                     ).toFixed(2)}{" "}
-                    AED
+                    $
                   </dd>
                 </div>
               ) : (
@@ -408,7 +398,7 @@ const Checkout = ({
                     Order total
                   </dt>
                   <dd className="text-xl font-medium text-gray-900">
-                    {total_amount} AED
+                    {total_amount} $
                   </dd>
                 </div>
               )}

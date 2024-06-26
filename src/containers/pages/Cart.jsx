@@ -33,7 +33,7 @@ function Cart({
     get_total();
     get_item_total();
     get_items();
-  }, [render]);
+  }, [get_total, get_item_total, get_items, render]);
 
   const showItems = () => {
     return items?.length !== 0 ? (
@@ -219,7 +219,7 @@ function Cart({
                 Items in your shopping cart
               </h2>
 
-              <ul role="list" className="">
+              <ul >
                 {isAuthenticated && showItems()}
               </ul>
             </section>
@@ -256,7 +256,7 @@ function Cart({
                             {(
                               parseFloat(item?.product?.price) * item.count
                             ).toFixed(2)}{" "}
-                            AED
+                            $
                           </dd>
                         </div>
                       ))}
@@ -265,7 +265,7 @@ function Cart({
                     <div className="flex items-center justify-between">
                       <dt className="text-sm text-gray-600">Subtotal</dt>
                       <dd className="text-sm font-medium text-gray-900">
-                        {amount.toFixed(2)} AED
+                        {amount.toFixed(2)} $
                       </dd>
                     </div>
                   </dl>

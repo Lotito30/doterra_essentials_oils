@@ -3,8 +3,6 @@ from datetime import timedelta
 # para definir variables de ambientes 
 import os
 import environ
-import dj_database_url
-
 
 # env para definir listas o algo mas complicado
 env = environ.Env() 
@@ -20,12 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 if not DEBUG:
-    DOMAIN = 'https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com'
+    DOMAIN = ''
 DOMAIN = os.environ.get('DOMAIN')
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*',]
 
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -122,15 +120,14 @@ DATABASES = {
 }
 
 # Configuración para PostgreSQL en producción (Heroku)
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+# if 'DATABASE_URL' in os.environ:
+#     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Permitir el uso de credenciales
 CORS_ALLOW_CREDENTIALS = True
 
 # Lista de orígenes permitidos
 CORS_ALLOWED_ORIGINS = [
-    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",
@@ -145,7 +142,6 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 
 # Lista de orígenes confiables para CSRF
 CSRF_TRUSTED_ORIGINS = [
-    "https://doterra-essentials-oils-2fbd0f7ae026.herokuapp.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8000",

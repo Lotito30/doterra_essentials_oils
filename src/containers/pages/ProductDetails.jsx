@@ -1,13 +1,17 @@
 import { Disclosure, Tab } from "@headlessui/react";
 import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
-import { BanIcon, CheckIcon, ClockIcon, StarIcon, XCircleIcon } from "@heroicons/react/solid";
+import {
+  BanIcon,
+  CheckIcon,
+  StarIcon,
+} from "@heroicons/react/solid";
 import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Oval } from "react-loader-spinner";
 import { connect } from "react-redux";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   get_products_by_arrival,
   get_products_by_sold,
@@ -91,31 +95,24 @@ function ProductDetails({
 }) {
   const params = useParams();
   const productId = params.productId;
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const addToCart = async () => {
-    if (
-      product &&
-      isAuthenticated
-    ) {
+    if (product && isAuthenticated) {
       setLoading(true);
       await add_item(product);
       await get_items();
       await get_total();
       await get_item_total();
       setLoading(false);
-    }else{
-      navigate('/signin')
-      return
+    } else {
+      navigate("/signin");
+      return;
     }
   };
   const addToWishList = async () => {
-    if (
-      isAuthenticated &&
-      product &&
-      wishlist
-    ) {
+    if (isAuthenticated && product && wishlist) {
       !wishlist.find(
         (item) => item.product.id.toString() === product.id.toString()
       )
@@ -125,20 +122,24 @@ const navigate = useNavigate()
       await get_wishlist_item_total();
     }
   };
-  
+
   useEffect(() => {
     get_product(productId);
     get_related_products(productId);
     get_wishlist_items();
     get_wishlist_item_total();
-  }, [loading]);
-  
+  }, [loading, get_product, get_related_products, get_wishlist_items, get_wishlist_item_total, productId]);
+
   useEffect(() => {
     get_reviews(productId);
-  }, [productId]);
-  
-  const reduceRating = reviews ? reviews.reduce((previous, current) => {return Number(previous) + Number(current.rating)},1) : 0
-  const averageRating = reviews ? reduceRating / reviews.length : 4
+  }, [get_reviews, productId]);
+
+  const reduceRating = reviews
+    ? reviews.reduce((previous, current) => {
+        return Number(previous) + Number(current.rating);
+      }, 1)
+    : 0;
+  const averageRating = reviews ? reduceRating / reviews.length : 4;
 
   return (
     <Layout>
@@ -174,6 +175,7 @@ const navigate = useNavigate()
                   <img
                     src={GetSrcPhoto(product.photo)}
                     className="w-1/2 object-center object-cover lg:w-4/6 mx-auto"
+                    alt="product"
                   />
                 </Tab.Panel>
               </Tab.Panels>
@@ -186,7 +188,7 @@ const navigate = useNavigate()
 
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl text-gray-900">AED {product.price} </p>
+                <p className="text-3xl text-gray-900">$ {product.price} </p>
               </div>
 
               <div className="mt-3">
@@ -330,7 +332,7 @@ const navigate = useNavigate()
                             as="div"
                             className="pb-6 prose prose-sm"
                           >
-                            <ul role="list">
+                            <ul>
                               {detail.items.map((item) => (
                                 <li key={item}>{item}</li>
                               ))}
@@ -344,88 +346,94 @@ const navigate = useNavigate()
               </section>
             </div>
           </div>
-          {/* DESCRIPTION PRODUCTS */}
-          <section className="my-5 ">
-            <div className="">
-              <div className="shadow-card">
-                <div>
-                  <h1 className="text-2xl uppercase">
-                    Descripcion del producto en un recuadro
-                  </h1>
+          {/* DESCRIPTION PRODUCT */}
+          <div className="hidden">
+            {/* DESCRIPTION PRODUCTS */}
+            <section className="my-5 ">
+              <div className="">
+                <div className="shadow-card">
+                  <div>
+                    <h1 className="text-2xl uppercase">
+                      Descripcion del producto en un recuadro
+                    </h1>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-          
-          {/* SOLD PRODUCTS */}
-          <section className="my-5 ">
-            <div>
+            </section>
+
+            {/* SOLD PRODUCTS */}
+            <section className="my-5 ">
+              <div>
+                <div>
+                  <CarouselProducts
+                    title={"Best Seller"}
+                    description={"Best Seller Description"}
+                    data={products_sold}
+                  />
+                </div>
+              </div>
+            </section>
+            {/* INTEREST PRODUCTS */}
+            <section className="my-5 ">
               <div>
                 <CarouselProducts
-                  title={"Best Seller"}
-                  description={"Best Seller Description"}
-                  data={products_sold}
+                  title={"This might interest you"}
+                  description={"This might interest you description"}
+                  data={""}
                 />
               </div>
-            </div>
-          </section>
-          {/* INTEREST PRODUCTS */}
-          <section className="my-5 ">
-            <div>
-              <CarouselProducts
-                title={"This might interest you"}
-                description={"This might interest you description"}
-                data={""}
-              />
-            </div>
-          </section>
-          {/* REVIEWS  */}
-          <section className="my-5">
-            {/* SI COMPRO PUEDE SER PERMITIDO QUE EL HAGA REVIEW */}
-            <div className="shadow-card">
-              <div className="">
-                <div>
-                  <Link
-                    to={`/create-review/product/${productId}`}
-                    className="underline"
-                  >
-                    Create Review
-                  </Link>
-                  {reviews &&
-                    reviews.map((rev, index) => (
-                      <blockquote class="flex flex-col justify-between bg-white p-4" key={index}>
-                        <div>
-                          <div class="flex">
-                            {[0, 1, 2, 3, 4].map((star) => (
-                              <StarIcon
-                                key={star}
-                                className={classNames(
-                                  rev.rating >= star
-                                    ? "text-yellow-400"
-                                    : "text-gray-300",
-                                  "h-5 w-5 flex-shrink-0"
-                                )}
-                                aria-hidden="true"
-                              />
-                            ))}
+            </section>
+            {/* REVIEWS  */}
+            <section className="my-5">
+              {/* SI COMPRO PUEDE SER PERMITIDO QUE EL HAGA REVIEW */}
+              <div className="shadow-card">
+                <div className="">
+                  <div>
+                    <Link
+                      to={`/create-review/product/${productId}`}
+                      className="underline"
+                    >
+                      Create Review
+                    </Link>
+                    {reviews &&
+                      reviews.map((rev, index) => (
+                        <blockquote
+                          class="flex flex-col justify-between bg-white p-4"
+                          key={index}
+                        >
+                          <div>
+                            <div class="flex">
+                              {[0, 1, 2, 3, 4].map((star) => (
+                                <StarIcon
+                                  key={star}
+                                  className={classNames(
+                                    rev.rating >= star
+                                      ? "text-yellow-400"
+                                      : "text-gray-300",
+                                    "h-5 w-5 flex-shrink-0"
+                                  )}
+                                  aria-hidden="true"
+                                />
+                              ))}
+                            </div>
+
+                            <div class="mt-2">
+                              <p class="mt-2 leading-relaxed text-gray-700">
+                                {rev.comment}
+                              </p>
+                            </div>
                           </div>
 
-                          <div class="mt-2">
-                            <p class="mt-2 leading-relaxed text-gray-700">
-                              {rev.comment}
-                            </p>
-                          </div>
-                        </div>
-
-                        <footer class="mt-1 text-sm font-medium text-gray-700">
-                          &mdash; {rev.user}
-                        </footer>
-                      </blockquote>
-                    ))}
+                          <footer class="mt-1 text-sm font-medium text-gray-700">
+                            &mdash; {rev.user}
+                          </footer>
+                        </blockquote>
+                      ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
       )}
     </Layout>

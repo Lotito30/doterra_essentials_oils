@@ -529,7 +529,7 @@ const ShowDashboard = ({
                                   {(
                                     parseFloat(item.price) * item.count
                                   ).toFixed(2)}{" "}
-                                  AED
+                                  $
                                 </dd>
                               </div>
                             ))}
@@ -537,14 +537,14 @@ const ShowDashboard = ({
                         <div className="py-1 flex items-center justify-between">
                           <dt className="text-gray-600">Shipping</dt>
                           <dd className="font-medium text-gray-900">
-                            {parseFloat(order.shipping_price).toFixed(2)} AED
+                            {parseFloat(order.shipping_price).toFixed(2)} $
                           </dd>
                         </div>
                         {order.coupon_price > 0 ? (
                           <div className="py-1 flex items-center justify-between">
                             <dt className="text-gray-600">Coupon</dt>
                             <dd className="font-medium text-green-500">
-                              - {parseFloat(order.coupon_price).toFixed(2)} AED
+                              - {parseFloat(order.coupon_price).toFixed(2)} $
                             </dd>
                           </div>
                         ) : (
@@ -556,7 +556,7 @@ const ShowDashboard = ({
                             {parseFloat(
                               order.amount - order.shipping_price
                             ).toFixed(2)}{" "}
-                            AED
+                            $
                           </dd>
                         </div>
 
@@ -565,7 +565,7 @@ const ShowDashboard = ({
                             Order total
                           </dt>
                           <dd className="font-semibold text-gray-900">
-                            {parseFloat(order.amount).toFixed(2)} AED
+                            {parseFloat(order.amount).toFixed(2)} $
                           </dd>
                         </div>
                       </dl>
@@ -841,7 +841,7 @@ const ShowDashboard = ({
                           {/* NOMBRE DEL CLIENTE */}
                         </td>
                         <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                          {order.amount} AED
+                          {order.amount} $
                         </td>
                         <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                           <button
@@ -920,7 +920,7 @@ const ShowDashboard = ({
                             {product.sold}
                           </td>
                           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                            {product.price} AED
+                            {product.price} $
                           </td>
                           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                             <button

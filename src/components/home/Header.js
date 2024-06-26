@@ -3,7 +3,7 @@ import { Typewriter } from "react-simple-typewriter";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { IoLogoWhatsapp } from "react-icons/io";
+
 function Header() {
   const home =
     "https://doterra-aws-back-s3.s3.eu-central-1.amazonaws.com/images/doterraSliderHome.jpeg";
@@ -25,16 +25,7 @@ function Header() {
   return (
     <main>
       <div class="px-4 mx-auto max-w-7xl pt-10 lg:pt-5 sm:px-6 md:px-12 lg:px-16 lg:pb-8 relative">
-        <a
-          className="fixed bottom-5 right-2 w-30 h-20 z-10 cursor-pointer "
-          href="https://wa.me/971554693255?text=Hello!%20I'm%20reaching%20out%20from%20the%20doTERRA%20website%20and%20I%20have%20a%20query.%20Can%20you%20please%20assist%20me?%20Thank%20you!"
-          target="_blank"
-        >
-          <IoLogoWhatsapp
-            size={50}
-            color="#25D366"
-          />
-        </a>
+        
         <div class="flex flex-wrap items-center mx-auto max-w-7xl flex-col-reverse lg:flex-row">
           <div class="w-full lg:max-w-lg lg:w-1/2 hidden lg:inline-block">
             <Slider {...settings}>

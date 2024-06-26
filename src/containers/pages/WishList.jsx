@@ -1,7 +1,7 @@
 import { HeartIcon, TrashIcon } from "@heroicons/react/solid";
 import GetSrcPhoto from "components/photo/GetSrcPhoto";
 import Layout from "hocs/layouts/Layout";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
@@ -24,20 +24,26 @@ function WishList({
   get_related_products,
 }) {
   const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
+
+  const fetchWishlistItems = useCallback(() => {
     get_wishlist_items();
     get_wishlist_item_total();
     setDataLoaded(true);
-  }, []);
+  }, [get_wishlist_items, get_wishlist_item_total, setDataLoaded]);
+
+  const fetchRelatedProducts = useCallback(async () => {
+    if (wishlist && wishlist.length > 0) {
+      await get_related_products(wishlist[0].product.category);
+    }
+  }, [wishlist, get_related_products]);
 
   useEffect(() => {
-    if (wishlist && wishlist.length > 0) {
-      const fetchRelated = async () => {
-        await get_related_products(wishlist[0].product.category);
-      };
-      fetchRelated();
-    }
-  }, []);
+    fetchWishlistItems();
+  }, [fetchWishlistItems]);
+
+  useEffect(() => {
+    fetchRelatedProducts();
+  }, [fetchRelatedProducts]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -56,7 +62,7 @@ function WishList({
                       <img
                         className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48 "
                         src={GetSrcPhoto(item.product.photo)}
-                        alt="photo"
+                        alt="product"
                       />
                       <div>
                         <h3 className="mt-4 text-lg font-medium sm:text-2xl hover:underline">
@@ -68,7 +74,7 @@ function WishList({
 
                         <div className="mt-4 sm:flex sm:items-center sm:gap-2">
                           <p className="text-2xl text-gray-900">
-                            {item.product.price} AED
+                            {item.product.price} $
                           </p>
                         </div>
                       </div>
@@ -149,7 +155,7 @@ function WishList({
               Items in your shopping wishlist
             </h2>
             {dataLoaded ? (
-              <ul role="list" className="">
+              <ul>
                 {wishlist && showItems()}
               </ul>
             ) : (

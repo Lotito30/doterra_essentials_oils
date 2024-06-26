@@ -97,8 +97,7 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
         });
         dispatch(
           setAlert(
-            "We send you an email, please activate your account. Check your spam mail",
-            "green"
+            "We send you an email, please activate your account. Check your spam mail"
           )
         );
         return true
@@ -106,7 +105,7 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
         dispatch({
           type: SIGNUP_FAIL,
         });
-        dispatch(setAlert("Error verify the data entered", "red"));
+        dispatch(setAlert("Error verify the data entered"));
       }
         dispatch({
           type: REMOVE_AUTH_LOADING,
@@ -126,8 +125,7 @@ export const signup = (first_name, last_name, phone, email, password, re_passwor
           ? `Phone ${error.response.data.phone}`
           : error.response.data?.non_field_errors 
           ? error.response.data.non_field_errors 
-          : "Your password must meet security requirements",
-          "red"
+          : "Your password must meet security requirements"
         ))
       return false
     }
@@ -203,12 +201,11 @@ export const signin = (email, password) => async (dispatch) => {
       dispatch({
         type: REMOVE_AUTH_LOADING,
       });
-      dispatch(setAlert("Successful login", "green"));
     } else {
       dispatch({
         type: LOGIN_FAIL,
       });
-      dispatch(setAlert("Email address or Password is incorrect", "red"));
+      dispatch(setAlert("Email address or Password is incorrect"));
     }
   } catch (error) {
     console.error("Error response data:", error.response.data); 
@@ -218,7 +215,7 @@ export const signin = (email, password) => async (dispatch) => {
     dispatch({
       type: REMOVE_AUTH_LOADING,
     });
-    dispatch(setAlert("Email address or Password is incorrect", "red"));
+    dispatch(setAlert("Email address or Password is incorrect"));
   }
 };
 
@@ -248,13 +245,13 @@ export const activate = (uid, token) => async (dispatch) => {
       dispatch({
         type: ACTIVATION_SUCCESS,
       });
-      dispatch(setAlert("Account Successfully Activated", "green"));
+      dispatch(setAlert("Account Successfully Activated"));
       return true
     } else {
       dispatch({
         type: ACTIVATION_FAIL,
       });
-      dispatch(setAlert("Error activating account", "red"));
+      dispatch(setAlert("Error activating account"));
     }
     dispatch({
       type: REMOVE_AUTH_LOADING,
@@ -267,7 +264,7 @@ export const activate = (uid, token) => async (dispatch) => {
     dispatch({
       type: REMOVE_AUTH_LOADING,
     });
-    dispatch(setAlert("Error activating account", "red"));
+    dispatch(setAlert("Error activating account"));
     return false
   }
 };
@@ -343,7 +340,7 @@ export const reset_password = (email) => async (dispatch) => {
       dispatch({
         type: REMOVE_AUTH_LOADING,
       });
-      dispatch(setAlert("Password reset email sent", "green"));
+      dispatch(setAlert("Password reset email sent"));
     } else {
       dispatch({
         type: RESET_PASSWORD_FAIL,
@@ -351,7 +348,7 @@ export const reset_password = (email) => async (dispatch) => {
       dispatch({
         type: REMOVE_AUTH_LOADING,
       });
-      dispatch(setAlert("Error sending password reset email", "red"));
+      dispatch(setAlert("Error sending password reset email"));
     }
   } catch (error) {
     console.error("Error response data:", error.response.data);
@@ -361,7 +358,7 @@ export const reset_password = (email) => async (dispatch) => {
     dispatch({
       type: REMOVE_AUTH_LOADING,
     });
-    dispatch(setAlert("Error sending password reset email", "red"));
+    dispatch(setAlert("Error sending password reset email"));
   }
 };
 
@@ -390,7 +387,7 @@ if (new_password !== re_new_password) {
     dispatch({
         type: REMOVE_AUTH_LOADING
     });
-    dispatch(setAlert('Passwords do not match', 'red'));
+    dispatch(setAlert('Passwords do not match'));
 } else {
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password_confirm/`, body, config);
@@ -402,7 +399,7 @@ if (new_password !== re_new_password) {
             dispatch({
                 type: REMOVE_AUTH_LOADING
             });
-            dispatch(setAlert('Password has been reset successfully', 'green'));
+            dispatch(setAlert('Password has been reset successfully'));
         } else {
             dispatch({
                 type: RESET_PASSWORD_CONFIRM_FAIL
@@ -410,7 +407,7 @@ if (new_password !== re_new_password) {
             dispatch({
                 type: REMOVE_AUTH_LOADING
             });
-            dispatch(setAlert('Error resetting your password', 'red'));
+            dispatch(setAlert('Error resetting your password'));
         }
     } catch(error){
       console.error("Error response data:", error.response.data);
@@ -420,7 +417,7 @@ if (new_password !== re_new_password) {
         dispatch({
             type: REMOVE_AUTH_LOADING
         });
-        dispatch(setAlert('Error resetting your password', 'red'));
+        dispatch(setAlert('Error resetting your password'));
     }
 }
 }

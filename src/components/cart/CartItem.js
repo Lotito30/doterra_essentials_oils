@@ -69,7 +69,7 @@ const CartItem = ({
             </div>
 
             <p className="mt-1 text-sm font-medium text-gray-900">
-              AED {item.product.price}
+              $ {item.product.price}
             </p>
           </div>
 
